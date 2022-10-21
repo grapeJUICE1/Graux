@@ -1,20 +1,74 @@
-import { AppDataSource } from "./data-source"
-import { User } from "./entity/User"
+import { ApolloServer } from '@apollo/server'
+import config from './config/config'
+import { expressMiddleware } from '@apollo/server/express4'
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
+import express from 'express'
+import http from 'http'
+import cors from 'cors'
+import bodyParser from 'body-parser'
+import dataSource from './data-source'
 
-AppDataSource.initialize().then(async () => {
+interface MyContext {
+  token?: String
+}
+const typeDefs = `#graphql
+ # This "Book" type defines the queryable fields for every book in our data source.
+  type Book {
+    title: String
+    author: String
+  }
 
-    console.log("Inserting a new user into the database...")
-    const user = new User()
-    user.firstName = "Timber"
-    user.lastName = "Saw"
-    user.age = 25
-    await AppDataSource.manager.save(user)
-    console.log("Saved a new user with id: " + user.id)
+  # The "Query" type is special: it lists all of the available queries that
+  # clients can execute, along with the return type for each. In this
+  # case, the "books" query returns an array of zero or more Books (defined above).
+  type Query {
+    books: [Book]
+  }
+`
 
-    console.log("Loading users from the database...")
-    const users = await AppDataSource.manager.find(User)
-    console.log("Loaded users: ", users)
+const books = [
+  {
+    title: 'The Awakening',
+    author: 'Kate Chopin',
+  },
+  {
+    title: 'City of Glass',
+    author: 'Paul Auster',
+  },
+]
 
-    console.log("Here you can setup and run express / fastify / any other framework.")
+const resolvers = {
+  Query: {
+    books: () => books,
+  },
+}
+async function main() {
+  const app = express()
+  const httpServer = http.createServer(app)
 
-}).catch(error => console.log(error))
+  // @ts-ignore
+  const server = new ApolloServer<MyContext>({
+    typeDefs,
+    resolvers,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  })
+
+  // @ts-ignore
+  await server.start()
+
+  app.use(
+    '/',
+    cors<cors.CorsRequest>(),
+    bodyParser.json(),
+    expressMiddleware(server, {
+      context: async ({ req }) => ({ token: req.headers.token }),
+    })
+  )
+
+  await new Promise<void>((resolve) =>
+    httpServer.listen({ port: config.PORT }, resolve)
+  )
+  console.log(`🚀 Server ready at http://localhost:4000/`)
+}
+
+main().catch((err) => console.log(err))
