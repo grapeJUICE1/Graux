@@ -5,7 +5,6 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import express from 'express'
 import http from 'http'
 import cors from 'cors'
-import bodyParser from 'body-parser'
 import dataSource from './data-source'
 import resolvers from './graphql/resolvers'
 import typeDefs from './graphql/typeDefs'
