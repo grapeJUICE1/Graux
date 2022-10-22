@@ -22,7 +22,8 @@ const typeDefs = `#graphql
     author: String
   }
   type Query {
-    books: [Book]
+    getBattles: [Battle]
+    getUsers: [User]
   }
 
 `

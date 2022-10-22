@@ -4,11 +4,12 @@ import {
   Column,
   ManyToMany,
   JoinTable,
+  BaseEntity,
 } from 'typeorm'
 import { Battle } from './Battle'
 
 @Entity('users')
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 

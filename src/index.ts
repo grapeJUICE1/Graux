@@ -7,30 +7,13 @@ import http from 'http'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import dataSource from './data-source'
-import { User } from './entities/User'
-import { Battle } from './entities/Battle'
+import resolvers from './graphql/resolvers'
 import typeDefs from './graphql/typeDefs'
 
 interface MyContext {
   token?: String
 }
 
-const books = [
-  {
-    title: 'The Awakening',
-    author: 'Kate Chopin',
-  },
-  {
-    title: 'City of Glass',
-    author: 'Paul Auster',
-  },
-]
-
-const resolvers = {
-  Query: {
-    books: () => books,
-  },
-}
 async function main() {
   await dataSource.initialize()
   console.log('connected to database')
@@ -49,9 +32,9 @@ async function main() {
   await server.start()
 
   app.use(
-    '/',
+    '/graphql',
     cors<cors.CorsRequest>(),
-    bodyParser.json(),
+    express.json(),
     expressMiddleware(server, {
       context: async ({ req }) => ({ token: req.headers.token }),
     })
@@ -60,7 +43,7 @@ async function main() {
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: config.PORT }, resolve)
   )
-  console.log(`🚀 Server ready at http://localhost:4000/`)
+  console.log(`🚀 Server ready at http://localhost:${config.PORT}/`)
 }
 
 main().catch((err) => console.log(err))
