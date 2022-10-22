@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import { DataSource } from 'typeorm'
-import { User } from './entities/User'
-import { Battle } from './entities/Battle'
+import User from './entities/User'
+import Battle from './entities/Battle'
 import config from './config/config'
 
 const AppDataSource = new DataSource({

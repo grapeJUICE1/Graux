@@ -1,4 +1,4 @@
-import { Battle } from '../../entities/Battle'
+import Battle from '../../entities/Battle'
 
 const resolvers = {
   Query: {
