@@ -3,7 +3,6 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToMany,
-  JoinTable,
   BaseEntity,
 } from 'typeorm'
 import { Battle } from './Battle'

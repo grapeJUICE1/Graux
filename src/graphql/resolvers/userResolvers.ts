@@ -1,4 +1,3 @@
-import { warn } from 'console'
 import { User } from '../../entities/User'
 
 const resolvers = {
