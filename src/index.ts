@@ -7,6 +7,8 @@ import http from 'http'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import dataSource from './data-source'
+import { User } from './entities/User'
+import { Battle } from './entities/Battle'
 
 interface MyContext {
   token?: String
@@ -43,6 +45,9 @@ const resolvers = {
   },
 }
 async function main() {
+  await dataSource.initialize()
+  console.log('connected to database')
+
   const app = express()
   const httpServer = http.createServer(app)
 
