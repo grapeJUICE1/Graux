@@ -12,6 +12,9 @@
     "@apollo/server": "^4.0.1",
     "express": "^4.18.2",
     "graphql": "^16.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "passport": "^0.6.0",
+    "passport-google-token": "^0.1.2",
     "pg": "^8.4.0",
     "reflect-metadata": "^0.1.13",
     "typeorm": "0.3.10"
