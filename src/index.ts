@@ -9,35 +9,11 @@ import bodyParser from 'body-parser'
 import dataSource from './data-source'
 import { User } from './entities/User'
 import { Battle } from './entities/Battle'
+import typeDefs from './graphql/typeDefs'
 
 interface MyContext {
   token?: String
 }
-const typeDefs = `#graphql
-  type Book {
-    title: String
-    author: String
-  }
-  type Query {
-    books: [Book]
-  }
-
-
-  type User{
-   id: ID!
-   email: String!
-   firstName: String!
-   lastName: String!
-   username: String!
-    
-  }
-
-  type Battle {
-   id: ID!
-   uuid: String!
-   title: String!
-  }
-`
 
 const books = [
   {
