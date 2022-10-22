@@ -1,0 +1,2 @@
+const typeDefs = `#graphql
+`
