@@ -24,8 +24,8 @@ export default class User extends BaseEntity {
   @Column({ unique: true })
   username: string
 
-  @Column({ select: false })
-  password: string
+  @Column('text')
+  token: string
 
   @ManyToMany(() => Battle, (battle) => battle.users)
   battles: Battle[]
