@@ -1,10 +1,13 @@
-import battleResolvers from './battleResolvers'
-import userResolvers from './userResolvers'
+import { userQueries, userMutations } from './user'
+import { battleQueries, battleMutations } from './battle'
 
 const resolvers = {
   Query: {
-    ...battleResolvers.Query,
-    ...userResolvers.Query,
+    ...battleQueries,
+    ...userQueries,
+  },
+  Mutation: {
+    ...userMutations,
   },
 }
 

@@ -3,6 +3,7 @@ import config from './config/config'
 import { expressMiddleware } from '@apollo/server/express4'
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
 import express from 'express'
+import { Request, Response } from 'express'
 import http from 'http'
 import cors from 'cors'
 import dataSource from './data-source'
@@ -10,7 +11,8 @@ import resolvers from './graphql/resolvers'
 import typeDefs from './graphql/typeDefs'
 
 interface MyContext {
-  token?: String
+  req: Request
+  res: Response
 }
 
 async function main() {
@@ -35,7 +37,7 @@ async function main() {
     cors<cors.CorsRequest>(),
     express.json(),
     expressMiddleware(server, {
-      context: async ({ req }) => ({ token: req.headers.token }),
+      context: async ({ req, res }) => ({ req, res }),
     })
   )
 

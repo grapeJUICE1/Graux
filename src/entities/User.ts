@@ -15,17 +15,11 @@ export default class User extends BaseEntity {
   @Column({ unique: true })
   email: string
 
-  @Column()
-  firstName: string
-
-  @Column()
-  lastName: string
-
   @Column({ unique: true })
   username: string
 
-  @Column('text')
-  token: string
+  @Column()
+  password: string
 
   @ManyToMany(() => Battle, (battle) => battle.users)
   battles: Battle[]
