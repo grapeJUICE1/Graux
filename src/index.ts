@@ -3,17 +3,13 @@ import config from './config/config'
 import { expressMiddleware } from '@apollo/server/express4'
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
 import express from 'express'
-import { Request, Response } from 'express'
+import cookieParser from 'cookie-parser'
+import MyContext from './MyContext'
 import http from 'http'
 import cors from 'cors'
 import dataSource from './data-source'
 import resolvers from './graphql/resolvers'
 import typeDefs from './graphql/typeDefs'
-
-interface MyContext {
-  req: Request
-  res: Response
-}
 
 async function main() {
   await dataSource.initialize()
@@ -34,8 +30,12 @@ async function main() {
 
   app.use(
     '/graphql',
-    cors<cors.CorsRequest>(),
+    cors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+    }),
     express.json(),
+    cookieParser(),
     expressMiddleware(server, {
       context: async ({ req, res }) => ({ req, res }),
     })
