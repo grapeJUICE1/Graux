@@ -2,8 +2,6 @@ const typeDefs = `#graphql
   type User{
    id: ID!
    email: String!
-   firstName: String!
-   lastName: String!
    username: String!
     
   }
@@ -24,6 +22,15 @@ const typeDefs = `#graphql
   type Query {
     getBattles: [Battle]
     getUsers: [User]
+  }
+
+  type LoginResponse {
+    accessToken: String
+  }
+
+  type Mutation {
+    register(username: String! , email: String! , password: String!): String
+    login(username: String! , password: String!): LoginResponse
   }
 
 `
