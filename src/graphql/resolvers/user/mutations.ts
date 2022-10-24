@@ -1,12 +1,11 @@
 import { hash, verify } from 'argon2'
-import { sign } from 'jsonwebtoken'
 import User from '../../../entities/User'
 import MyContext from '../../../MyContext'
+import { createAccessToken, createRefreshToken } from '../../../utils/auth'
 
 export default {
   async register(_, { username, email, password }, context) {
     try {
-      console.log(context)
       const checkIfUserExists = await User.findOne({
         where: { username },
       })
@@ -27,7 +26,7 @@ export default {
     }
   },
 
-  async login(_, { username, email, password }, { res }: MyContext) {
+  async login(_, { username, password }, { res }: MyContext) {
     try {
       const user = await User.findOne({ where: { username } })
 
@@ -43,22 +42,14 @@ export default {
 
       //login successful
 
-      res.cookie(
-        'lit',
-        sign({ userId: user.id }, 'solosososlso', {
-          expiresIn: '7d',
-        }),
-        {
-          httpOnly: true,
-          sameSite: 'none',
-          secure: true,
-        }
-      )
+      res.cookie('lit', createRefreshToken(user), {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      })
 
       return {
-        accessToken: sign({ userId: user.id }, 'lololololol', {
-          expiresIn: '15m',
-        }),
+        accessToken: createAccessToken(user),
       }
     } catch (err) {
       console.log(err)
