@@ -22,6 +22,7 @@ const typeDefs = `#graphql
   type Query {
     getBattles: [Battle]
     getUsers: [User]
+    test: String
   }
 
   type LoginResponse {

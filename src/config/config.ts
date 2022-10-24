@@ -17,6 +17,8 @@ interface ENV {
   DATABASE_PASSWORD: string | undefined
   DATABASE_TYPE: string | undefined
   DATABASE_NAME: string | undefined
+  ACCESS_TOKEN_SECRET: string | undefined
+  REFRESH_TOKEN_SECRET: string | undefined
 }
 
 interface Config {
@@ -28,6 +30,8 @@ interface Config {
   DATABASE_PASSWORD: string
   DATABASE_TYPE: string
   DATABASE_NAME: string
+  ACCESS_TOKEN_SECRET: string
+  REFRESH_TOKEN_SECRET: string
 }
 
 // Loading process.env as ENV interface
@@ -44,6 +48,8 @@ const getConfig = (): ENV => {
     DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
     DATABASE_TYPE: process.env.DATABASE_TYPE,
     DATABASE_NAME: process.env.DATABASE_NAME,
+    ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
+    REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,
   }
 }
 
