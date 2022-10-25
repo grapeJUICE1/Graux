@@ -68,8 +68,8 @@ const getSanitzedConfig = (config: ENV): Config => {
   return config as Config
 }
 
-const config = getConfig()
+let config = getConfig()
 
-const sanitizedConfig = getSanitzedConfig(config)
+config = getSanitzedConfig(config)
 
-export default sanitizedConfig
+export default config

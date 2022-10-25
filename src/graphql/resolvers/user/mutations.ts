@@ -1,7 +1,7 @@
 import { hash, verify } from 'argon2'
 import User from '../../../entities/User'
 import MyContext from '../../../MyContext'
-import { createAccessToken, createRefreshToken } from '../../../utils/auth'
+import { createAccessToken, sendRefreshToken } from '../../../utils/auth'
 
 export default {
   async register(_, { username, email, password }, context) {
@@ -41,12 +41,12 @@ export default {
       }
 
       //login successful
-
-      res.cookie('lit', createRefreshToken(user), {
-        httpOnly: true,
-        sameSite: 'none',
-        secure: true,
-      })
+      sendRefreshToken(res, user)
+      // res.cookie('jid', createRefreshToken(user), {
+      //   httpOnly: true,
+      //   sameSite: 'none',
+      //   secure: true,
+      // })
 
       return {
         accessToken: createAccessToken(user),
