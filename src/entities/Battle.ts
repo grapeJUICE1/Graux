@@ -17,11 +17,14 @@ export default class Battle extends BaseEntity {
   @Column({ generated: 'uuid' })
   uuid: string
 
-  @Column()
+  @Column({ unique: true })
   title: string
 
   @Column()
   votingTill: Date
+
+  @ManyToOne(() => User, (user) => user.battles)
+  battleCreatedBy: User
 
   @ManyToMany(() => User, (user) => user.battles)
   @JoinTable()
