@@ -14,6 +14,7 @@ const resolvers: ResolverMap = {
   },
   Mutation: {
     ...userMutations,
+    ...battleMutations,
   },
 }
 

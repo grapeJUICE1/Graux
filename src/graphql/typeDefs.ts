@@ -12,6 +12,7 @@ const typeDefs = `#graphql
    title: String!
    votingTill: String!
    winner : User
+   battleCreatedBy: User
    users: [User]
     
   }
@@ -25,6 +26,7 @@ const typeDefs = `#graphql
     test: String
   }
 
+
   type LoginResponse {
     accessToken: String
   }
@@ -32,6 +34,11 @@ const typeDefs = `#graphql
   type Mutation {
     register(username: String! , email: String! , password: String!): String
     login(username: String! , password: String!): LoginResponse
+    createBattle(title:String! , votingTill: Int! , battleCreatedById:Int! ,usersIdArr: [Int]!  ): Boolean
+    updateBattle(ttile:String!):Boolean
+    deleteBattle(ttile:String!):Boolean
+    voteForInBattle(ttile:String!):Boolean
+  
   }
 
 `

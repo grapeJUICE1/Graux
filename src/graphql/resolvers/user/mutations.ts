@@ -1,6 +1,7 @@
 import { hash, verify } from 'argon2'
 import User from '../../../entities/User'
 import MyContext from '../../../MyContext'
+// import {UserInputError} from '@apollo/server'
 import { createAccessToken, sendRefreshToken } from '../../../utils/auth'
 
 export default {
@@ -10,6 +11,9 @@ export default {
         where: { username },
       })
       if (checkIfUserExists) {
+        console.log('this reached')
+        // throw new UserInputError()
+        // return new AppError('User already exists')
         return { error: 'User already exists' }
       }
 
