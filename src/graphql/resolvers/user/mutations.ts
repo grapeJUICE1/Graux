@@ -5,17 +5,13 @@ import { createAccessToken, sendRefreshToken } from '../../../utils/auth'
 
 export default {
   async register(_: any, { username, email, password }, { req }) {
+    const checkIfUserExists = await User.findOne({
+      where: [{ username }, { email }],
+    })
+    if (checkIfUserExists) {
+      throw new Error('User Already Exists')
+    }
     try {
-      const checkIfUserExists = await User.findOne({
-        where: { username },
-      })
-      if (checkIfUserExists) {
-        console.log('this reached')
-        // throw new UserInputError()
-        // return new AppError('User already exists')
-        return { error: 'User already exists' }
-      }
-
       const hashedPassword = await hash(password)
       const newUser = await User.save({
         username,
@@ -25,7 +21,7 @@ export default {
       req.user = newUser
       return 'it happened woohoo'
     } catch (err) {
-      console.log(err)
+      throw new Error(err)
     }
   },
 
@@ -34,22 +30,18 @@ export default {
       const user = await User.findOne({ where: { username } })
 
       if (!user) {
-        return { error: 'User was not found' }
+        throw new Error('User was not found')
       }
 
       const isPasswordCorrect = await verify(user.password, password)
 
       if (!isPasswordCorrect) {
-        return { error: 'password was incorrect' }
+        throw new Error('password was incorrect')
       }
 
       //login successful
       sendRefreshToken(res, user)
-      // res.cookie('jid', createRefreshToken(user), {
-      //   httpOnly: true,
-      //   sameSite: 'none',
-      //   secure: true,
-      // })
+
       req.user = user
       return {
         accessToken: createAccessToken(user),

@@ -9,6 +9,11 @@ export default {
     isAuthMiddleware,
     async (_, { title, votingTill, usersIdArr }, { payload }) => {
       try {
+        const titleTaken = await Battle.findOne({ where: { title } })
+
+        if (titleTaken) {
+          throw new Error('Title is already taken')
+        }
         if (!usersIdArr.includes(payload.userId)) {
           usersIdArr.unshift(payload.userId)
         }
@@ -35,12 +40,6 @@ export default {
           (newBattle.users = usersArr)
 
         battleRepository.save(newBattle)
-        // await Battle.insert({
-        //   title,
-        //   votingTill: voteTill,
-        //   battleCreatedBy,
-        //   users: usersArr,
-        // })
 
         return newBattle
       } catch (err) {
