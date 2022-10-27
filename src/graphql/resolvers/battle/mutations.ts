@@ -12,7 +12,7 @@ export default {
         const titleTaken = await Battle.findOne({ where: { title } })
 
         if (titleTaken) {
-          throw new Error('Title is already taken')
+          return new Error('Title is already taken')
         }
         if (!usersIdArr.includes(payload.userId)) {
           usersIdArr.unshift(payload.userId)
@@ -22,7 +22,7 @@ export default {
         for (const userId of usersIdArr) {
           let user = await User.findOne({ where: { id: userId } })
           if (!user) {
-            throw new Error('User Ids provided are faulty')
+            return new Error('User Ids provided are faulty')
           }
           usersArr.push(user)
         }
@@ -50,10 +50,10 @@ export default {
   async updateBattle(_, { id, title }, { req }) {
     const battle = await Battle.findOne({ where: { id } })
     if (!battle) {
-      throw new Error('Battle with the id does not exist')
+      return new Error('Battle with the id does not exist')
     }
     if (!title || title.trim() === '') {
-      throw new Error('Title cannot be empty')
+      return new Error('Title cannot be empty')
     }
     try {
       battle.title = title

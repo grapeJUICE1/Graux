@@ -9,7 +9,7 @@ export default {
       where: [{ username }, { email }],
     })
     if (checkIfUserExists) {
-      throw new Error('User Already Exists')
+      return new Error('User Already Exists')
     }
     try {
       const hashedPassword = await hash(password)
@@ -30,13 +30,13 @@ export default {
       const user = await User.findOne({ where: { username } })
 
       if (!user) {
-        throw new Error('User was not found')
+        return new Error('User was not found')
       }
 
       const isPasswordCorrect = await verify(user.password, password)
 
       if (!isPasswordCorrect) {
-        throw new Error('password was incorrect')
+        return new Error('password was incorrect')
       }
 
       //login successful
