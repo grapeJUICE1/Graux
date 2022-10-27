@@ -17,7 +17,7 @@ export default class Battle extends BaseEntity {
   @Column({ generated: 'uuid' })
   uuid: string
 
-  @Column({ unique: true })
+  @Column()
   title: string
 
   @Column()
