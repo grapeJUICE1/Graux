@@ -34,7 +34,7 @@ const typeDefs = `#graphql
   type Mutation {
     register(username: String! , email: String! , password: String!): String
     login(username: String! , password: String!): LoginResponse
-    createBattle(title:String! , votingTill: Int! , battleCreatedById:Int! ,usersIdArr: [Int]!  ): Boolean
+    createBattle(title:String! , votingTill: Int!  ,usersIdArr: [Int]!  ): Boolean
     updateBattle(ttile:String!):Boolean
     deleteBattle(ttile:String!):Boolean
     voteForInBattle(ttile:String!):Boolean
