@@ -33,7 +33,7 @@ const isAuthMiddleware: GraphQLMiddlewareFunc = async (
     return result
   } catch (err) {
     console.log(err)
-    throw new Error('not authenticated')
+    throw new Error(err)
   }
 }
 
