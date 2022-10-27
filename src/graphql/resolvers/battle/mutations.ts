@@ -42,13 +42,28 @@ export default {
         //   users: usersArr,
         // })
 
-        return true
+        return newBattle
       } catch (err) {
         throw new Error(err)
       }
     }
   ),
-  async updateBattle() {},
+  async updateBattle(_, { id, title }, { req }) {
+    const battle = await Battle.findOne({ where: { id } })
+    if (!battle) {
+      throw new Error('Battle with the id does not exist')
+    }
+    if (!title || title.trim() === '') {
+      throw new Error('Title cannot be empty')
+    }
+    try {
+      battle.title = title
+      await Battle.save(battle)
+      return battle
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
   async deleteBattle() {},
   async voteForInBattle() {},
 }
