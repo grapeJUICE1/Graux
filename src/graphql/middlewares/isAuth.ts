@@ -1,5 +1,6 @@
 import { verify } from 'jsonwebtoken'
 import config from '../../config/config'
+import User from '../../entities/User'
 import { GraphQLMiddlewareFunc } from '../../types/graphql-utils'
 
 const isAuthMiddleware: GraphQLMiddlewareFunc = async (
@@ -16,9 +17,17 @@ const isAuthMiddleware: GraphQLMiddlewareFunc = async (
   }
   try {
     const token = authorization.split(' ')[1]
-    const payload = verify(token, config.ACCESS_TOKEN_SECRET)
-    console.log(payload)
-    context.payload = payload as any
+    const payload: any = verify(token, config.ACCESS_TOKEN_SECRET)
+
+    const user = await User.find({ where: { id: payload.userId } })
+
+    if (!user) {
+      throw new Error('User associated with this token does not exist anymore')
+    }
+
+    context.payload = payload
+    context.req.user = user
+
     const result = await resolver(parent, args, context, info)
 
     return result
