@@ -1,11 +1,10 @@
 import { hash, verify } from 'argon2'
 import User from '../../../entities/User'
-import MyContext from '../../../MyContext'
 // import {UserInputError} from '@apollo/server'
 import { createAccessToken, sendRefreshToken } from '../../../utils/auth'
 
 export default {
-  async register(_, { username, email, password }, context) {
+  async register(_: any, { username, email, password }, { req }) {
     try {
       const checkIfUserExists = await User.findOne({
         where: { username },
@@ -18,19 +17,19 @@ export default {
       }
 
       const hashedPassword = await hash(password)
-      await User.insert({
+      const newUser = await User.save({
         username,
         email,
         password: hashedPassword,
       })
-
+      req.user = newUser
       return 'it happened woohoo'
     } catch (err) {
       console.log(err)
     }
   },
 
-  async login(_, { username, password }, { res }: MyContext) {
+  async login(_: any, { username, password }, { req, res }) {
     try {
       const user = await User.findOne({ where: { username } })
 
@@ -51,7 +50,7 @@ export default {
       //   sameSite: 'none',
       //   secure: true,
       // })
-
+      req.user = user
       return {
         accessToken: createAccessToken(user),
       }
