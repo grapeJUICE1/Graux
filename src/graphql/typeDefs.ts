@@ -34,10 +34,11 @@ const typeDefs = `#graphql
   type Mutation {
     register(username: String! , email: String! , password: String!): String
     login(username: String! , password: String!): LoginResponse
-    createBattle(title:String! , votingTill: Int!  ,usersIdArr: [Int]!  ): Battle
-    updateBattle(id:Int! , title:String!):Battle
+    createBattle(title:String! , expires: Int!  ,usersIdArr: [Int]): Battle
+    updateBattle(id:Int! , title:String! , winnerId:Int):Battle
+    # updateWinnerBattle():Battle
+    # updateUsersBattle():Battle
     deleteBattle(title:String!):Boolean
-    voteForInBattle(title:String!):Boolean
   
   }
 

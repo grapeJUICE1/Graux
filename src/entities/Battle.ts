@@ -21,7 +21,7 @@ export default class Battle extends BaseEntity {
   title: string
 
   @Column()
-  votingTill: Date
+  expires: Date
 
   @ManyToOne(() => User, (user) => user.battles)
   battleCreatedBy: User
