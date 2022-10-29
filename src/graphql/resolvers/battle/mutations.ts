@@ -40,7 +40,7 @@ export default {
   ),
   updateBattle: addMiddleware(
     isAuthMiddleware,
-    async (_, { battleId, title, winnerId }, { payload }) => {
+    async (_, { battleId, title }, { payload }) => {
       try {
         //Check if battle exists
         const battle = await Battle.findOne({
