@@ -123,6 +123,48 @@ export default {
   ),
 
   // delete a user
+  removeBattleUser: addMiddleware(
+    isAuthMiddleware,
+    async (_, { battleId, userIdToRemove }, { payload }) => {
+      try {
+        const battle = await Battle.findOne({
+          where: { id: battleId },
+          relations: { battleCreatedBy: true, users: true },
+        })
+        if (!battle) return new Error('Battle with that id does not exist')
+
+        const userId = Number(payload.userId)
+
+        if (userId !== battle.battleCreatedBy.id)
+          return new Error('Battle was not created by you')
+
+        if (userIdToRemove === battle.battleCreatedBy.id)
+          return new Error("You can't remove yourself from the battle")
+
+        const userToRemove = await User.findOne({
+          where: { id: userIdToRemove },
+        })
+        if (!userToRemove) return new Error('User with that Id does not exist')
+
+        let userDoesNotExistInBattle = true
+
+        const usersArr = battle.users.filter((user) => {
+          if (user.id === userIdToRemove) {
+            userDoesNotExistInBattle = false
+          }
+          return user.id !== userIdToRemove
+        })
+        if (userDoesNotExistInBattle)
+          return new Error('User with that id does not exist in battle users')
+
+        battle.users = usersArr
+        await Battle.save(battle)
+        return battle
+      } catch (err) {
+        throw new Error(err)
+      }
+    }
+  ),
 }
 
 //add mutation for adding users
