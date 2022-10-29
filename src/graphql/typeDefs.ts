@@ -10,7 +10,7 @@ const typeDefs = `#graphql
    id: ID!
    uuid: String!
    title: String!
-   votingTill: String!
+   expires: String!
    winner : User
    battleCreatedBy: User
    users: [User]
@@ -34,7 +34,7 @@ const typeDefs = `#graphql
   type Mutation {
     register(username: String! , email: String! , password: String!): String
     login(username: String! , password: String!): LoginResponse
-    createBattle(title:String! , expires: Int!  ,usersIdArr: [Int]): Battle
+    createBattle(title:String! , expires: Int! ): Battle
     updateBattle(id:Int! , title:String! , winnerId:Int):Battle
     # updateWinnerBattle():Battle
     # updateUsersBattle():Battle

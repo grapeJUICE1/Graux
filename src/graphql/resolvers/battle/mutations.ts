@@ -7,27 +7,20 @@ import isAuthMiddleware from '../../middlewares/isAuth'
 export default {
   createBattle: addMiddleware(
     isAuthMiddleware,
-    async (_, { title, expires, usersIdArr }, { payload }) => {
+    async (_, { title, expires }, { payload }) => {
       try {
         const titleTaken = await Battle.findOne({ where: { title } })
 
         if (titleTaken) {
           return new Error('Title is already taken')
         }
-        if (!usersIdArr) usersIdArr = []
-        if (!usersIdArr.includes(payload.userId)) {
-          usersIdArr.unshift(payload.userId)
-        }
-        const usersArr = []
 
-        for (const userId of usersIdArr) {
-          let user = await User.findOne({ where: { id: userId } })
-          if (!user) {
-            return new Error('User Ids provided are faulty')
-          }
-          usersArr.push(user)
-        }
-        const battleCreatedBy = usersArr[0]
+        const battleCreatedBy = await User.findOne({
+          where: { id: Number(payload.userId) },
+        })
+
+        if (!battleCreatedBy)
+          return new Error('Logged in User no longer exists')
 
         const expiresAt = new Date(Date.now() + expires * 3.6e6)
 
@@ -38,9 +31,9 @@ export default {
         ;(newBattle.title = title),
           (newBattle.expires = expiresAt),
           (newBattle.battleCreatedBy = battleCreatedBy),
-          (newBattle.users = usersArr)
+          (newBattle.users = [battleCreatedBy])
 
-        battleRepository.save(newBattle)
+        await battleRepository.save(newBattle)
 
         return newBattle
       } catch (err) {
@@ -97,6 +90,18 @@ export default {
       throw new Error(err)
     }
   },
+
+  // add  a user
+
+  // async addBattleUser(_ , {id , usersIdArr} , context){
+  //   const battle = await Battle.findOne({where: {id}})
+  //   if(!battle) return new Error("Battle with that id does not exist")
+  //
+  //
+  // },
+
+  // delete a user
+
   async deleteBattle() {},
 }
 
