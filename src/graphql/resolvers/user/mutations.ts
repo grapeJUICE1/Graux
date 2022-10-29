@@ -1,10 +1,13 @@
 import { hash, verify } from 'argon2'
+import { isAbsolute } from 'path/posix'
 import User from '../../../entities/User'
+import addMiddleware from '../../../utils/addMiddleware'
 // import {UserInputError} from '@apollo/server'
 import { createAccessToken, sendRefreshToken } from '../../../utils/auth'
+import isAuthMiddleware from '../../middlewares/isAuth'
 
 export default {
-  async register(_: any, { username, email, password }, { req }) {
+  register: async (_: any, { username, email, password }, { req }) => {
     const checkIfUserExists = await User.findOne({
       where: [{ username }, { email }],
     })
@@ -25,7 +28,7 @@ export default {
     }
   },
 
-  async login(_: any, { username, password }, { req, res }) {
+  login: async (_: any, { username, password }, { req, res }) => {
     try {
       const user = await User.findOne({ where: { username } })
 
@@ -50,4 +53,31 @@ export default {
       console.log(err)
     }
   },
+
+  updateUser: addMiddleware(
+    isAuthMiddleware,
+    async (_, { newUsername, newEmail }, { payload }) => {
+      const user = await User.findOne({ where: { id: Number(payload.userId) } })
+
+      if (!user) return new Error('User logged in does not exist anymore')
+
+      const username = newUsername.trim()
+      const email = newEmail.trim()
+
+      if (username === '' || email === '') {
+        return new Error("username and email can't be empty")
+      }
+
+      const checkIfUserExists = await User.findOne({
+        where: [{ username }, { email }],
+      })
+      if (checkIfUserExists)
+        return new Error('User with that username and email already exists')
+      user.username = username
+      user.email = email
+
+      await User.save(user)
+      return user
+    }
+  ),
 }

@@ -3,6 +3,7 @@ const typeDefs = `#graphql
    id: ID!
    email: String!
    username: String!
+   battles:[Battle]
     
   }
 
@@ -32,8 +33,12 @@ const typeDefs = `#graphql
   }
 
   type Mutation {
+    # User Mutations
     register(username: String! , email: String! , password: String!): String
     login(username: String! , password: String!): LoginResponse
+    updateUser(newUsername:String! , newEmail: String! ):User
+
+    # Battle Mutations
     createBattle(title:String! , expires: Int! ): Battle
     updateBattle(battleId:Int! , title:String! , winnerId:Int):Battle
     addBattleUser(battleId:Int! , newUserId:Int!):Battle

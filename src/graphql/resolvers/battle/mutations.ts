@@ -2,7 +2,7 @@ import Battle from '../../../entities/Battle'
 import User from '../../../entities/User'
 import addMiddleware from '../../../utils/addMiddleware'
 import isAuthMiddleware from '../../middlewares/isAuth'
-
+//
 export default {
   createBattle: addMiddleware(
     isAuthMiddleware,
@@ -40,7 +40,7 @@ export default {
   ),
   updateBattle: addMiddleware(
     isAuthMiddleware,
-    async (_, { battleId, title, winnerId }, { req }) => {
+    async (_, { battleId, title, winnerId }, { payload }) => {
       try {
         //Check if battle exists
         const battle = await Battle.findOne({
@@ -50,6 +50,9 @@ export default {
         if (!battle) {
           return new Error('Battle with the id does not exist')
         }
+
+        if (Number(payload.userId) !== battle.battleCreatedBy.id)
+          return new Error('Battle was not created by you')
 
         // Check if title is empty
         if (!title || title.trim() === '') {
@@ -191,5 +194,8 @@ export default {
 
 // DONE:add mutation for adding users in battle
 // DONE:add mutation for deleting users in battle
+// TODO:update user mutation
+// TODO:delete user mutation
+// TODO:think of a better way to store users
 // TODO:implement voting
 // TODO:better way of error handling
