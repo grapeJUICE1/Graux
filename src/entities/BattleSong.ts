@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, BaseEntity, Column } from 'typeorm'
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  Column,
+  ManyToOne,
+} from 'typeorm'
 import Battle from './Battle'
 import User from './User'
 
@@ -9,6 +15,9 @@ export default class BattleSong extends BaseEntity {
 
   // Battle id
   @Column()
+  @ManyToOne(() => Battle, (battle) => battle.id, {
+    onDelete: 'CASCADE',
+  })
   battle: Battle
 
   // User who associated with it
