@@ -17,14 +17,9 @@ const typeDefs = `#graphql
    users: [User]
     
   }
-  type Book {
-    title: String
-    author: String
-  }
   type Query {
     getBattles: [Battle]
     getUsers: [User]
-    test: String
   }
 
 
@@ -41,7 +36,7 @@ const typeDefs = `#graphql
 
     # Battle Mutations
     createBattle(title:String! , expires: Int! ): Battle
-    updateBattle(battleId:Int! , title:String! , winnerId:Int):Battle
+    updateBattle(battleId:Int! , title:String! ):Battle
     addBattleUser(battleId:Int! , newUserId:Int!):Battle
     removeBattleUser(battleId:Int! , userIdToRemove:Int!):Battle
     deleteBattle(battleId:Int!):Boolean

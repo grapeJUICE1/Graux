@@ -1,5 +1,4 @@
 import { hash, verify } from 'argon2'
-import { isAbsolute } from 'path/posix'
 import User from '../../../entities/User'
 import addMiddleware from '../../../utils/addMiddleware'
 // import {UserInputError} from '@apollo/server'
