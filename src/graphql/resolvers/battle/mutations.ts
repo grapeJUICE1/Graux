@@ -40,11 +40,11 @@ export default {
   ),
   updateBattle: addMiddleware(
     isAuthMiddleware,
-    async (_, { id, title, winnerId }, { req }) => {
+    async (_, { battleId, title, winnerId }, { req }) => {
       try {
         //Check if battle exists
         const battle = await Battle.findOne({
-          where: { id },
+          where: { id: battleId },
           relations: { users: true, battleCreatedBy: true, winner: true },
         })
         if (!battle) {
@@ -165,9 +165,31 @@ export default {
       }
     }
   ),
+
+  deleteBattle: addMiddleware(
+    isAuthMiddleware,
+    async (_, { battleId }, { payload }) => {
+      try {
+        const battle = await Battle.findOne({
+          where: { id: battleId },
+          relations: { battleCreatedBy: true },
+        })
+        if (!battle) return new Error('Battle with that Id not found')
+
+        if (Number(payload.userId) !== battle.battleCreatedBy.id)
+          return new Error('Battle was not created by you')
+
+        await Battle.remove(battle)
+
+        return true
+      } catch (err) {
+        throw new Error(err)
+      }
+    }
+  ),
 }
 
-//add mutation for adding users
-// add mutation for deleting battle and users
-//implement voting
-// better way of error handling
+// DONE:add mutation for adding users in battle
+// DONE:add mutation for deleting users in battle
+// TODO:implement voting
+// TODO:better way of error handling
