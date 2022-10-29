@@ -37,7 +37,7 @@ const typeDefs = `#graphql
     register(username: String! , email: String! , password: String!): String
     login(username: String! , password: String!): LoginResponse
     updateUser(newUsername:String! , newEmail: String! ):User
-    # deleteUser(userId:Int!):boolean
+    deleteUser:Boolean
 
     # Battle Mutations
     createBattle(title:String! , expires: Int! ): Battle
