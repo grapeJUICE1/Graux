@@ -171,8 +171,8 @@ export default {
 
 // DONE:add mutation for adding users in battle
 // DONE:add mutation for deleting users in battle
-// TODO:update user mutation
-// TODO:delete user mutation
-// TODO:think of a better way to store users
+// DONE:update user mutation
+// DONE:delete user mutation
+// TODO:think of a better way to store battle users
 // TODO:implement voting
 // TODO:better way of error handling
