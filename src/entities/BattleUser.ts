@@ -4,9 +4,11 @@ import {
   BaseEntity,
   Column,
   ManyToOne,
+  OneToMany,
 } from 'typeorm'
 import Battle from './Battle'
 import User from './User'
+import Vote from './Vote'
 
 @Entity()
 export default class BattleUser extends BaseEntity {
@@ -18,6 +20,9 @@ export default class BattleUser extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.battleSongs)
   user: User
+
+  @OneToMany(() => Vote, (vote) => vote.battleUser)
+  votes: Vote[]
 
   @Column({ default: false })
   battleCreator: boolean
