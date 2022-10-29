@@ -2,12 +2,11 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToMany,
   BaseEntity,
   OneToMany,
 } from 'typeorm'
-import Battle from './Battle'
 import BattleUser from './BattleUser'
+import Vote from './Vote'
 
 @Entity('users')
 export default class User extends BaseEntity {
@@ -29,6 +28,8 @@ export default class User extends BaseEntity {
   @OneToMany(() => BattleUser, (battleUser) => battleUser.user)
   battleSongs: BattleUser[]
 
+  @OneToMany(() => Vote, (vote) => vote.user)
+  votes: Vote[]
   // @ManyToMany(() => Battle, (battle) => battle.users)
   // battles: Battle[]
 }

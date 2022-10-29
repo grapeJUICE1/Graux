@@ -4,6 +4,7 @@ import User from './entities/User'
 import Battle from './entities/Battle'
 import config from './config/config'
 import BattleUser from './entities/BattleUser'
+import Vote from './entities/Vote'
 
 const AppDataSource = new DataSource({
   //@ts-ignore
@@ -15,7 +16,7 @@ const AppDataSource = new DataSource({
   database: config.DATABASE_NAME,
   synchronize: true,
   logging: false,
-  entities: [User, Battle, BattleUser],
+  entities: [User, Battle, BattleUser, Vote],
   migrations: [],
   subscribers: [],
 })
