@@ -35,14 +35,10 @@ const typeDefs = `#graphql
     register(username: String! , email: String! , password: String!): String
     login(username: String! , password: String!): LoginResponse
     createBattle(title:String! , expires: Int! ): Battle
-    updateBattle(id:Int! , title:String! , winnerId:Int):Battle
+    updateBattle(battleId:Int! , title:String! , winnerId:Int):Battle
     addBattleUser(battleId:Int! , newUserId:Int!):Battle
     removeBattleUser(battleId:Int! , userIdToRemove:Int!):Battle
-
-  
-    # updateWinnerBattle():Battle
-    # updateUsersBattle():Battle
-    deleteBattle(title:String!):Boolean
+    deleteBattle(battleId:Int!):Boolean
   
   }
 
