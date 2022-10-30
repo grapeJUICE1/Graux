@@ -6,6 +6,16 @@ const typeDefs = `#graphql
    battles:[Battle]
     
   }
+  type BattleUser{
+    id: ID!
+    battle:Battle
+    user: User
+    songName: String
+    songArtist: String
+    songAlbum: String
+    songImage: String
+    songLink : String
+  }
 
   type Battle {
    id: ID!
@@ -40,7 +50,9 @@ const typeDefs = `#graphql
     addBattleUser(battleId:Int! , newUserId:Int!):Battle
     removeBattleUser(battleId:Int! , userIdToRemove:Int!):Battle
     deleteBattle(battleId:Int!):Boolean
-  
+    
+    #experimental
+    addBattleUserExp(battleId:Int! ,userId:Int!): BattleUser
   }
 
 `
