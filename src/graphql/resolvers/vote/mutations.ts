@@ -18,7 +18,6 @@ export default {
         return new Error('Battle was not created by you')
 
       const user = await User.findOne({ where: { id: userId } })
-      console.log(user)
       if (!user) return new Error('User with that id not found')
 
       await BattleUser.insert({
