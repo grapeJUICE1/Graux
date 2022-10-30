@@ -1,4 +1,5 @@
 import Battle from '../../../entities/Battle'
+import BattleUser from '../../../entities/BattleUser'
 import User from '../../../entities/User'
 import addMiddleware from '../../../utils/addMiddleware'
 import isAuthMiddleware from '../../middlewares/isAuth'
@@ -31,6 +32,11 @@ export default {
           (newBattle.users = [battleCreatedBy])
 
         await Battle.save(newBattle)
+
+        await BattleUser.insert({
+          battle: newBattle,
+          user: battleCreatedBy,
+        })
 
         return newBattle
       } catch (err) {

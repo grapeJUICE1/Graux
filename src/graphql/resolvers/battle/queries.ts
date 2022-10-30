@@ -7,7 +7,9 @@ export default {
         relations: {
           users: true,
           battleCreatedBy: true,
-          winner: true,
+          battleUsers: {
+            user: true,
+          },
         },
       })
       return battles

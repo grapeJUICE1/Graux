@@ -1,12 +1,33 @@
+import BattleUser from '../../../entities/BattleUser'
 import User from '../../../entities/User'
-import addMiddleware from '../../../utils/addMiddleware'
-import isAuthMiddleware from '../../middlewares/isAuth'
 
 export default {
-  async getUsers() {
+  getUsers: async () => {
     try {
-      const users = await User.find({ relations: { battles: true } })
+      const users = await User.find({})
       return users
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+
+  getUserBattles: async (_: any, { userId }) => {
+    try {
+      const battles = await BattleUser.find({
+        select: {
+          songName: false,
+          songArtist: false,
+          songAlbum: false,
+          songImage: false,
+          songLink: false,
+        },
+        relations: { battle: true },
+        where: { user: userId },
+      })
+
+      if (!battles) return new Error('Given user has no battles')
+
+      return battles
     } catch (err) {
       throw new Error(err)
     }

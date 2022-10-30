@@ -4,7 +4,6 @@ import {
   BaseEntity,
   Column,
   ManyToOne,
-  OneToOne,
 } from 'typeorm'
 import Battle from './Battle'
 import User from './User'
