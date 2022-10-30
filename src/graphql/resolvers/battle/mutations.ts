@@ -36,6 +36,7 @@ export default {
         await BattleUser.insert({
           battle: newBattle,
           user: battleCreatedBy,
+          battleCreator: true,
         })
 
         return newBattle
