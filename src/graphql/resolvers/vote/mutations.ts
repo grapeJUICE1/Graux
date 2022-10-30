@@ -1,3 +1,4 @@
+import AppDataSource from '../../../data-source'
 import Battle from '../../../entities/Battle'
 import BattleUser from '../../../entities/BattleUser'
 import User from '../../../entities/User'
@@ -24,6 +25,33 @@ export default {
         battle: battle,
         user: user,
       })
+      return true
+    }
+  ),
+
+  removeBattleUserExp: addMiddleware(
+    isAuthMiddleware,
+    async (_: any, { battleId, userToRemoveId }, { payload }) => {
+      try {
+        const battleUser = await BattleUser.findOne({
+          relations: { battle: { battleCreatedBy: true }, user: true },
+          where: { battle: { id: battleId }, user: { id: userToRemoveId } },
+        })
+        if (!battleUser) return new Error('BattleUser not found')
+        if (battleUser.battle.battleCreatedBy.id !== Number(payload.userId)) {
+          return new Error('Battle is not created by you')
+        }
+        if (battleUser.battleCreator === true) {
+          return new Error(
+            "You can't remove yourself from the battle you created"
+          )
+        }
+        await BattleUser.remove(battleUser)
+
+        return true
+      } catch (err) {
+        throw new Error(err)
+      }
     }
   ),
 }

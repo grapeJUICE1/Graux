@@ -59,7 +59,8 @@ const typeDefs = `#graphql
     deleteBattle(battleId:Int!):Boolean
     
     #experimental
-    addBattleUserExp(battleId:Int! ,userId:Int!): BattleUser
+    addBattleUserExp(battleId:Int! ,userId:Int!): Boolean
+    removeBattleUserExp(battleId:Int!, userToRemoveId:Int!): Boolean
   }
 
 `
