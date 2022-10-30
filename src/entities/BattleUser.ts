@@ -21,6 +21,10 @@ export default class BattleUser extends BaseEntity {
   // User who associated with it
   @ManyToOne(() => User, (user) => user.battleSongs)
   user: User
+
+  @Column({ default: false })
+  battleCreator: boolean
+
   // Song Name
   @Column({ nullable: true })
   songName: string
