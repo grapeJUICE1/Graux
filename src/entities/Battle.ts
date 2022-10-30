@@ -26,7 +26,7 @@ export default class Battle extends BaseEntity {
   expires: Date
 
   @OneToMany(() => BattleUser, (battleUser) => battleUser.battle)
-  battleUsers: User[]
+  battleUsers: BattleUser[]
 
   @ManyToOne(() => User, (user) => user.battles, {
     onDelete: 'CASCADE',

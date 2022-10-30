@@ -4,6 +4,7 @@ const typeDefs = `#graphql
    email: String!
    username: String!
    battles:[Battle]
+   battleSongs: [BattleUser]
     
   }
   type BattleUser{
@@ -25,6 +26,7 @@ const typeDefs = `#graphql
    winner : User
    battleCreatedBy: User
    users: [User]
+   battleUsers: [BattleUser]
     
   }
   type Query {
@@ -34,6 +36,7 @@ const typeDefs = `#graphql
     #experimental
     getAllBattleUsers: [BattleUser]
     getBattleUsers(battleId:Int!): [BattleUser]
+    getUserBattles(userId: Int!): [BattleUser]
   }
 
 

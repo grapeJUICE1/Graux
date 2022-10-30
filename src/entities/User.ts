@@ -27,7 +27,7 @@ export default class User extends BaseEntity {
   tokenVersion: number
 
   @OneToMany(() => BattleUser, (battleUser) => battleUser.user)
-  battleSongs: []
+  battleSongs: BattleUser[]
 
   @ManyToMany(() => Battle, (battle) => battle.users)
   battles: Battle[]
