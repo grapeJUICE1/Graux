@@ -4,8 +4,10 @@ import {
   Column,
   ManyToMany,
   BaseEntity,
+  OneToMany,
 } from 'typeorm'
 import Battle from './Battle'
+import BattleUser from './BattleUser'
 
 @Entity('users')
 export default class User extends BaseEntity {
@@ -23,6 +25,9 @@ export default class User extends BaseEntity {
 
   @Column('int', { default: 0 })
   tokenVersion: number
+
+  @OneToMany(() => BattleUser, (battleUser) => battleUser.user)
+  battleSongs: []
 
   @ManyToMany(() => Battle, (battle) => battle.users)
   battles: Battle[]

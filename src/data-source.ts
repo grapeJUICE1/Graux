@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm'
 import User from './entities/User'
 import Battle from './entities/Battle'
 import config from './config/config'
+import BattleUser from './entities/BattleUser'
 
 const AppDataSource = new DataSource({
   //@ts-ignore
@@ -14,7 +15,7 @@ const AppDataSource = new DataSource({
   database: config.DATABASE_NAME,
   synchronize: true,
   logging: false,
-  entities: [User, Battle],
+  entities: [User, Battle, BattleUser],
   migrations: [],
   subscribers: [],
 })

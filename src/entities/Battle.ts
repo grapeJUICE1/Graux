@@ -6,7 +6,9 @@ import {
   JoinTable,
   ManyToOne,
   BaseEntity,
+  OneToMany,
 } from 'typeorm'
+import BattleUser from './BattleUser'
 import User from './User'
 
 @Entity()
@@ -22,6 +24,9 @@ export default class Battle extends BaseEntity {
 
   @Column()
   expires: Date
+
+  @OneToMany(() => BattleUser, (battleUser) => battleUser.battle)
+  battleUsers: User[]
 
   @ManyToOne(() => User, (user) => user.battles, {
     onDelete: 'CASCADE',
