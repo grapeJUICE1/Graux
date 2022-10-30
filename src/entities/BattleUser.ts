@@ -22,17 +22,18 @@ export default class BattleUser extends BaseEntity {
   @ManyToOne(() => User, (user) => user.battleSongs)
   user: User
   // Song Name
-  @Column()
+  @Column({ nullable: true })
   songName: string
   // Song Artist
-  @Column()
+  @Column({ nullable: true })
   songArtist: string
   // Song Album
-  @Column()
+  @Column({ nullable: true })
   songAlbum: string
   // Song Image
+  @Column({ nullable: true })
   songImage: string
   // Song Link
-  @Column()
+  @Column({ nullable: true })
   songLink: string
 }
