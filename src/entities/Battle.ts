@@ -2,14 +2,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToMany,
-  JoinTable,
-  ManyToOne,
   BaseEntity,
   OneToMany,
 } from 'typeorm'
 import BattleUser from './BattleUser'
-import User from './User'
 
 @Entity()
 export default class Battle extends BaseEntity {
@@ -28,15 +24,10 @@ export default class Battle extends BaseEntity {
   @OneToMany(() => BattleUser, (battleUser) => battleUser.battle)
   battleUsers: BattleUser[]
 
-  // @ManyToOne(() => User, (user) => user.battles, {
-  //   onDelete: 'CASCADE',
-  // })
-  // battleCreatedBy: User
-  //
-  // @ManyToMany(() => User, (user) => user.battles)
-  // @JoinTable()
-  // users: User[]
-
-  // @ManyToOne(() => User, (user) => user.battles)
-  // winner: User
+  public get getBattleCreator() {
+    const battleUser = this.battleUsers.find(
+      (battleUser) => battleUser.battleCreator === true
+    )
+    return battleUser.user
+  }
 }

@@ -49,17 +49,13 @@ export default {
         //Check if battle exists
         const battle = await Battle.findOne({
           where: { id: battleId },
-          relations: { battleUsers: true },
+          relations: { battleUsers: { user: true } },
         })
         if (!battle) {
           return new Error('Battle with the id does not exist')
         }
-        const battleCreator = battle.battleUsers.find(
-          (battleUser) => battleUser.battleCreator === true
-        )
-        if (!battleCreator) return new Error('Battle does not exist')
-
-        if (Number(payload.userId) !== battleCreator.id)
+        if (!battle.getBattleCreator) return new Error('Battle does not exist')
+        if (Number(payload.userId) !== battle.getBattleCreator.id)
           return new Error('Battle was not created by you')
 
         // Check if title is empty
@@ -85,17 +81,14 @@ export default {
       try {
         const battle = await Battle.findOne({
           where: { id: battleId },
-          relations: { battleUsers: true },
+          relations: { battleUsers: { user: true } },
         })
 
         if (!battle) return new Error('Battle with that Id not found')
 
-        const battleCreator = battle.battleUsers.find(
-          (battleUser) => battleUser.battleCreator === true
-        )
-        if (!battleCreator) return new Error('Battle does not exist')
+        if (!battle.getBattleCreator) return new Error('Battle does not exist')
 
-        if (Number(payload.userId) !== battleCreator.id)
+        if (Number(payload.userId) !== battle.getBattleCreator.id)
           return new Error('Battle was not created by you')
 
         await Battle.remove(battle)
