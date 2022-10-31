@@ -27,14 +27,20 @@ const typeDefs = `#graphql
    battleUsers: [BattleUser]
     
   }
+  type getUserBattlesResponse {
+    battle:Battle
+  }
+  type getBattleUsersResponse {
+    user:User
+  }
   type Query {
     getBattles: [Battle]
     getUsers: [User]
 
     #experimental
     getAllBattleUsers: [BattleUser]
-    getBattleUsers(battleId:Int!): [BattleUser]
-    getUserBattles(userId: Int!): [BattleUser]
+    getBattleUsers(battleId:Int!): [getBattleUsersResponse]
+    getUserBattles(userId: Int!): [getUserBattlesResponse]
   }
 
 
