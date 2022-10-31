@@ -84,11 +84,11 @@ export default {
     try {
       const user = await User.findOne({
         where: { id: Number(payload.userId) },
-        relations: { battles: true },
+        relations: { battleSongs: true },
       })
       if (!user) return new Error('User logged in does not exist anymore')
 
-      user.battles = []
+      user.battleSongs = []
       User.save(user)
       User.delete({ id: Number(payload.userId) })
       return true

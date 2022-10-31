@@ -5,8 +5,6 @@ export default {
     try {
       const battles = await Battle.find({
         relations: {
-          users: true,
-          battleCreatedBy: true,
           battleUsers: {
             user: true,
           },
