@@ -72,7 +72,7 @@ export default typeDefs
 
 // DONE: implement chooseSong mutation
 // DONE: change exp mutations with the real ones
-// TODO: appropirate queries to get battles of user and users in battle
+// DONE: appropirate queries to get battles of user and users in battle
 // TODO: implement votes
 // TODO: handle expiration dates
 // TODO: better error handling
