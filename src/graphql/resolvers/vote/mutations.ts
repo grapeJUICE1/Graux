@@ -1,4 +1,3 @@
-import AppDataSource from '../../../data-source'
 import Battle from '../../../entities/Battle'
 import BattleUser from '../../../entities/BattleUser'
 import User from '../../../entities/User'
@@ -49,6 +48,40 @@ export default {
         await BattleUser.remove(battleUser)
 
         return true
+      } catch (err) {
+        throw new Error(err)
+      }
+    }
+  ),
+
+  chooseSong: addMiddleware(
+    isAuthMiddleware,
+    async (
+      _: any,
+      { battleId, songName, songArtist, songAlbum, songImage, songLink },
+      { payload }
+    ) => {
+      try {
+        const battleUser = await BattleUser.findOne({
+          relations: { battle: true, user: true },
+          where: {
+            battle: { id: battleId },
+            user: { id: Number(payload.userId) },
+          },
+        })
+
+        if (!battleUser)
+          return new Error('You are not a participant of this battle')
+
+        battleUser.songName = songName
+        battleUser.songArtist = songArtist
+        battleUser.songAlbum = songAlbum
+        battleUser.songImage = songImage
+        battleUser.songLink = songLink
+
+        await BattleUser.save(battleUser)
+
+        return battleUser
       } catch (err) {
         throw new Error(err)
       }
