@@ -10,14 +10,12 @@ export default {
     async (_, { battleId, userId }, { payload }) => {
       const battle = await Battle.findOne({
         where: { id: battleId },
-        relations: { battleUsers: true },
+        relations: { battleUsers: { user: true } },
       })
       if (!battle) return new Error('Battle with that id not found')
-      const battleCreator = battle.battleUsers.find(
-        (battleUser) => battleUser.battleCreator === true
-      )
-      if (!battleCreator) return new Error('Battle does not exist')
-      if (battleCreator.id !== Number(payload.userId))
+
+      if (!battle.getBattleCreator) return new Error('Battle does not exist')
+      if (battle.getBattleCreator.id !== Number(payload.userId))
         return new Error('Battle was not created by you')
 
       const user = await User.findOne({ where: { id: userId } })
@@ -36,7 +34,7 @@ export default {
     async (_: any, { battleId, userToRemoveId }, { payload }) => {
       try {
         const battleUser = await BattleUser.findOne({
-          relations: { battle: { battleUsers: true }, user: true },
+          relations: { battle: { battleUsers: { user: true } }, user: true },
           where: { battle: { id: battleId }, user: { id: userToRemoveId } },
         })
 
@@ -48,12 +46,10 @@ export default {
           )
         }
 
-        const battleCreator = battleUser.battle.battleUsers.find(
-          (battleUser) => battleUser.battleCreator === true
-        )
-        if (!battleCreator) return new Error('Battle does not exist')
+        if (!battleUser.battle.getBattleCreator)
+          return new Error('Battle does not exist')
 
-        if (battleCreator.id !== Number(payload.userId)) {
+        if (battleUser.battle.getBattleCreator.id !== Number(payload.userId)) {
           if (battleUser.user.id !== Number(payload.userId)) {
             return new Error(
               'You cant remove no one but yourself from the battle'
