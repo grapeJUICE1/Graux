@@ -61,8 +61,16 @@ const typeDefs = `#graphql
     #experimental
     addBattleUserExp(battleId:Int! ,userId:Int!): Boolean
     removeBattleUserExp(battleId:Int!, userToRemoveId:Int!): Boolean
+    chooseSong(battleId:Int!, songName:String! , songArtist:String! , songAlbum:String! , songImage:String! , songLink:String!):BattleUser
   }
 
 `
 
 export default typeDefs
+
+// TODO: implement chooseSong mutation
+// TODO: change exp mutations with the real ones
+// TODO: appropirate queries to get battles of user and users in battle
+// TODO: implement votes
+// TODO: handle expiration dates
+// TODO: better error handling
