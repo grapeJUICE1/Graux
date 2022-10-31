@@ -26,13 +26,10 @@ export default {
 
         const newBattle = new Battle()
 
-        ;(newBattle.title = title),
-          (newBattle.expires = expiresAt),
-          (newBattle.battleCreatedBy = battleCreatedBy),
-          (newBattle.users = [battleCreatedBy])
+        newBattle.title = title
+        newBattle.expires = expiresAt
 
         await Battle.save(newBattle)
-
         await BattleUser.insert({
           battle: newBattle,
           user: battleCreatedBy,
@@ -52,13 +49,17 @@ export default {
         //Check if battle exists
         const battle = await Battle.findOne({
           where: { id: battleId },
-          relations: { users: true, battleCreatedBy: true },
+          relations: { battleUsers: true },
         })
         if (!battle) {
           return new Error('Battle with the id does not exist')
         }
+        const battleCreator = battle.battleUsers.find(
+          (battleUser) => battleUser.battleCreator === true
+        )
+        if (!battleCreator) return new Error('Battle does not exist')
 
-        if (Number(payload.userId) !== battle.battleCreatedBy.id)
+        if (Number(payload.userId) !== battleCreator.id)
           return new Error('Battle was not created by you')
 
         // Check if title is empty
@@ -78,92 +79,23 @@ export default {
     }
   ),
 
-  // add  a user
-
-  addBattleUser: addMiddleware(
-    isAuthMiddleware,
-    async (_, { battleId, newUserId }, { payload }) => {
-      const battle = await Battle.findOne({
-        where: { id: battleId },
-        relations: { battleCreatedBy: true, users: true },
-      })
-      if (!battle) return new Error('Battle with that id does not exist')
-
-      const userId = Number(payload.userId)
-      if (userId !== battle.battleCreatedBy.id)
-        return new Error('Battle was not created by you')
-
-      const userExistsInBattle = battle.users.find(
-        (user) => user.id === newUserId
-      )
-      if (userExistsInBattle) return new Error('User Already Exists in Battle')
-
-      const newUser = await User.findOne({ where: { id: newUserId } })
-      if (!newUser) return new Error('User with that Id does not exist')
-
-      battle.users.push(newUser)
-
-      await Battle.save(battle)
-
-      return battle
-    }
-  ),
-
-  // delete a user
-  removeBattleUser: addMiddleware(
-    isAuthMiddleware,
-    async (_, { battleId, userIdToRemove }, { payload }) => {
-      try {
-        const battle = await Battle.findOne({
-          where: { id: battleId },
-          relations: { battleCreatedBy: true, users: true },
-        })
-        if (!battle) return new Error('Battle with that id does not exist')
-
-        const userId = Number(payload.userId)
-
-        if (userId !== battle.battleCreatedBy.id)
-          return new Error('Battle was not created by you')
-
-        if (userIdToRemove === battle.battleCreatedBy.id)
-          return new Error("You can't remove yourself from the battle")
-
-        const userToRemove = await User.findOne({
-          where: { id: userIdToRemove },
-        })
-        if (!userToRemove) return new Error('User with that Id does not exist')
-
-        let userDoesNotExistInBattle = true
-
-        const usersArr = battle.users.filter((user) => {
-          if (user.id === userIdToRemove) {
-            userDoesNotExistInBattle = false
-          }
-          return user.id !== userIdToRemove
-        })
-        if (userDoesNotExistInBattle)
-          return new Error('User with that id does not exist in battle users')
-
-        battle.users = usersArr
-        await Battle.save(battle)
-        return battle
-      } catch (err) {
-        throw new Error(err)
-      }
-    }
-  ),
-
   deleteBattle: addMiddleware(
     isAuthMiddleware,
     async (_, { battleId }, { payload }) => {
       try {
         const battle = await Battle.findOne({
           where: { id: battleId },
-          relations: { battleCreatedBy: true },
+          relations: { battleUsers: true },
         })
+
         if (!battle) return new Error('Battle with that Id not found')
 
-        if (Number(payload.userId) !== battle.battleCreatedBy.id)
+        const battleCreator = battle.battleUsers.find(
+          (battleUser) => battleUser.battleCreator === true
+        )
+        if (!battleCreator) return new Error('Battle does not exist')
+
+        if (Number(payload.userId) !== battleCreator.id)
           return new Error('Battle was not created by you')
 
         await Battle.remove(battle)

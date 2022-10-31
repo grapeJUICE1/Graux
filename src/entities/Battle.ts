@@ -28,15 +28,15 @@ export default class Battle extends BaseEntity {
   @OneToMany(() => BattleUser, (battleUser) => battleUser.battle)
   battleUsers: BattleUser[]
 
-  @ManyToOne(() => User, (user) => user.battles, {
-    onDelete: 'CASCADE',
-  })
-  battleCreatedBy: User
+  // @ManyToOne(() => User, (user) => user.battles, {
+  //   onDelete: 'CASCADE',
+  // })
+  // battleCreatedBy: User
+  //
+  // @ManyToMany(() => User, (user) => user.battles)
+  // @JoinTable()
+  // users: User[]
 
-  @ManyToMany(() => User, (user) => user.battles)
-  @JoinTable()
-  users: User[]
-
-  @ManyToOne(() => User, (user) => user.battles)
-  winner: User
+  // @ManyToOne(() => User, (user) => user.battles)
+  // winner: User
 }

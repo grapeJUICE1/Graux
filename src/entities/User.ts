@@ -29,6 +29,6 @@ export default class User extends BaseEntity {
   @OneToMany(() => BattleUser, (battleUser) => battleUser.user)
   battleSongs: BattleUser[]
 
-  @ManyToMany(() => Battle, (battle) => battle.users)
-  battles: Battle[]
+  // @ManyToMany(() => Battle, (battle) => battle.users)
+  // battles: Battle[]
 }

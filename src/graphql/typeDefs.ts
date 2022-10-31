@@ -3,7 +3,6 @@ const typeDefs = `#graphql
    id: ID!
    email: String!
    username: String!
-   battles:[Battle]
    battleSongs: [BattleUser]
     
   }
@@ -11,6 +10,7 @@ const typeDefs = `#graphql
     id: ID!
     battle:Battle
     user: User
+    battleCreator:Boolean
     songName: String
     songArtist: String
     songAlbum: String
@@ -24,8 +24,6 @@ const typeDefs = `#graphql
    title: String!
    expires: String!
    winner : User
-   battleCreatedBy: User
-   users: [User]
    battleUsers: [BattleUser]
     
   }
@@ -54,8 +52,6 @@ const typeDefs = `#graphql
     # Battle Mutations
     createBattle(title:String! , expires: Int! ): Battle
     updateBattle(battleId:Int! , title:String! ):Battle
-    addBattleUser(battleId:Int! , newUserId:Int!):Battle
-    removeBattleUser(battleId:Int! , userIdToRemove:Int!):Battle
     deleteBattle(battleId:Int!):Boolean
     
     #experimental
@@ -68,8 +64,8 @@ const typeDefs = `#graphql
 
 export default typeDefs
 
-// TODO: implement chooseSong mutation
-// TODO: change exp mutations with the real ones
+// DONE: implement chooseSong mutation
+// DONE: change exp mutations with the real ones
 // TODO: appropirate queries to get battles of user and users in battle
 // TODO: implement votes
 // TODO: handle expiration dates
