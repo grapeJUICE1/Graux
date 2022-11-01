@@ -60,10 +60,8 @@ const typeDefs = `#graphql
     createBattle(title:String! , expires: Int! ): Battle
     updateBattle(battleId:Int! , title:String! ):Battle
     deleteBattle(battleId:Int!):Boolean
-    
-    #experimental
-    addBattleUserExp(battleId:Int! ,userId:Int!): Boolean
-    removeBattleUserExp(battleId:Int!, userToRemoveId:Int!): Boolean
+    addBattleUser(battleId:Int! ,userId:Int!): Boolean
+    removeBattleUser(battleUserId:Int!): Boolean
     chooseSong(battleId:Int!, songName:String! , songArtist:String! , songAlbum:String! , songImage:String! , songLink:String!):BattleUser
 
     #votes
@@ -77,6 +75,10 @@ export default typeDefs
 // DONE: implement chooseSong mutation
 // DONE: change exp mutations with the real ones
 // DONE: appropirate queries to get battles of user and users in battle
-// TODO: implement votes
+// DONE: implement votes
 // TODO: handle expiration dates
 // TODO: better error handling
+// TODO: comments
+// TODO: liking comments and battle
+// TODO: sort , filter/search , pagination
+//

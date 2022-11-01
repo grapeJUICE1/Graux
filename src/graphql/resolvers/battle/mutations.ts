@@ -100,11 +100,3 @@ export default {
     }
   ),
 }
-
-// DONE:add mutation for adding users in battle
-// DONE:add mutation for deleting users in battle
-// DONE:update user mutation
-// DONE:delete user mutation
-// TODO:think of a better way to store battle users
-// TODO:implement voting
-// TODO:better way of error handling

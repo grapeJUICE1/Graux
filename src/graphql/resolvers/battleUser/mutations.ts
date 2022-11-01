@@ -5,7 +5,7 @@ import addMiddleware from '../../../utils/addMiddleware'
 import isAuthMiddleware from '../../middlewares/isAuth'
 
 export default {
-  addBattleUserExp: addMiddleware(
+  addBattleUser: addMiddleware(
     isAuthMiddleware,
     async (_, { battleId, userId }, { payload }) => {
       const battle = await Battle.findOne({
@@ -29,13 +29,13 @@ export default {
     }
   ),
 
-  removeBattleUserExp: addMiddleware(
+  removeBattleUser: addMiddleware(
     isAuthMiddleware,
-    async (_: any, { battleId, userToRemoveId }, { payload }) => {
+    async (_: any, { battleUserId }, { payload }) => {
       try {
         const battleUser = await BattleUser.findOne({
           relations: { battle: { battleUsers: { user: true } }, user: true },
-          where: { battle: { id: battleId }, user: { id: userToRemoveId } },
+          where: { id: battleUserId },
         })
 
         if (!battleUser) return new Error('BattleUser not found')
@@ -46,10 +46,10 @@ export default {
           )
         }
 
-        if (!battleUser.battle.getBattleCreator)
-          return new Error('Battle does not exist')
+        const battleCreator = battleUser.battle.getBattleCreator
+        if (!battleCreator) return new Error('Battle does not exist')
 
-        if (battleUser.battle.getBattleCreator.id !== Number(payload.userId)) {
+        if (battleCreator.id !== Number(payload.userId)) {
           if (battleUser.user.id !== Number(payload.userId)) {
             return new Error(
               'You cant remove no one but yourself from the battle'
