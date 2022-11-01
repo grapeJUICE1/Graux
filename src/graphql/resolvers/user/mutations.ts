@@ -1,7 +1,8 @@
 import { verify } from 'argon2'
-import { validate } from 'class-validator'
+import { isEmpty, validate } from 'class-validator'
 import User from '../../../entities/User'
 import addMiddleware from '../../../utils/addMiddleware'
+import AppError from '../../../utils/AppError'
 // import {UserInputError} from '@apollo/server'
 import { createAccessToken, sendRefreshToken } from '../../../utils/auth'
 import mapErrors from '../../../utils/mapErrors'
@@ -21,7 +22,7 @@ export default {
         errors.push({ path: 'username', message: 'Username is already taken' })
 
       if (errors.length > 0) {
-        return errors
+        return new AppError('Validation Error', errors, 'BAD_USER_INPUT')
       }
 
       const newUser = new User()
@@ -30,9 +31,14 @@ export default {
       newUser.password = password
 
       errors = await validate(newUser)
-      if (errors.length > 0) return mapErrors(errors)
+      if (errors.length > 0)
+        return new AppError(
+          'Validation Error',
+          mapErrors(errors),
+          'BAD_USER_INPUT'
+        )
 
-      newUser.save()
+      await newUser.save()
 
       req.user = newUser
       return newUser
@@ -43,6 +49,15 @@ export default {
 
   login: async (_: any, { username, password }, { req, res }) => {
     try {
+      let errors = []
+
+      if (isEmpty(username))
+        errors.push({ path: 'username', message: 'Username must not be empty' })
+      if (isEmpty(password))
+        errors.push({ path: 'password', message: 'Password must not be empty' })
+      if (errors.length > 0) {
+        return new AppError('Validation Error', errors, 'BAD_USER_INPUT')
+      }
       const user = await User.findOne({ where: { username } })
 
       if (!user) {

@@ -13,6 +13,7 @@ import { verify } from 'jsonwebtoken'
 import config from './config/config'
 import User from './entities/User'
 import { createAccessToken, sendRefreshToken } from './utils/auth'
+import AppError from './utils/AppError'
 
 async function main() {
   await dataSource.initialize()
@@ -26,6 +27,13 @@ async function main() {
     typeDefs,
     resolvers,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    includeStacktraceInErrorResponses: false,
+    formatError: (formattedError: any, error: any) => {
+      if (error instanceof AppError) {
+        formattedError.extensions.errors = error.extensions.errors
+      }
+      return formattedError
+    },
   })
 
   // @ts-ignore

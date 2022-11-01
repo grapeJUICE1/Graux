@@ -55,7 +55,7 @@ const typeDefs = `#graphql
   }
   type Mutation {
     # User Mutations
-    register(username: String! , email: String! , password: String!): [Error!]
+    register(username: String! , email: String! , password: String!): User
     login(username: String! , password: String!): LoginResponse
     updateUser(newUsername:String! , newEmail: String! ):User
     deleteUser:Boolean
