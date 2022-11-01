@@ -13,7 +13,16 @@ export default {
 
       if (!battleUser)
         return new Error('The thing u wanted to vote was not found')
-      console.log(req.user)
+
+      const voteExists = await Vote.findOne({
+        relations: { battleUser: true },
+        where: { battleUser: { id: battleUserId } },
+      })
+      console.log('sodomy', voteExists)
+      if (voteExists) {
+        await Vote.remove(voteExists)
+        return true
+      }
       await Vote.insert({
         user: req.user,
         battleUser: battleUser,
