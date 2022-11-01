@@ -1,9 +1,8 @@
 import { verify } from 'argon2'
 import { isEmpty, validate } from 'class-validator'
+import { GraphQLError } from 'graphql'
 import User from '../../../entities/User'
 import addMiddleware from '../../../utils/addMiddleware'
-import AppError from '../../../utils/AppError'
-// import {UserInputError} from '@apollo/server'
 import { createAccessToken, sendRefreshToken } from '../../../utils/auth'
 import mapErrors from '../../../utils/mapErrors'
 import isAuthMiddleware from '../../middlewares/isAuth'
@@ -22,7 +21,9 @@ export default {
         errors.push({ path: 'username', message: 'Username is already taken' })
 
       if (errors.length > 0) {
-        return new AppError('Validation Error', errors, 'BAD_USER_INPUT')
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
       }
 
       const newUser = new User()
@@ -32,11 +33,9 @@ export default {
 
       errors = await validate(newUser)
       if (errors.length > 0)
-        return new AppError(
-          'Validation Error',
-          mapErrors(errors),
-          'BAD_USER_INPUT'
-        )
+        return new GraphQLError('Validation Error', {
+          extensions: { errors: mapErrors(errors), code: 'BAD_USER_INPUT' },
+        })
 
       await newUser.save()
 
@@ -55,20 +54,34 @@ export default {
         errors.push({ path: 'username', message: 'Username must not be empty' })
       if (isEmpty(password))
         errors.push({ path: 'password', message: 'Password must not be empty' })
+
       if (errors.length > 0) {
-        return new AppError('Validation Error', errors, 'BAD_USER_INPUT')
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
       }
       const user = await User.findOne({ where: { username } })
 
       if (!user) {
-        return new Error('User was not found')
+        errors.push({
+          path: 'username',
+          message: 'user with that username not found',
+        })
       }
+      if (errors.length > 0)
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
 
       const isPasswordCorrect = await verify(user.password, password)
 
       if (!isPasswordCorrect) {
-        return new Error('password was incorrect')
+        errors.push({ path: 'password', message: 'password is not correct' })
       }
+      if (errors.length > 0)
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
 
       //login successful
       sendRefreshToken(res, user)
@@ -85,24 +98,53 @@ export default {
   updateUser: addMiddleware(
     isAuthMiddleware,
     async (_, { newUsername, newEmail }, { payload }) => {
+      let errors = []
       const user = await User.findOne({ where: { id: Number(payload.userId) } })
+      if (!user)
+        return new GraphQLError('Authentication Error', {
+          extensions: {
+            path: 'jwt',
+            message: 'User logged in does not exist anymore',
+          },
+        })
 
-      if (!user) return new Error('User logged in does not exist anymore')
-
-      const username = newUsername.trim()
-      const email = newEmail.trim()
-
-      if (username === '' || email === '') {
-        return new Error("username and email can't be empty")
+      if (isEmpty(newUsername))
+        errors.push({ path: 'username', message: 'Username must not be empty' })
+      if (isEmpty(newEmail))
+        errors.push({ path: 'email', message: 'Email must not be empty' })
+      if (errors.length > 0) {
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
       }
 
-      const checkIfUserExists = await User.findOne({
-        where: [{ username }, { email }],
+      const checkIfUsernameExists = await User.findOne({
+        where: { username: newUsername },
       })
-      if (checkIfUserExists)
-        return new Error('User with that username and email already exists')
-      user.username = username
-      user.email = email
+
+      const checkIfEmailExists = await User.findOne({
+        where: { email: newEmail },
+      })
+
+      if (checkIfUsernameExists)
+        errors.push({ path: 'username', message: 'Username is already taken' })
+
+      if (checkIfEmailExists)
+        errors.push({ path: 'email', message: 'Email is already taken' })
+
+      if (errors.length > 0)
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
+
+      user.username = newUsername
+      user.email = newEmail
+
+      errors = await validate(user)
+      if (errors.length > 0)
+        return new GraphQLError('Validation Error', {
+          extensions: { errors: mapErrors(errors), code: 'BAD_USER_INPUT' },
+        })
 
       await User.save(user)
       return user
@@ -115,7 +157,13 @@ export default {
         where: { id: Number(payload.userId) },
         relations: { battleSongs: true },
       })
-      if (!user) return new Error('User logged in does not exist anymore')
+      if (!user)
+        return new GraphQLError('Authentication Error', {
+          extensions: {
+            path: 'jwt',
+            message: 'User logged in does not exist anymore',
+          },
+        })
 
       user.battleSongs = []
       User.save(user)
