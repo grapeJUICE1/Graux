@@ -1,5 +1,5 @@
 import Queries from './queries'
 import Mutations from './mutations'
 
-export const userQueries = Queries
-export const userMutations = Mutations
+export const voteQueries = Queries
+export const voteMutations = Mutations

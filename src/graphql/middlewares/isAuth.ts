@@ -19,7 +19,7 @@ const isAuthMiddleware: GraphQLMiddlewareFunc = async (
     const token = authorization.split(' ')[1]
     const payload: any = verify(token, config.ACCESS_TOKEN_SECRET)
 
-    const user = await User.find({ where: { id: payload.userId } })
+    const user = await User.findOne({ where: { id: payload.userId } })
 
     if (!user) {
       throw new Error('User associated with this token does not exist anymore')

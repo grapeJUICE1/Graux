@@ -16,6 +16,7 @@ const typeDefs = `#graphql
     songAlbum: String
     songImage: String
     songLink : String
+    voteCount: Int
   }
 
   type Battle {
@@ -64,6 +65,9 @@ const typeDefs = `#graphql
     addBattleUserExp(battleId:Int! ,userId:Int!): Boolean
     removeBattleUserExp(battleId:Int!, userToRemoveId:Int!): Boolean
     chooseSong(battleId:Int!, songName:String! , songArtist:String! , songAlbum:String! , songImage:String! , songLink:String!):BattleUser
+
+    #votes
+    vote(battleUserId:Int!):Boolean
   }
 
 `
