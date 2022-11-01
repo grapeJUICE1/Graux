@@ -4,6 +4,7 @@ import {
   Column,
   BaseEntity,
   OneToMany,
+  JoinColumn,
 } from 'typeorm'
 import BattleUser from './BattleUser'
 
@@ -25,6 +26,7 @@ export default class Battle extends BaseEntity {
   battleUsers: BattleUser[]
 
   public get getBattleCreator() {
+    console.log(this)
     const battleUser = this.battleUsers.find(
       (battleUser) => battleUser.battleCreator === true
     )

@@ -4,7 +4,7 @@ export default {
   async getBattles() {
     try {
       const battles = await Battle.find({
-        relations: {},
+        relations: { battleUsers: { user: true } },
       })
       return battles
     } catch (err) {
