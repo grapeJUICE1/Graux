@@ -1,10 +1,10 @@
+import { IsDate, Max, Min } from 'class-validator'
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   BaseEntity,
   OneToMany,
-  JoinColumn,
 } from 'typeorm'
 import BattleUser from './BattleUser'
 
@@ -16,9 +16,12 @@ export default class Battle extends BaseEntity {
   @Column({ generated: 'uuid' })
   uuid: string
 
+  @Min(10)
+  @Max(255)
   @Column()
   title: string
 
+  @IsDate()
   @Column()
   expires: Date
 

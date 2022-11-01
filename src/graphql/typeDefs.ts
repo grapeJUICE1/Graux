@@ -48,10 +48,14 @@ const typeDefs = `#graphql
   type LoginResponse {
     accessToken: String
   }
-
+  
+  type Error {
+    path: String
+    message: String
+  }
   type Mutation {
     # User Mutations
-    register(username: String! , email: String! , password: String!): String
+    register(username: String! , email: String! , password: String!): [Error!]
     login(username: String! , password: String!): LoginResponse
     updateUser(newUsername:String! , newEmail: String! ):User
     deleteUser:Boolean
@@ -78,6 +82,7 @@ export default typeDefs
 // DONE: implement votes
 // TODO: handle expiration dates
 // TODO: better error handling
+// TODO: validation of inputs (either yup or class validator)
 // TODO: comments
 // TODO: liking comments and battle
 // TODO: sort , filter/search , pagination
