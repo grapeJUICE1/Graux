@@ -1,10 +1,10 @@
 import Queries from './queries'
 import Mutations from './mutations'
 
-export const voteQueries = {
+export const battleUserQueries = {
   ...Queries,
 }
 
-export const voteMutations = {
+export const battleUserMutations = {
   ...Mutations,
 }

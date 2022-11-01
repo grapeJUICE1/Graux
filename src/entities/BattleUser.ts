@@ -1,10 +1,10 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   BaseEntity,
   Column,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm'
 import Battle from './Battle'
 import User from './User'
@@ -14,7 +14,6 @@ import Vote from './Vote'
 export default class BattleUser extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
-
   @ManyToOne(() => Battle, (battle) => battle.battleUsers)
   battle: Battle
 
@@ -23,6 +22,9 @@ export default class BattleUser extends BaseEntity {
 
   @OneToMany(() => Vote, (vote) => vote.battleUser)
   votes: Vote[]
+
+  @Column({ default: 0 })
+  voteCount: number
 
   @Column({ default: false })
   battleCreator: boolean
