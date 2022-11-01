@@ -1,27 +1,41 @@
-import { hash, verify } from 'argon2'
+import { verify } from 'argon2'
+import { validate } from 'class-validator'
 import User from '../../../entities/User'
 import addMiddleware from '../../../utils/addMiddleware'
 // import {UserInputError} from '@apollo/server'
 import { createAccessToken, sendRefreshToken } from '../../../utils/auth'
+import mapErrors from '../../../utils/mapErrors'
 import isAuthMiddleware from '../../middlewares/isAuth'
 
 export default {
   register: async (_: any, { username, email, password }, { req }) => {
-    const checkIfUserExists = await User.findOne({
-      where: [{ username }, { email }],
-    })
-    if (checkIfUserExists) {
-      return new Error('User Already Exists')
-    }
     try {
-      const hashedPassword = await hash(password)
-      const newUser = await User.save({
-        username,
-        email,
-        password: hashedPassword,
-      })
+      // Validate data
+      let errors = []
+      const emailUser = await User.findOne({ where: { email } })
+      const usernameUser = await User.findOne({ where: { username } })
+      if (emailUser)
+        errors.push({ path: 'email', message: 'Email is already taken' })
+
+      if (usernameUser)
+        errors.push({ path: 'username', message: 'Username is already taken' })
+
+      if (errors.length > 0) {
+        return errors
+      }
+
+      const newUser = new User()
+      newUser.username = username
+      newUser.email = email
+      newUser.password = password
+
+      errors = await validate(newUser)
+      if (errors.length > 0) return mapErrors(errors)
+
+      newUser.save()
+
       req.user = newUser
-      return 'it happened woohoo'
+      return newUser
     } catch (err) {
       throw new Error(err)
     }

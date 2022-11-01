@@ -1,9 +1,12 @@
+import { hash } from 'argon2'
+import { IsAlphanumeric, IsEmail, Length, Max, Min } from 'class-validator'
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   BaseEntity,
   OneToMany,
+  BeforeInsert,
 } from 'typeorm'
 import BattleUser from './BattleUser'
 import Vote from './Vote'
@@ -14,12 +17,16 @@ export default class User extends BaseEntity {
   id: number
 
   @Column()
+  @IsEmail()
   email: string
 
   @Column()
+  @Length(3, 30)
+  @IsAlphanumeric()
   username: string
 
   @Column()
+  @Length(8, 255)
   password: string
 
   @Column('int', { default: 0 })
@@ -30,6 +37,9 @@ export default class User extends BaseEntity {
 
   @OneToMany(() => Vote, (vote) => vote.user)
   votes: Vote[]
-  // @ManyToMany(() => Battle, (battle) => battle.users)
-  // battles: Battle[]
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await hash(this.password)
+  }
 }
