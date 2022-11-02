@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm'
 import BattleUser from './BattleUser'
+import BattleStatus from '../types/BattleStatusEnum'
 
 @Entity()
 export default class Battle extends BaseEntity {
@@ -22,8 +23,15 @@ export default class Battle extends BaseEntity {
   title: string
 
   @IsDate()
-  @Column()
+  @Column({ nullable: true })
   expires: Date
+
+  @Column({
+    type: 'enum',
+    enum: BattleStatus,
+    default: BattleStatus.CREATION,
+  })
+  status: BattleStatus
 
   @OneToMany(() => BattleUser, (battleUser) => battleUser.battle)
   battleUsers: BattleUser[]
