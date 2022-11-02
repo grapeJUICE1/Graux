@@ -1,3 +1,4 @@
+import { GraphQLError } from 'graphql'
 import BattleUser from '../../../entities/BattleUser'
 import Vote from '../../../entities/Vote'
 import addMiddleware from '../../../utils/addMiddleware'
@@ -7,27 +8,38 @@ export default {
   vote: addMiddleware(
     isAuthMiddleware,
     async (_: any, { battleUserId }, { req }) => {
-      const battleUser = await BattleUser.findOne({
-        where: { id: battleUserId },
-      })
+      try {
+        let errors = []
+        const battleUser = await BattleUser.findOne({
+          where: { id: battleUserId },
+        })
 
-      if (!battleUser)
-        return new Error('The thing u wanted to vote was not found')
+        if (!battleUser) {
+          errors.push({
+            path: 'battleUser',
+            message: 'BattleUser with that id does not exist',
+          })
+          return new GraphQLError('Validation Error', {
+            extensions: { errors, code: 'BAD_USER_INPUT' },
+          })
+        }
 
-      const voteExists = await Vote.findOne({
-        relations: { battleUser: true },
-        where: { battleUser: { id: battleUserId } },
-      })
-      console.log('sodomy', voteExists)
-      if (voteExists) {
-        await Vote.remove(voteExists)
+        const voteExists = await Vote.findOne({
+          relations: { battleUser: true },
+          where: { battleUser: { id: battleUserId } },
+        })
+        if (voteExists) {
+          await Vote.remove(voteExists)
+          return true
+        }
+        await Vote.insert({
+          user: req.user,
+          battleUser: battleUser,
+        })
         return true
+      } catch (err) {
+        throw new Error(err)
       }
-      await Vote.insert({
-        user: req.user,
-        battleUser: battleUser,
-      })
-      return true
     }
   ),
 }

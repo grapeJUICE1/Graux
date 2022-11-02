@@ -100,13 +100,18 @@ export default {
     async (_, { newUsername, newEmail }, { payload }) => {
       let errors = []
       const user = await User.findOne({ where: { id: Number(payload.userId) } })
-      if (!user)
+      if (!user) {
+        errors.push({
+          path: 'jwt',
+          message: 'User logged in does not exist anymore',
+        })
         return new GraphQLError('Authentication Error', {
           extensions: {
-            path: 'jwt',
-            message: 'User logged in does not exist anymore',
+            errors,
+            code: 'BAD_USER_INPUT',
           },
         })
+      }
 
       if (isEmpty(newUsername))
         errors.push({ path: 'username', message: 'Username must not be empty' })
