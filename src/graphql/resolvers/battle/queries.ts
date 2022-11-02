@@ -15,7 +15,7 @@ export default {
 
   async getBattle(battleId: number) {
     try {
-      const battle = Battle.findOne({
+      const battle = await Battle.findOne({
         where: { id: battleId },
       })
       if (!battle) {
@@ -27,6 +27,9 @@ export default {
             code: 'BAD_USER_INPUT',
           },
         })
+      }
+      if (Date.now() > Number(battle.expires)) {
+        console.log('expired')
       }
       return battle
     } catch (err) {

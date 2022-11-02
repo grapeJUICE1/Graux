@@ -13,7 +13,7 @@ export default {
   },
   getUser: async (userId: number) => {
     try {
-      const user = User.findOne({ where: { id: userId } })
+      const user = await User.findOne({ where: { id: userId } })
       if (!user) {
         return new GraphQLError('Validation Error', {
           extensions: {
