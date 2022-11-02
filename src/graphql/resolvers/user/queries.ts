@@ -1,3 +1,4 @@
+import { GraphQLError } from 'graphql'
 import BattleUser from '../../../entities/BattleUser'
 import User from '../../../entities/User'
 
@@ -10,7 +11,24 @@ export default {
       throw new Error(err)
     }
   },
-
+  getUser: async (userId: number) => {
+    try {
+      const user = User.findOne({ where: { id: userId } })
+      if (!user) {
+        return new GraphQLError('Validation Error', {
+          extensions: {
+            errors: [
+              { path: 'user', message: 'User with that id was not found' },
+            ],
+            code: 'BAD_USER_INPUT',
+          },
+        })
+      }
+      return user
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
   getUserBattles: async (_: any, { userId }) => {
     try {
       const battles = await BattleUser.find({
