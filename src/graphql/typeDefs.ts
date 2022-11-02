@@ -80,9 +80,9 @@ export default typeDefs
 // DONE: change exp mutations with the real ones
 // DONE: appropirate queries to get battles of user and users in battle
 // DONE: implement votes
+// DONE: better error handling
+// DONE: validation of inputs (either yup or class validator)
 // TODO: handle expiration dates
-// TODO: better error handling
-// TODO: validation of inputs (either yup or class validator)
 // TODO: comments
 // TODO: liking comments and battle
 // TODO: sort , filter/search , pagination
