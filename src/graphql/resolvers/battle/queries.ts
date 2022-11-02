@@ -1,3 +1,4 @@
+import { GraphQLError } from 'graphql'
 import Battle from '../../../entities/Battle'
 
 export default {
@@ -7,6 +8,27 @@ export default {
         relations: { battleUsers: { user: true } },
       })
       return battles
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+
+  async getBattle(battleId: number) {
+    try {
+      const battle = Battle.findOne({
+        where: { id: battleId },
+      })
+      if (!battle) {
+        return new GraphQLError('Validation Error', {
+          extensions: {
+            errors: [
+              { path: 'battle', message: 'Battle with that id was not found' },
+            ],
+            code: 'BAD_USER_INPUT',
+          },
+        })
+      }
+      return battle
     } catch (err) {
       throw new Error(err)
     }
