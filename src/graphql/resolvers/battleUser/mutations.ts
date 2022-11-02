@@ -2,6 +2,7 @@ import { GraphQLError } from 'graphql'
 import Battle from '../../../entities/Battle'
 import BattleUser from '../../../entities/BattleUser'
 import User from '../../../entities/User'
+import BattleStatus from '../../../types/BattleStatusEnum'
 import addMiddleware from '../../../utils/addMiddleware'
 import isAuthMiddleware from '../../middlewares/isAuth'
 
@@ -19,6 +20,20 @@ export default {
         errors.push({
           path: 'battle',
           message: 'Battle with that id does not exist',
+        })
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
+      }
+
+      if (Date.now() > Number(battle.expires)) {
+        console.log('expired')
+      }
+      if (battle.status !== BattleStatus.CREATION) {
+        errors.push({
+          path: 'battle',
+          message:
+            'You can only add users to battle if battle is being created',
         })
         return new GraphQLError('Validation Error', {
           extensions: { errors, code: 'BAD_USER_INPUT' },
@@ -81,6 +96,16 @@ export default {
           })
         }
 
+        if (battleUser.battle.status !== BattleStatus.CREATION) {
+          errors.push({
+            path: 'battle',
+            message:
+              'You can only add users to battle if battle is being created',
+          })
+          return new GraphQLError('Validation Error', {
+            extensions: { errors, code: 'BAD_USER_INPUT' },
+          })
+        }
         if (battleUser.battleCreator === true) {
           errors.push({
             path: 'battleUser',
@@ -147,6 +172,16 @@ export default {
           })
         }
 
+        if (battleUser.battle.status !== BattleStatus.CREATION) {
+          errors.push({
+            path: 'battle',
+            message:
+              'You can only add users to battle if battle is being created',
+          })
+          return new GraphQLError('Validation Error', {
+            extensions: { errors, code: 'BAD_USER_INPUT' },
+          })
+        }
         battleUser.songName = songName
         battleUser.songArtist = songArtist
         battleUser.songAlbum = songAlbum

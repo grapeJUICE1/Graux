@@ -37,8 +37,6 @@ const typeDefs = `#graphql
   type Query {
     getBattles: [Battle]
     getUsers: [User]
-
-    #experimental
     getAllBattleUsers: [BattleUser]
     getBattleUsers(battleId:Int!): [getBattleUsersResponse]
     getUserBattles(userId: Int!): [getUserBattlesResponse]
@@ -61,13 +59,13 @@ const typeDefs = `#graphql
     deleteUser:Boolean
 
     # Battle Mutations
-    createBattle(title:String! , expires: Int! ): Battle
+    createBattle(title:String!): Battle
     updateBattle(battleId:Int! , title:String! ):Battle
     deleteBattle(battleId:Int!):Boolean
     addBattleUser(battleId:Int! ,userId:Int!): Boolean
     removeBattleUser(battleUserId:Int!): Boolean
     chooseSong(battleId:Int!, songName:String! , songArtist:String! , songAlbum:String! , songImage:String! , songLink:String!):BattleUser
-
+    startBattle(battleId:Int! , hoursTillActive:Int!):Boolean
     #votes
     vote(battleUserId:Int!):Boolean
   }

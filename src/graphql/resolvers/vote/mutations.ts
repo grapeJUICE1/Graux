@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql'
 import BattleUser from '../../../entities/BattleUser'
 import Vote from '../../../entities/Vote'
+import BattleStatus from '../../../types/BattleStatusEnum'
 import addMiddleware from '../../../utils/addMiddleware'
 import isAuthMiddleware from '../../middlewares/isAuth'
 
@@ -24,6 +25,16 @@ export default {
           })
         }
 
+        if (battleUser.battle.status !== BattleStatus.CREATION) {
+          errors.push({
+            path: 'battle',
+            message:
+              'You can only add users to battle if battle is being created',
+          })
+          return new GraphQLError('Validation Error', {
+            extensions: { errors, code: 'BAD_USER_INPUT' },
+          })
+        }
         const voteExists = await Vote.findOne({
           relations: { battleUser: true },
           where: { battleUser: { id: battleUserId } },

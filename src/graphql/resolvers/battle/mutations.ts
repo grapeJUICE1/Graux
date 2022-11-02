@@ -3,13 +3,14 @@ import { GraphQLError } from 'graphql'
 import Battle from '../../../entities/Battle'
 import BattleUser from '../../../entities/BattleUser'
 import User from '../../../entities/User'
+import BattleStatus from '../../../types/BattleStatusEnum'
 import addMiddleware from '../../../utils/addMiddleware'
 import isAuthMiddleware from '../../middlewares/isAuth'
 
 export default {
   createBattle: addMiddleware(
     isAuthMiddleware,
-    async (_, { title, expires }, { payload }) => {
+    async (_, { title }, { payload }) => {
       try {
         let errors = []
 
@@ -39,12 +40,9 @@ export default {
           })
         }
 
-        const expiresAt = new Date(Date.now() + expires * 3.6e6)
-
         const newBattle = new Battle()
 
         newBattle.title = title
-        newBattle.expires = expiresAt
 
         errors = await validate(newBattle)
         if (errors.length > 0)
@@ -82,6 +80,10 @@ export default {
           return new GraphQLError('Validation Error', {
             extensions: { errors, code: 'BAD_USER_INPUT' },
           })
+        }
+
+        if (Date.now() > Number(battle.expires)) {
+          console.log('expired')
         }
         const battleCreator = battle.getBattleCreator
         if (battleCreator) {
@@ -170,6 +172,33 @@ export default {
       } catch (err) {
         throw new Error(err)
       }
+    }
+  ),
+
+  startBattle: addMiddleware(
+    isAuthMiddleware,
+    async (battleId, hoursTillBattleActive) => {
+      let errors = []
+
+      const battle = await Battle.findOne({ where: { id: battleId } })
+
+      if (!battle) {
+        errors.push({
+          path: 'battle',
+          message: 'Battle with that id does not exist',
+        })
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
+      }
+
+      const expiresAt = new Date(Date.now() + hoursTillBattleActive * 3.6e6)
+
+      battle.status = BattleStatus.ACTIVE
+      battle.expires = expiresAt
+
+      await Battle.save(battle)
+      return true
     }
   ),
 }
