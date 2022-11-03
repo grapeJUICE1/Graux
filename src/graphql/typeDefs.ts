@@ -23,8 +23,9 @@ const typeDefs = `#graphql
    id: ID!
    uuid: String!
    title: String!
-   expires: String!
+   expires: String
    winner : User
+   status: String!
    battleUsers: [BattleUser]
     
   }

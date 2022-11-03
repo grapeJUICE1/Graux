@@ -1,4 +1,4 @@
-import { IsDate, Max, Min } from 'class-validator'
+import { IsDate, Length, Max, Min } from 'class-validator'
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -17,12 +17,10 @@ export default class Battle extends BaseEntity {
   @Column({ generated: 'uuid' })
   uuid: string
 
-  @Min(10)
-  @Max(255)
+  @Length(10, 255)
   @Column()
   title: string
 
-  @IsDate()
   @Column({ nullable: true })
   expires: Date
 

@@ -11,7 +11,7 @@ export default {
       throw new Error(err)
     }
   },
-  getUser: async (userId: number) => {
+  getUser: async (_: any, { userId }) => {
     try {
       const user = await User.findOne({ where: { id: userId } })
       if (!user) {

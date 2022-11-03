@@ -82,5 +82,4 @@ async function main() {
   )
   console.log(`🚀 Server ready at http://localhost:${config.PORT}/`)
 }
-
 main().catch((err) => console.log(err))
