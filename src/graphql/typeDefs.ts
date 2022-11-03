@@ -4,7 +4,7 @@ const typeDefs = `#graphql
    email: String!
    username: String!
    battleSongs: [BattleUser]
-    
+   createdAt:String
   }
   type BattleUser{
     id: ID!
@@ -18,6 +18,7 @@ const typeDefs = `#graphql
     songImage: String
     songLink : String
     voteCount: Int
+    createdAt:String
   }
 
   type Battle {
@@ -27,6 +28,7 @@ const typeDefs = `#graphql
    expires: String
    status: String!
    battleUsers: [BattleUser]
+   createdAt:String
     
   }
   type getUserBattlesResponse {

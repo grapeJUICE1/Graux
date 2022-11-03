@@ -1,21 +1,12 @@
 import { hash } from 'argon2'
-import { IsAlphanumeric, IsEmail, Length, Max, Min } from 'class-validator'
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  BaseEntity,
-  OneToMany,
-  BeforeInsert,
-} from 'typeorm'
+import { IsAlphanumeric, IsEmail, Length } from 'class-validator'
+import { Entity, Column, OneToMany, BeforeInsert } from 'typeorm'
+import AppBaseEntity from './AppBaseEntity'
 import BattleUser from './BattleUser'
 import Vote from './Vote'
 
 @Entity('users')
-export default class User extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number
-
+export default class User extends AppBaseEntity {
   @Column()
   @IsEmail()
   email: string

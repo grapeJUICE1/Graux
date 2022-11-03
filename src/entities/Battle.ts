@@ -1,19 +1,11 @@
 import { Length } from 'class-validator'
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  BaseEntity,
-  OneToMany,
-} from 'typeorm'
+import { Entity, Column, OneToMany } from 'typeorm'
 import BattleUser from './BattleUser'
 import BattleStatus from '../types/BattleStatusEnum'
+import AppBaseEntity from './AppBaseEntity'
 
 @Entity()
-export default class Battle extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number
-
+export default class Battle extends AppBaseEntity {
   @Column({ generated: 'uuid' })
   uuid: string
 

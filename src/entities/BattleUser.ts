@@ -1,19 +1,11 @@
-import {
-  Entity,
-  BaseEntity,
-  Column,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm'
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm'
+import AppBaseEntity from './AppBaseEntity'
 import Battle from './Battle'
 import User from './User'
 import Vote from './Vote'
 
 @Entity()
-export default class BattleUser extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number
+export default class BattleUser extends AppBaseEntity {
   @ManyToOne(() => Battle, (battle) => battle.battleUsers)
   battle: Battle
 
