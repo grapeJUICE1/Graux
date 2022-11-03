@@ -31,6 +31,12 @@ const typeDefs = `#graphql
    createdAt:String
     
   }
+
+  type Comment {
+    body: String!
+    battle: Battle
+    user: User
+  }
   type getUserBattlesResponse {
     battle:Battle
   }
@@ -74,6 +80,8 @@ const typeDefs = `#graphql
     startBattle(battleId:Int! , hoursTillActive:Int!):Boolean
     #votes
     vote(battleUserId:Int!):Boolean
+
+    addComment(battleId:Int!):Comment
   }
 
 `

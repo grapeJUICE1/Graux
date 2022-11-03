@@ -30,17 +30,15 @@ export default {
       newUser.username = username
       newUser.email = email
       newUser.password = password
-
       errors = await validate(newUser)
       if (errors.length > 0)
         return new GraphQLError('Validation Error', {
           extensions: { errors: mapErrors(errors), code: 'BAD_USER_INPUT' },
         })
 
-      await newUser.save()
-
-      req.user = newUser
-      return newUser
+      const user = await newUser.save()
+      req.user = user
+      return user
     } catch (err) {
       throw new Error(err)
     }

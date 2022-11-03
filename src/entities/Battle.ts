@@ -3,6 +3,7 @@ import { Entity, Column, OneToMany } from 'typeorm'
 import BattleUser from './BattleUser'
 import BattleStatus from '../types/BattleStatusEnum'
 import AppBaseEntity from './AppBaseEntity'
+import Comment from './Comment'
 
 @Entity()
 export default class Battle extends AppBaseEntity {
@@ -25,6 +26,9 @@ export default class Battle extends AppBaseEntity {
 
   @OneToMany(() => BattleUser, (battleUser) => battleUser.battle)
   battleUsers: BattleUser[]
+
+  @OneToMany(() => Comment, (comment) => comment.battle)
+  comments: Comment[]
 
   public get getBattleCreator() {
     const battleUser = this.battleUsers.find(

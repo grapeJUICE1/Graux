@@ -5,9 +5,13 @@ import AppBaseEntity from './AppBaseEntity'
 
 @Entity()
 export default class Vote extends AppBaseEntity {
-  @ManyToOne(() => User, (user) => user.votes)
+  @ManyToOne(() => User, (user) => user.votes, {
+    onDelete: 'CASCADE',
+  })
   user: User
 
-  @ManyToOne(() => BattleUser, (battleUser) => battleUser.votes)
+  @ManyToOne(() => BattleUser, (battleUser) => battleUser.votes, {
+    onDelete: 'CASCADE',
+  })
   battleUser: BattleUser
 }
