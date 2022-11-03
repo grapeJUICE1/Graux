@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql'
 import Battle from '../../../entities/Battle'
+import BattleStatus from '../../../types/BattleStatusEnum'
 
 export default {
   async getBattles() {
@@ -13,7 +14,7 @@ export default {
     }
   },
 
-  async getBattle(battleId: number) {
+  async getBattle(_: any, { battleId }) {
     try {
       const battle = await Battle.findOne({
         where: { id: battleId },
@@ -28,8 +29,13 @@ export default {
           },
         })
       }
-      if (Date.now() > Number(battle.expires)) {
+      const now = new Date()
+
+      if (now.getTime() > battle.expires.getTime()) {
         console.log('expired')
+
+        battle.status = BattleStatus.OVER
+        Battle.save(battle)
       }
       return battle
     } catch (err) {

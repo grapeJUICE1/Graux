@@ -5,6 +5,7 @@ import BattleUser from '../../../entities/BattleUser'
 import User from '../../../entities/User'
 import BattleStatus from '../../../types/BattleStatusEnum'
 import addMiddleware from '../../../utils/addMiddleware'
+import mapErrors from '../../../utils/mapErrors'
 import isAuthMiddleware from '../../middlewares/isAuth'
 
 export default {
@@ -45,9 +46,10 @@ export default {
         newBattle.title = title
 
         errors = await validate(newBattle)
+        console.log(errors)
         if (errors.length > 0)
           return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+            extensions: { errors: mapErrors(errors), code: 'BAD_USER_INPUT' },
           })
         await Battle.save(newBattle)
         await BattleUser.insert({
@@ -82,9 +84,6 @@ export default {
           })
         }
 
-        if (Date.now() > Number(battle.expires)) {
-          console.log('expired')
-        }
         const battleCreator = battle.getBattleCreator
         if (battleCreator) {
           errors.push({ path: 'battle', message: 'Battle does not exist' })
@@ -177,10 +176,13 @@ export default {
 
   startBattle: addMiddleware(
     isAuthMiddleware,
-    async (battleId, hoursTillBattleActive) => {
+    async (_, { battleId, hoursTillActive }, { payload }) => {
       let errors = []
 
-      const battle = await Battle.findOne({ where: { id: battleId } })
+      const battle = await Battle.findOne({
+        where: { id: battleId },
+        relations: { battleUsers: { user: true } },
+      })
 
       if (!battle) {
         errors.push({
@@ -192,7 +194,35 @@ export default {
         })
       }
 
-      const expiresAt = new Date(Date.now() + hoursTillBattleActive * 3.6e6)
+      if (battle.status !== BattleStatus.CREATION) {
+        errors.push({
+          path: 'battle',
+          message: 'Battle has already started or over',
+        })
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
+      }
+      const battleCreator = battle.getBattleCreator
+      if (!battleCreator) {
+        errors.push({ path: 'battle', message: 'Battle does not exist' })
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
+      }
+
+      if (Number(payload.userId) !== battleCreator.id) {
+        errors.push({
+          path: 'battle',
+          message: 'Battle was not created by you',
+        })
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
+      }
+
+      const expiresAt = new Date()
+      expiresAt.setHours(expiresAt.getHours() + hoursTillActive)
 
       battle.status = BattleStatus.ACTIVE
       battle.expires = expiresAt
