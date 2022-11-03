@@ -3,6 +3,7 @@ import { IsAlphanumeric, IsEmail, Length } from 'class-validator'
 import { Entity, Column, OneToMany, BeforeInsert } from 'typeorm'
 import AppBaseEntity from './AppBaseEntity'
 import BattleUser from './BattleUser'
+import Comment from './Comment'
 import Vote from './Vote'
 
 @Entity('users')
@@ -28,6 +29,9 @@ export default class User extends AppBaseEntity {
 
   @OneToMany(() => Vote, (vote) => vote.user)
   votes: Vote[]
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[]
 
   @BeforeInsert()
   async hashPassword() {
