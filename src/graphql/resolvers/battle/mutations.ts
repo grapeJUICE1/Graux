@@ -203,6 +203,26 @@ export default {
           extensions: { errors, code: 'BAD_USER_INPUT' },
         })
       }
+
+      if (battle.battleUsers.length < 2) {
+        errors.push({
+          path: 'battle',
+          message: 'Battle must have 2 participants',
+        })
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
+      }
+
+      if (!battle.battleUsersChosenSong) {
+        errors.push({
+          path: 'battle',
+          message: 'Battle participants havent chose songs yet',
+        })
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
+      }
       const battleCreator = battle.getBattleCreator
       if (!battleCreator) {
         errors.push({ path: 'battle', message: 'Battle does not exist' })

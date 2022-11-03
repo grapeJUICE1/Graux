@@ -11,6 +11,7 @@ const typeDefs = `#graphql
     battle:Battle
     user: User
     battleCreator:Boolean
+    isWinner:Boolean
     songName: String
     songArtist: String
     songAlbum: String
@@ -24,7 +25,6 @@ const typeDefs = `#graphql
    uuid: String!
    title: String!
    expires: String
-   winner : User
    status: String!
    battleUsers: [BattleUser]
     
@@ -84,8 +84,10 @@ export default typeDefs
 // DONE: implement votes
 // DONE: better error handling
 // DONE: validation of inputs (either yup or class validator)
-// TODO: handle expiration dates
+// DONE: handle expiration dates
+// DONE: set and get winner
 // TODO: comments
 // TODO: liking comments and battle
 // TODO: sort , filter/search , pagination
-//
+// TODO: try graphql code generator
+// TODO: strict mode on typescript

@@ -1,4 +1,4 @@
-import { IsDate, Length, Max, Min } from 'class-validator'
+import { Length } from 'class-validator'
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -35,10 +35,39 @@ export default class Battle extends BaseEntity {
   battleUsers: BattleUser[]
 
   public get getBattleCreator() {
-    console.log(this)
     const battleUser = this.battleUsers.find(
       (battleUser) => battleUser.battleCreator === true
     )
     return battleUser.user
+  }
+
+  public setBattleWinner() {
+    let winner: any
+    if (this.battleUsers[0]?.voteCount === this.battleUsers[1]?.voteCount) {
+      winner = 'tie'
+      return winner
+    }
+    winner = this?.battleUsers.sort((prev, curr) => {
+      return curr.voteCount - prev.voteCount
+    })[0]
+
+    return winner
+  }
+
+  public get getBattleWinner() {
+    const winner = this.battleUsers.find(
+      (battleUser) => battleUser.isWinner === true
+    )
+    if (!winner) return 'No Winner'
+    return winner
+  }
+
+  public get battleUsersChosenSong() {
+    const userNotChoseSong = this.battleUsers.find(
+      (battleUser) => battleUser.songName === null
+    )
+
+    if (userNotChoseSong) return false
+    return true
   }
 }

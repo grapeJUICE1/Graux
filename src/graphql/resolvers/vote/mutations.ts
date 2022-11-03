@@ -13,6 +13,7 @@ export default {
         let errors = []
         const battleUser = await BattleUser.findOne({
           where: { id: battleUserId },
+          relations: { battle: true },
         })
 
         if (!battleUser) {
@@ -25,11 +26,10 @@ export default {
           })
         }
 
-        if (battleUser.battle.status !== BattleStatus.CREATION) {
+        if (battleUser.battle.status !== BattleStatus.ACTIVE) {
           errors.push({
             path: 'battle',
-            message:
-              'You can only add users to battle if battle is being created',
+            message: 'You can only vote if a batttle is active',
           })
           return new GraphQLError('Validation Error', {
             extensions: { errors, code: 'BAD_USER_INPUT' },
