@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql'
 import Battle from '../../../entities/Battle'
+import BattleUser from '../../../entities/BattleUser'
 import BattleStatus from '../../../types/BattleStatusEnum'
 
 export default {
@@ -18,6 +19,7 @@ export default {
     try {
       const battle = await Battle.findOne({
         where: { id: battleId },
+        relations: { battleUsers: true },
       })
       if (!battle) {
         return new GraphQLError('Validation Error', {
@@ -30,13 +32,34 @@ export default {
         })
       }
       const now = new Date()
-
-      if (now.getTime() > battle.expires.getTime()) {
-        console.log('expired')
-
-        battle.status = BattleStatus.OVER
-        Battle.save(battle)
+      const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
       }
+      //@ts-ignore
+      console.log(now.toLocaleDateString('en-US', options))
+      //@ts-ignore
+      console.log(battle.expires.toLocaleDateString('en-US', options))
+      if (battle.status === BattleStatus.ACTIVE) {
+        if (now.getTime() > battle.expires.getTime()) {
+          console.log('expired')
+
+          battle.status = BattleStatus.OVER
+          await Battle.save(battle)
+
+          const winner = battle.setBattleWinner()
+          console.log(winner)
+          if (winner instanceof BattleUser) {
+            winner.isWinner = true
+            BattleUser.save(winner)
+          }
+        }
+      }
+
       return battle
     } catch (err) {
       throw new Error(err)

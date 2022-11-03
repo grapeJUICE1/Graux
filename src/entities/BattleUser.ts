@@ -29,6 +29,9 @@ export default class BattleUser extends BaseEntity {
   @Column({ default: false })
   battleCreator: boolean
 
+  @Column({ default: false })
+  isWinner: boolean
+
   @Column({ nullable: true })
   songName: string
 
