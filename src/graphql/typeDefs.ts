@@ -52,6 +52,10 @@ const typeDefs = `#graphql
     getAllBattleUsers: [BattleUser]
     getBattleUsers(battleId:Int!): [getBattleUsersResponse]
     getUserBattles(userId: Int!): [getUserBattlesResponse]
+
+    getComments:[Comment]
+    getComment(commentId:Int!):Comment
+    getCommentsOfBattle(battleId:Int!):[Comment]
   }
 
 
