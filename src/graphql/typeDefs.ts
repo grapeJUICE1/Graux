@@ -29,13 +29,16 @@ const typeDefs = `#graphql
    status: String!
    battleUsers: [BattleUser]
    createdAt:String
+   likeDislikeCount: Int
     
   }
 
   type Comment {
+    id: ID!
     body: String!
     battle: Battle
     user: User
+    likeDislikeCount: Int
   }
   type getUserBattlesResponse {
     battle:Battle
@@ -67,6 +70,8 @@ const typeDefs = `#graphql
     path: String
     message: String
   }
+  union BattleOrComment = Battle | Comment
+
   type Mutation {
     # User Mutations
     register(username: String! , email: String! , password: String!): User
@@ -82,13 +87,18 @@ const typeDefs = `#graphql
     removeBattleUser(battleUserId:Int!): Boolean
     chooseSong(battleId:Int!, songName:String! , songArtist:String! , songAlbum:String! , songImage:String! , songLink:String!):BattleUser
     startBattle(battleId:Int! , hoursTillActive:Int!):Boolean
-    #votes
+
+    # Vote Mutations
     vote(battleUserId:Int!):Boolean
-    
-    #Comment
+  
+    # LikeDislike Mutations 
+    likeDislike(battleId:Int , commentId:Int , value:Int!): BattleOrComment
+  
+    # Comment Mutations
     addComment(battleId:Int! , body:String!):Comment
     updateComment(commentId:Int! , body:String!):Comment
     removeComment(commentId:Int!):Boolean
+
     
   }
 

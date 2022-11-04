@@ -25,6 +25,9 @@ export default class Battle extends AppBaseEntity {
   })
   status: BattleStatus
 
+  @Column({ default: 0 })
+  likeDislikeCount: Number
+
   @OneToMany(() => BattleUser, (battleUser) => battleUser.battle)
   battleUsers: BattleUser[]
 
@@ -72,8 +75,10 @@ export default class Battle extends AppBaseEntity {
   }
 
   protected userLikeDislike: number
-  // async setUserLikeDislike(userId:number) {
-  //    const likeDislike = await LikeDislike.findOne({relations:{user:true}, where: {user:{id:userId}}})
-  //    this.userLikeDislike = likeDislike?likeDislike.value:0;
-  //  }
+  async setUserLikeDislike(userId: number) {
+    const likeDislike = await LikeDislike.findOne({
+      where: { user: { id: userId }, battle: { id: this.id } },
+    })
+    this.userLikeDislike = likeDislike ? likeDislike.value : 0
+  }
 }
