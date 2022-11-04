@@ -7,6 +7,7 @@ import BattleUser from './entities/BattleUser'
 import Vote from './entities/Vote'
 import { VoteSubscriber } from './entities/VoteSubscriber'
 import Comment from './entities/Comment'
+import LikeDislike from './entities/LikeDislike'
 
 const AppDataSource = new DataSource({
   //@ts-ignore
@@ -18,7 +19,7 @@ const AppDataSource = new DataSource({
   database: config.DATABASE_NAME,
   synchronize: true,
   logging: false,
-  entities: [User, Battle, BattleUser, Vote, Comment],
+  entities: [User, Battle, BattleUser, Vote, Comment, LikeDislike],
   migrations: [],
   subscribers: [VoteSubscriber],
 })
