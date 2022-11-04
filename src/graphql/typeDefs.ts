@@ -115,7 +115,7 @@ export default typeDefs
 // DONE: handle expiration dates
 // DONE: set and get winner
 // DONE: comments
-// TODO: liking comments and battle
+// DONE: liking comments and battle
 // TODO: sort , filter/search , pagination
 // TODO: try graphql code generator
 // TODO: strict mode on typescript

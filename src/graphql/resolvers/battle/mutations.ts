@@ -1,4 +1,4 @@
-import { isEmpty, validate } from 'class-validator'
+import { validate } from 'class-validator'
 import { GraphQLError } from 'graphql'
 import Battle from '../../../entities/Battle'
 import BattleUser from '../../../entities/BattleUser'
@@ -7,14 +7,16 @@ import BattleStatus from '../../../types/BattleStatusEnum'
 import addMiddleware from '../../../utils/addMiddleware'
 import mapErrors from '../../../utils/mapErrors'
 import isAuthMiddleware from '../../middlewares/isAuth'
+import { checkIfBattleExistsAndBattleCreatedByUser } from './utils'
 
 export default {
   createBattle: addMiddleware(
     isAuthMiddleware,
-    async (_, { title }, { payload }) => {
+    async (_, { title }, { req }) => {
       try {
         let errors = []
 
+        //Check if title is already taken
         const titleTaken = await Battle.findOne({ where: { title } })
 
         if (titleTaken) {
@@ -24,10 +26,8 @@ export default {
           })
         }
 
-        const battleCreatedBy = await User.findOne({
-          where: { id: Number(payload.userId) },
-        })
-
+        // make logged in user battleCreator
+        const battleCreatedBy = req.user
         if (!battleCreatedBy) {
           errors.push({
             path: 'jwt',
@@ -42,16 +42,19 @@ export default {
         }
 
         const newBattle = new Battle()
-
         newBattle.title = title
 
+        // validate input
         errors = await validate(newBattle)
-        console.log(errors)
+
         if (errors.length > 0)
           return new GraphQLError('Validation Error', {
             extensions: { errors: mapErrors(errors), code: 'BAD_USER_INPUT' },
           })
+
         await Battle.save(newBattle)
+
+        // add logged in user as BattleUser
         await BattleUser.insert({
           battle: newBattle,
           user: battleCreatedBy,
@@ -66,49 +69,16 @@ export default {
   ),
   updateBattle: addMiddleware(
     isAuthMiddleware,
-    async (_, { battleId, title }, { payload }) => {
+    async (_, { battleId, title }, { req }) => {
       try {
         let errors = []
-        //Check if battle exists
-        const battle = await Battle.findOne({
-          where: { id: battleId },
-          relations: { battleUsers: { user: true } },
-        })
-        if (!battle) {
-          errors.push({
-            path: 'battle',
-            message: 'Battle with that id does not exist',
-          })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
-          })
+        const battle = await checkIfBattleExistsAndBattleCreatedByUser(
+          battleId,
+          req.user as User
+        )
+        if (battle instanceof GraphQLError) {
+          return battle
         }
-
-        const battleCreator = battle.getBattleCreator
-        if (battleCreator) {
-          errors.push({ path: 'battle', message: 'Battle does not exist' })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
-          })
-        }
-        if (Number(payload.userId) !== battleCreator.id) {
-          errors.push({
-            path: 'battle',
-            message: 'Battle was not created by you',
-          })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
-          })
-        }
-
-        // Check if title is empty
-        if (isEmpty(title)) {
-          errors.push({ path: 'title', message: 'Title cannot be empty' })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
-          })
-        }
-
         const battleExists = await Battle.findOne({ where: { title } })
 
         if (battleExists) {
@@ -118,7 +88,15 @@ export default {
           })
         }
 
+        // validate input
         battle.title = title
+
+        errors = await validate(battle)
+        if (errors.length > 0)
+          return new GraphQLError('Validation Error', {
+            extensions: { errors: mapErrors(errors), code: 'BAD_USER_INPUT' },
+          })
+
         await Battle.save(battle)
         return battle
       } catch (err) {
@@ -129,40 +107,14 @@ export default {
 
   deleteBattle: addMiddleware(
     isAuthMiddleware,
-    async (_, { battleId }, { payload }) => {
+    async (_, { battleId }, { req }) => {
       try {
-        let errors = []
-        const battle = await Battle.findOne({
-          where: { id: battleId },
-          relations: { battleUsers: { user: true } },
-        })
-
-        if (!battle) {
-          errors.push({
-            path: 'battle',
-            message: 'Battle with that id does not exist',
-          })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
-          })
-        }
-
-        const battleCreator = battle.getBattleCreator
-        if (!battleCreator) {
-          errors.push({ path: 'battle', message: 'Battle does not exist' })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
-          })
-        }
-
-        if (Number(payload.userId) !== battleCreator.id) {
-          errors.push({
-            path: 'battle',
-            message: 'Battle was not created by you',
-          })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
-          })
+        const battle = await checkIfBattleExistsAndBattleCreatedByUser(
+          battleId,
+          req.user as User
+        )
+        if (battle instanceof GraphQLError) {
+          return battle
         }
 
         await Battle.remove(battle)
@@ -176,24 +128,18 @@ export default {
 
   startBattle: addMiddleware(
     isAuthMiddleware,
-    async (_, { battleId, hoursTillActive }, { payload }) => {
+    async (_, { battleId, hoursTillActive }, { req }) => {
       let errors = []
 
-      const battle = await Battle.findOne({
-        where: { id: battleId },
-        relations: { battleUsers: { user: true } },
-      })
-
-      if (!battle) {
-        errors.push({
-          path: 'battle',
-          message: 'Battle with that id does not exist',
-        })
-        return new GraphQLError('Validation Error', {
-          extensions: { errors, code: 'BAD_USER_INPUT' },
-        })
+      const battle = await checkIfBattleExistsAndBattleCreatedByUser(
+        battleId,
+        req.user as User
+      )
+      if (battle instanceof GraphQLError) {
+        return battle
       }
 
+      // check if battle is in creation phase
       if (battle.status !== BattleStatus.CREATION) {
         errors.push({
           path: 'battle',
@@ -204,6 +150,7 @@ export default {
         })
       }
 
+      // check if battle has atleast 2 users
       if (battle.battleUsers.length < 2) {
         errors.push({
           path: 'battle',
@@ -214,27 +161,11 @@ export default {
         })
       }
 
+      // check if users have chosen songs
       if (!battle.battleUsersChosenSong) {
         errors.push({
           path: 'battle',
           message: 'Battle participants havent chose songs yet',
-        })
-        return new GraphQLError('Validation Error', {
-          extensions: { errors, code: 'BAD_USER_INPUT' },
-        })
-      }
-      const battleCreator = battle.getBattleCreator
-      if (!battleCreator) {
-        errors.push({ path: 'battle', message: 'Battle does not exist' })
-        return new GraphQLError('Validation Error', {
-          extensions: { errors, code: 'BAD_USER_INPUT' },
-        })
-      }
-
-      if (Number(payload.userId) !== battleCreator.id) {
-        errors.push({
-          path: 'battle',
-          message: 'Battle was not created by you',
         })
         return new GraphQLError('Validation Error', {
           extensions: { errors, code: 'BAD_USER_INPUT' },
