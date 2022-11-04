@@ -5,7 +5,6 @@ import Battle from './entities/Battle'
 import config from './config/config'
 import BattleUser from './entities/BattleUser'
 import Vote from './entities/Vote'
-import { VoteSubscriber } from './entities/VoteSubscriber'
 import Comment from './entities/Comment'
 import LikeDislike from './entities/LikeDislike'
 
@@ -21,7 +20,7 @@ const AppDataSource = new DataSource({
   logging: false,
   entities: [User, Battle, BattleUser, Vote, Comment, LikeDislike],
   migrations: [],
-  subscribers: [VoteSubscriber],
+  subscribers: [],
 })
 
 export default AppDataSource
