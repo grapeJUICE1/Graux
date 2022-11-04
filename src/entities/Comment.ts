@@ -23,4 +23,15 @@ export default class Comment extends AppBaseEntity {
   @Column()
   @Length(1, 255)
   body: string
+
+  @Column({ default: 0 })
+  likeDislikeCount: Number
+
+  protected userLikeDislike: number
+  async setUserLikeDislike(userId: number) {
+    const likeDislike = await LikeDislike.findOne({
+      where: { user: { id: userId }, comment: { id: this.id } },
+    })
+    this.userLikeDislike = likeDislike ? likeDislike.value : 0
+  }
 }
