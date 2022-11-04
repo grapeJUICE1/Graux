@@ -87,7 +87,9 @@ const typeDefs = `#graphql
     
     #Comment
     addComment(battleId:Int! , body:String!):Comment
+    updateComment(commentId:Int! , body:String!):Comment
     removeComment(commentId:Int!):Boolean
+    
   }
 
 `
@@ -102,7 +104,7 @@ export default typeDefs
 // DONE: validation of inputs (either yup or class validator)
 // DONE: handle expiration dates
 // DONE: set and get winner
-// TODO: comments
+// DONE: comments
 // TODO: liking comments and battle
 // TODO: sort , filter/search , pagination
 // TODO: try graphql code generator
