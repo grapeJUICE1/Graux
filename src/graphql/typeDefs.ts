@@ -80,8 +80,10 @@ const typeDefs = `#graphql
     startBattle(battleId:Int! , hoursTillActive:Int!):Boolean
     #votes
     vote(battleUserId:Int!):Boolean
-
-    addComment(battleId:Int!):Comment
+    
+    #Comment
+    addComment(battleId:Int! , body:String!):Comment
+    removeComment(commentId:Int!):Boolean
   }
 
 `

@@ -51,4 +51,35 @@ export default {
       return comment
     }
   ),
+  removeComment: addMiddleware(
+    isAuthMiddleware,
+    async (_: any, { commentId }, { payload }) => {
+      let errors = []
+      const comment = await Comment.findOne({
+        where: { id: commentId },
+        relations: { user: true },
+      })
+      if (!comment) {
+        errors.push({
+          path: 'comment',
+          message: 'Comment with that id does not exist',
+        })
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
+      }
+      if (comment.user.id !== Number(payload.userId)) {
+        errors.push({
+          path: 'comment',
+          message: 'Comment was not created by you',
+        })
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
+      }
+
+      await Comment.remove(comment)
+      return true
+    }
+  ),
 }
