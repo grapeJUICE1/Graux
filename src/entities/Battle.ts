@@ -4,6 +4,9 @@ import BattleUser from './BattleUser'
 import BattleStatus from '../types/BattleStatusEnum'
 import AppBaseEntity from './AppBaseEntity'
 import Comment from './Comment'
+import Vote from './Vote'
+import User from './User'
+import LikeDislike from './LikeDislike'
 
 @Entity()
 export default class Battle extends AppBaseEntity {
@@ -29,6 +32,9 @@ export default class Battle extends AppBaseEntity {
 
   @OneToMany(() => Comment, (comment) => comment.battle)
   comments: Comment[]
+
+  @OneToMany(() => LikeDislike, (likeDislike) => likeDislike.battle)
+  likeDislikes: LikeDislike[]
 
   public get getBattleCreator() {
     const battleUser = this.battleUsers.find(
@@ -66,4 +72,10 @@ export default class Battle extends AppBaseEntity {
     if (userNotChoseSong) return false
     return true
   }
+
+  protected userLikeDislike: number
+  // async setUserLikeDislike(userId:number) {
+  //    const likeDislike = await LikeDislike.findOne({relations:{user:true}, where: {user:{id:userId}}})
+  //    this.userLikeDislike = likeDislike?likeDislike.value:0;
+  //  }
 }
