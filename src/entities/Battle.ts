@@ -4,8 +4,6 @@ import BattleUser from './BattleUser'
 import BattleStatus from '../types/BattleStatusEnum'
 import AppBaseEntity from './AppBaseEntity'
 import Comment from './Comment'
-import Vote from './Vote'
-import User from './User'
 import LikeDislike from './LikeDislike'
 
 @Entity()
