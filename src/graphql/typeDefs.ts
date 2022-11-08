@@ -47,15 +47,21 @@ const typeDefs = `#graphql
     user:User
   }
   type Query {
+    
+    # Battle Queries
     getBattles: [Battle]
     getBattle(battleId:Int!): Battle
+
+    # User Queries
     getUsers: [User]
     getUser(userId:Int!): User
-
+  
+    # BattleUser Queries
     getAllBattleUsers: [BattleUser]
     getBattleUsers(battleId:Int!): [getBattleUsersResponse]
     getUserBattles(userId: Int!): [getUserBattlesResponse]
 
+    # Comment Queries
     getComments:[Comment]
     getComment(commentId:Int!):Comment
     getCommentsOfBattle(battleId:Int!):[Comment]
@@ -66,10 +72,6 @@ const typeDefs = `#graphql
     accessToken: String
   }
   
-  type Error {
-    path: String
-    message: String
-  }
   union BattleOrComment = Battle | Comment
 
   type Mutation {
@@ -83,10 +85,12 @@ const typeDefs = `#graphql
     createBattle(title:String!): Battle
     updateBattle(battleId:Int! , title:String! ):Battle
     deleteBattle(battleId:Int!):Boolean
+    startBattle(battleId:Int! , hoursTillActive:Int!):Boolean
+    
+    # Battle User Mutations
     addBattleUser(battleId:Int! ,userId:Int!): Boolean
     removeBattleUser(battleUserId:Int!): Boolean
     chooseSong(battleId:Int!, songName:String! , songArtist:String! , songAlbum:String! , songImage:String! , songLink:String!):BattleUser
-    startBattle(battleId:Int! , hoursTillActive:Int!):Boolean
 
     # Vote Mutations
     vote(battleUserId:Int!):Boolean
