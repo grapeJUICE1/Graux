@@ -16,7 +16,7 @@ import { createAccessToken, sendRefreshToken } from './utils/auth'
 
 async function main() {
   await dataSource.initialize()
-  console.log('connected to database')
+  console.log('connected to database 📅📅📅')
 
   const app = express()
   const httpServer = http.createServer(app)
