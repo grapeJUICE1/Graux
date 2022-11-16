@@ -21,7 +21,7 @@ function Navbar() {
           <Box>
             {' '}
             <Text fontWeight='bold' pl={3}>
-              <Link href='/'>GrapeThoughts </Link>
+              <Link href='/'>Graux </Link>
             </Text>
           </Box>
           <Flex alignItems={'center'}>
