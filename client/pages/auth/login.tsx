@@ -1,7 +1,7 @@
-import React from 'react'
+import LoginCard from '../../components/Auth/Login'
 
 function Login() {
-  return <div>Login</div>
+  return <LoginCard />
 }
 
 export default Login
