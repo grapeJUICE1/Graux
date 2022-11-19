@@ -1,0 +1,11 @@
+query GetBattles {
+  getBattles {
+    id
+    uuid
+    title
+    status
+    expires
+    likeDislikeCount
+    createdAt
+  }
+}
