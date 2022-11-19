@@ -233,49 +233,51 @@ export type GetUserBattlesResponse = {
   battle?: Maybe<Battle>;
 };
 
-export type GetBattlesQueryVariables = Exact<{ [key: string]: never; }>;
+export type RegisterMutationVariables = Exact<{
+  username: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
+}>;
 
 
-export type GetBattlesQuery = { __typename?: 'Query', getBattles?: Array<{ __typename?: 'Battle', id: string, uuid: string, title: string, status: string, expires?: string | null, likeDislikeCount?: number | null, createdAt?: string | null } | null> | null };
+export type RegisterMutation = { __typename?: 'Mutation', register?: { __typename?: 'User', id: string, email: string, createdAt?: string | null, username: string } | null };
 
 
-export const GetBattlesDocument = gql`
-    query GetBattles {
-  getBattles {
+export const RegisterDocument = gql`
+    mutation Register($username: String!, $email: String!, $password: String!) {
+  register(username: $username, email: $email, password: $password) {
     id
-    uuid
-    title
-    status
-    expires
-    likeDislikeCount
+    email
     createdAt
+    username
   }
 }
     `;
+export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
 
 /**
- * __useGetBattlesQuery__
+ * __useRegisterMutation__
  *
- * To run a query within a React component, call `useGetBattlesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetBattlesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
+ * To run a mutation, you first call `useRegisterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
  *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const { data, loading, error } = useGetBattlesQuery({
+ * const [registerMutation, { data, loading, error }] = useRegisterMutation({
  *   variables: {
+ *      username: // value for 'username'
+ *      email: // value for 'email'
+ *      password: // value for 'password'
  *   },
  * });
  */
-export function useGetBattlesQuery(baseOptions?: Apollo.QueryHookOptions<GetBattlesQuery, GetBattlesQueryVariables>) {
+export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetBattlesQuery, GetBattlesQueryVariables>(GetBattlesDocument, options);
+        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
       }
-export function useGetBattlesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBattlesQuery, GetBattlesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetBattlesQuery, GetBattlesQueryVariables>(GetBattlesDocument, options);
-        }
-export type GetBattlesQueryHookResult = ReturnType<typeof useGetBattlesQuery>;
-export type GetBattlesLazyQueryHookResult = ReturnType<typeof useGetBattlesLazyQuery>;
-export type GetBattlesQueryResult = Apollo.QueryResult<GetBattlesQuery, GetBattlesQueryVariables>;
+export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
+export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
+export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
