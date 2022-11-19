@@ -6,7 +6,8 @@
         "dev": "next dev -p 4000",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "codegen": "graphql-codegen --config codegen.ts"
     },
     "dependencies": {
         "@apollo/client": "^3.7.1",
@@ -27,5 +28,11 @@
         "react-dom": "18.2.0",
         "typescript": "4.8.4",
         "yup": "^0.32.11"
+    },
+    "devDependencies": {
+        "@graphql-codegen/cli": "2.13.12",
+        "@graphql-codegen/typescript": "^2.8.2",
+        "@graphql-codegen/typescript-operations": "^2.5.7",
+        "@graphql-codegen/typescript-react-apollo": "^3.3.6"
     }
 }
