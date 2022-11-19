@@ -12,15 +12,21 @@ import {
   Text,
   useColorModeValue,
   Link,
+  useToast,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import NextLink from 'next/link'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import { useRegisterMutation } from '../../gql/graphql'
+import { useRouter } from 'next/router'
 
 function RegisterCard() {
   const [showPassword, setShowPassword] = useState(false)
+  let [register, { data, loading }] = useRegisterMutation()
+  const toast = useToast()
+  const router = useRouter()
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -38,10 +44,66 @@ function RegisterCard() {
         .max(255, "Can't exceed 255 characters")
         .required('Required'),
     }),
-    onSubmit: (values) => {
-      console.log(values)
+    onSubmit: async (values, { setFieldError }) => {
+      toast.closeAll()
+      try {
+        const response = await register({
+          variables: {
+            ...values,
+          },
+        })
+        toast.closeAll()
+        toast({
+          id: 'successToast',
+          description: 'Registered Successfully',
+          status: 'success',
+          duration: 1000,
+        })
+
+        router.replace('/')
+      } catch (err) {
+        toast.closeAll()
+        //@ts-ignore
+        if (err?.graphQLErrors[0]?.extensions?.errors) {
+          //@ts-ignore
+          let errors = err?.graphQLErrors[0].extensions.errors as {
+            path: string
+            message: string
+          }[]
+          if (errors) {
+            if (errors[0]?.path) {
+              errors.forEach((error: { path: string; message: string }) => {
+                //@ts-ignore
+                setFieldError(error.path, error.message)
+              })
+            }
+          } else {
+            if (!toast.isActive('errorToast')) {
+              toast({
+                id: 'errorToast',
+                description: 'Error',
+                status: 'error',
+                duration: 2000,
+              })
+            }
+          }
+        }
+      }
     },
   })
+
+  if (loading) {
+    if (!toast.isActive('loadingToast')) {
+      toast.closeAll(),
+        toast({
+          id: 'loadingToast',
+          description: 'Please wait for a few seconds',
+          isClosable: true,
+          duration: null,
+        })
+    }
+  }
+
   return (
     <Flex
       minH={'100vh'}
