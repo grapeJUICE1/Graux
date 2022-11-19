@@ -18,6 +18,7 @@
         "@types/node": "18.11.9",
         "@types/react": "18.0.25",
         "@types/react-dom": "18.0.8",
+        "apollo-link-token-refresh": "^0.4.0",
         "eslint": "8.27.0",
         "eslint-config-next": "13.0.3",
         "formik": "^2.2.9",
@@ -33,6 +34,7 @@
         "@graphql-codegen/cli": "2.13.12",
         "@graphql-codegen/typescript": "^2.8.2",
         "@graphql-codegen/typescript-operations": "^2.5.7",
-        "@graphql-codegen/typescript-react-apollo": "^3.3.6"
+        "@graphql-codegen/typescript-react-apollo": "^3.3.6",
+        "jwt-decode": "^3.1.2"
     }
 }

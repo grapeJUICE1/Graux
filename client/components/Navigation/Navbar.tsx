@@ -32,7 +32,7 @@ function Navbar() {
                 cursor={'pointer'}
                 minW={0}
               >
-                <Link href='/auth'>Login/Signup</Link>
+                <Link href='/auth/login'>Login/Signup</Link>
               </Button>
               <IconButton
                 aria-label='darkModeToggle'

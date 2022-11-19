@@ -10,12 +10,19 @@ import {
   Heading,
   Text,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react'
 import { useFormik } from 'formik'
 import NextLink from 'next/link'
+import { useRouter } from 'next/router'
 import * as Yup from 'yup'
+import { useLoginMutation } from '../../gql/graphql'
 
 function LoginCard() {
+  let [login, { data, loading }] = useLoginMutation()
+  const toast = useToast()
+  const router = useRouter()
+
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -31,8 +38,51 @@ function LoginCard() {
         .max(255, "Can't exceed 255 characters")
         .required('Required'),
     }),
-    onSubmit: (values) => {
-      console.log(values)
+    onSubmit: async (values, { setFieldError }) => {
+      toast.closeAll()
+      try {
+        const response = await login({
+          variables: {
+            ...values,
+          },
+        })
+        toast.closeAll()
+        toast({
+          id: 'successToast',
+          description: 'Logged In Successfully',
+          status: 'success',
+          duration: 1000,
+        })
+
+        router.replace('/')
+      } catch (err) {
+        toast.closeAll()
+        //@ts-ignore
+        if (err?.graphQLErrors[0]?.extensions?.errors) {
+          //@ts-ignore
+          let errors = err?.graphQLErrors[0].extensions.errors as {
+            path: string
+            message: string
+          }[]
+          if (errors) {
+            if (errors[0]?.path) {
+              errors.forEach((error: { path: string; message: string }) => {
+                //@ts-ignore
+                setFieldError(error.path, error.message)
+              })
+            }
+          } else {
+            if (!toast.isActive('errorToast')) {
+              toast({
+                id: 'errorToast',
+                description: 'Error',
+                status: 'error',
+                duration: 2000,
+              })
+            }
+          }
+        }
+      }
     },
   })
   return (
