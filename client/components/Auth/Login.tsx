@@ -16,7 +16,7 @@ import { useFormik } from 'formik'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import * as Yup from 'yup'
-import { useLoginMutation } from '../../gql/graphql'
+import { MeDocument, MeQuery, useLoginMutation } from '../../gql/graphql'
 
 function LoginCard() {
   let [login, { data, loading }] = useLoginMutation()
@@ -44,6 +44,14 @@ function LoginCard() {
         const response = await login({
           variables: {
             ...values,
+          },
+          update: (store, { data }) => {
+            console.log(data)
+            if (!data) return null
+            store.writeQuery<MeQuery>({
+              query: MeDocument,
+              data: { me: data?.login?.user },
+            })
           },
         })
         toast.closeAll()

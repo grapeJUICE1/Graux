@@ -87,6 +87,7 @@ export default {
       req.user = user
       return {
         accessToken: createAccessToken(user),
+        user: user,
       }
     } catch (err) {
       console.log(err)

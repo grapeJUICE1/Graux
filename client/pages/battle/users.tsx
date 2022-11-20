@@ -1,5 +1,5 @@
-function BattleUsers() {
+function BattleUsersPage() {
   return <div>Battle Users</div>
 }
 
-export default BattleUsers
+export default BattleUsersPage

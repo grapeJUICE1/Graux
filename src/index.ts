@@ -33,6 +33,20 @@ async function main() {
   await server.start()
 
   app.use(cookieParser())
+  app.use(
+    cors({
+      origin: 'http://localhost:4000',
+      credentials: true,
+    })
+  )
+  app.use(
+    '/graphql',
+    express.json(),
+    expressMiddleware(server, {
+      context: async ({ req, res }) => ({ req, res }),
+    })
+  )
+
   app.post('/refresh_token', async (req, res) => {
     const token = req.cookies.jid
     if (!token) {
@@ -49,7 +63,7 @@ async function main() {
         },
       })
       if (!user) {
-        return res.send({ status: 'failure', accessToken: '' })
+        return res.status(400).json({ status: 'failure', accessToken: '' })
       }
 
       if (user.tokenVersion !== payload.tokenVersion) {
@@ -65,18 +79,6 @@ async function main() {
       return res.send({ status: 'failure', accessToken: '' })
     }
   })
-  app.use(
-    '/graphql',
-    cors({
-      origin: 'http://localhost:7000',
-      credentials: true,
-    }),
-    express.json(),
-    expressMiddleware(server, {
-      context: async ({ req, res }) => ({ req, res }),
-    })
-  )
-
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: config.PORT }, resolve)
   )

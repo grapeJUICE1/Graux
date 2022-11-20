@@ -1,11 +1,12 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, Text } from '@chakra-ui/react'
 import { ApolloProvider } from '@apollo/client'
 import client from '../apollo-client'
 import Layout from '../components/Layout'
 import { useEffect, useState } from 'react'
 import { setAccessToken } from '../accessToken'
+import theme from '../theme'
 
 export default function App({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true)
@@ -21,10 +22,14 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [])
   return (
     <ApolloProvider client={client}>
-      <ChakraProvider>
-        <Layout>
-          {loading ? <h1> Loading </h1> : <Component {...pageProps} />}
-        </Layout>
+      <ChakraProvider theme={theme}>
+        {loading ? (
+          ''
+        ) : (
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        )}
       </ChakraProvider>
     </ApolloProvider>
   )

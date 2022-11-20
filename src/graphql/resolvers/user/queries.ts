@@ -1,8 +1,16 @@
+import { verify } from 'jsonwebtoken'
 import { GraphQLError } from 'graphql'
+import config from '../../../config/config'
 import BattleUser from '../../../entities/BattleUser'
 import User from '../../../entities/User'
+import MyContext from '../../../MyContext'
+import addMiddleware from '../../../utils/addMiddleware'
+import isAuthMiddleware from '../../middlewares/isAuth'
 
 export default {
+  test: addMiddleware(isAuthMiddleware, async () => {
+    return 'testo desu ne'
+  }),
   getUsers: async () => {
     try {
       const users = await User.find({})
@@ -48,6 +56,30 @@ export default {
       return battles
     } catch (err) {
       throw new Error(err)
+    }
+  },
+  me: async (_: any, {}, context: MyContext) => {
+    const authorization = context.req.headers['authorization'] // bearer token
+    if (!authorization) {
+      return null
+    }
+    try {
+      const token = authorization.split(' ')[1]
+      const payload: any = verify(token, config.ACCESS_TOKEN_SECRET)
+      if (!payload) {
+        return null
+      }
+
+      const user = await User.findOne({ where: { id: payload.userId } })
+
+      if (!user) {
+        return null
+      }
+
+      return user
+    } catch (err) {
+      console.log(err)
+      return null
     }
   },
 }
