@@ -30,7 +30,6 @@ const typeDefs = `#graphql
    battleUsers: [BattleUser]
    createdAt:String
    likeDislikeCount: Int
-    
   }
 
   type Comment {
@@ -46,6 +45,8 @@ const typeDefs = `#graphql
   type getBattleUsersResponse {
     user:User
   }
+
+    
   type Query {
     
     # Battle Queries
@@ -65,11 +66,16 @@ const typeDefs = `#graphql
     getComments:[Comment]
     getComment(commentId:Int!):Comment
     getCommentsOfBattle(battleId:Int!):[Comment]
+
+    test:String
+
+    me: User 
   }
 
 
   type LoginResponse {
     accessToken: String
+    user:User
   }
   
   union BattleOrComment = Battle | Comment

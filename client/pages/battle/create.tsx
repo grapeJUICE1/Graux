@@ -1,5 +1,5 @@
-function CreateBattle() {
+function CreateBattlePage() {
   return <div>Create Battle</div>
 }
 
-export default CreateBattle
+export default CreateBattlePage

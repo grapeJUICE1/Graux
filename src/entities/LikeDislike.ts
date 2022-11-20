@@ -12,9 +12,13 @@ export default class LikeDislike extends AppBaseEntity {
   @ManyToOne(() => User)
   user: User
 
-  @ManyToOne(() => Battle, (battle) => battle.likeDislikes)
+  @ManyToOne(() => Battle, (battle) => battle.likeDislikes, {
+    onDelete: 'CASCADE',
+  })
   battle: Battle
 
-  @ManyToOne(() => Comment, (comment) => comment.likeDislikes)
+  @ManyToOne(() => Comment, (comment) => comment.likeDislikes, {
+    onDelete: 'CASCADE',
+  })
   comment: Comment
 }

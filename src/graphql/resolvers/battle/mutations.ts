@@ -116,7 +116,6 @@ export default {
         if (battle instanceof GraphQLError) {
           return battle
         }
-
         await Battle.remove(battle)
 
         return true

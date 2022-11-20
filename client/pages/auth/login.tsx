@@ -1,7 +1,7 @@
 import LoginCard from '../../components/Auth/Login'
 
-function Login() {
+function LoginPage() {
   return <LoginCard />
 }
 
-export default Login
+export default LoginPage
