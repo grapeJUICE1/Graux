@@ -1,5 +1,7 @@
+import CreateBattleForm from '../../components/CreateBattle/CreateBattleForm'
+
 function CreateBattlePage() {
-  return <div>Create Battle</div>
+  return <CreateBattleForm />
 }
 
 export default CreateBattlePage

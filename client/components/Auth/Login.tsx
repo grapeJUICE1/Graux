@@ -19,7 +19,7 @@ import * as Yup from 'yup'
 import { MeDocument, MeQuery, useLoginMutation } from '../../gql/graphql'
 
 function LoginCard() {
-  let [login, { data, loading }] = useLoginMutation()
+  let [login] = useLoginMutation()
   const toast = useToast()
   const router = useRouter()
 
@@ -41,7 +41,7 @@ function LoginCard() {
     onSubmit: async (values, { setFieldError }) => {
       toast.closeAll()
       try {
-        const response = await login({
+        await login({
           variables: {
             ...values,
           },
@@ -133,11 +133,11 @@ function LoginCard() {
                 <Button
                   isDisabled={!formik.isValid}
                   type='submit'
-                  bg={'blue.400'}
+                  bg={'cyan.400'}
                   color={'white'}
                   mt={5}
                   _hover={{
-                    bg: 'blue.500',
+                    bg: 'cyan.500',
                   }}
                 >
                   Log in
