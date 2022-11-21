@@ -25,9 +25,9 @@ export class BattleSubscriber implements EntitySubscriberInterface<Battle> {
       minute: 'numeric',
     }
     //@ts-ignore
-    console.log(now.toLocaleDateString('en-US', options))
+    console.log(now?.toLocaleDateString('en-US', options))
     //@ts-ignore
-    console.log(entity.expires.toLocaleDateString('en-US', options))
+    console.log(entity?.expires?.toLocaleDateString('en-US', options))
     if (entity.status === BattleStatus.ACTIVE) {
       if (now.getTime() > entity.expires.getTime()) {
         console.log('expired')
