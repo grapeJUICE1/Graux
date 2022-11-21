@@ -22,8 +22,7 @@ function Battle({ battle }: { battle: BattleType }) {
         _dark={{
           bg: 'gray.700',
         }}
-        minW='50vw'
-        maxW='2xl'
+        w='50vw'
       >
         <Flex justifyContent='space-between' alignItems='center'>
           <Text
