@@ -5,6 +5,7 @@ import BattleStatus from '../types/BattleStatusEnum'
 import AppBaseEntity from './AppBaseEntity'
 import Comment from './Comment'
 import LikeDislike from './LikeDislike'
+import BattleRequest from './BattleRequest'
 
 @Entity()
 export default class Battle extends AppBaseEntity {
@@ -33,6 +34,9 @@ export default class Battle extends AppBaseEntity {
 
   @OneToMany(() => Comment, (comment) => comment.battle)
   comments: Comment[]
+
+  @OneToMany(() => BattleRequest, (battleRequest) => battleRequest.battle)
+  battleRequests: BattleRequest[]
 
   @OneToMany(() => LikeDislike, (likeDislike) => likeDislike.battle)
   likeDislikes: LikeDislike[]

@@ -109,7 +109,7 @@ const typeDefs = `#graphql
     updateComment(commentId:Int! , body:String!):Comment
     removeComment(commentId:Int!):Boolean
 
-    
+    approveBattleRequest(battleRequestId:Int!):Boolean
   }
 
 `

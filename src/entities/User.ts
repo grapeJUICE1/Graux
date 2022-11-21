@@ -2,6 +2,7 @@ import { hash } from 'argon2'
 import { IsAlphanumeric, IsEmail, Length } from 'class-validator'
 import { Entity, Column, OneToMany, BeforeInsert } from 'typeorm'
 import AppBaseEntity from './AppBaseEntity'
+import BattleRequest from './BattleRequest'
 import BattleUser from './BattleUser'
 import Comment from './Comment'
 import Vote from './Vote'
@@ -26,6 +27,9 @@ export default class User extends AppBaseEntity {
 
   @OneToMany(() => BattleUser, (battleUser) => battleUser.user)
   battleSongs: BattleUser[]
+
+  @OneToMany(() => BattleRequest, (battleRequest) => battleRequest.user)
+  battleRequests: BattleUser[]
 
   @OneToMany(() => Vote, (vote) => vote.user)
   votes: Vote[]

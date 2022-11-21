@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql'
 import Battle from '../../../entities/Battle'
+import BattleRequest from '../../../entities/BattleRequest'
 import BattleUser from '../../../entities/BattleUser'
 import User from '../../../entities/User'
 import BattleStatus from '../../../types/BattleStatusEnum'
@@ -68,14 +69,71 @@ export default {
           extensions: { errors, code: 'BAD_USER_INPUT' },
         })
 
-      await BattleUser.insert({
+      // await BattleUser.insert({
+      //   battle: battle,
+      //   user: user,
+      // })
+
+      await BattleRequest.insert({
         battle: battle,
         user: user,
+        validated: false,
       })
       return true
     }
   ),
+  approveBattleRequest: addMiddleware(
+    isAuthMiddleware,
+    async (_: any, { battleRequestId }, { payload }) => {
+      try {
+        let errors = []
+        const battleRequest = await BattleRequest.findOne({
+          where: { id: battleRequestId },
+          relations: { user: true, battle: true },
+        })
 
+        if (!battleRequest) {
+          errors.push({
+            path: 'battleRequest',
+            message: 'BattleRequest with that id does not exist',
+          })
+          return new GraphQLError('Validation Error', {
+            extensions: { errors, code: 'BAD_USER_INPUT' },
+          })
+        }
+
+        if (!battleRequest.validated) {
+          if (battleRequest.user.id === +payload.userId) {
+            await BattleUser.insert({
+              battle: battleRequest.battle,
+              user: battleRequest.user,
+            })
+            battleRequest.validated = true
+            await battleRequest.save()
+            return true
+          } else {
+            errors.push({
+              path: 'battleRequest',
+              message: 'BattleRequest was not sent to you',
+            })
+            return new GraphQLError('Validation Error', {
+              extensions: { errors, code: 'BAD_USER_INPUT' },
+            })
+          }
+        } else {
+          errors.push({
+            path: 'battleRequest',
+            message: 'BattleRequest is already validated',
+          })
+          return new GraphQLError('Validation Error', {
+            extensions: { errors, code: 'BAD_USER_INPUT' },
+          })
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  ),
   removeBattleUser: addMiddleware(
     isAuthMiddleware,
     async (_: any, { battleUserId }, { payload }) => {
