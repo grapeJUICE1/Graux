@@ -1,5 +1,5 @@
 html {
-  font-size: 16px;
+  font-size: 14px;
 }
 a {
   color: inherit;
@@ -11,22 +11,22 @@ a {
 }
 @media only screen and (max-width: 480px) {
   html {
-    font-size: 12px;
+    font-size: 10px;
   }
 }
 
 @media only screen and (max-width: 340px) {
   html {
-    font-size: 10px;
+    font-size: 8px;
   }
 }
 @media only screen and (max-width: 290px) {
   html {
-    font-size: 8px;
+    font-size: 6px;
   }
 }
 @media only screen and (max-width: 220px) {
   html {
-    font-size: 6px;
+    font-size: 5px;
   }
 }
