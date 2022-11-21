@@ -236,6 +236,13 @@ export type GetUserBattlesResponse = {
   battle?: Maybe<Battle>;
 };
 
+export type CreateBattleMutationVariables = Exact<{
+  title: Scalars['String'];
+}>;
+
+
+export type CreateBattleMutation = { __typename?: 'Mutation', createBattle?: { __typename?: 'Battle', id: string, title: string, status: string, likeDislikeCount?: number | null, expires?: string | null, createdAt?: string | null } | null };
+
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
@@ -264,6 +271,44 @@ export type TestQueryVariables = Exact<{ [key: string]: never; }>;
 export type TestQuery = { __typename?: 'Query', test?: string | null };
 
 
+export const CreateBattleDocument = gql`
+    mutation CreateBattle($title: String!) {
+  createBattle(title: $title) {
+    id
+    title
+    status
+    likeDislikeCount
+    expires
+    createdAt
+  }
+}
+    `;
+export type CreateBattleMutationFn = Apollo.MutationFunction<CreateBattleMutation, CreateBattleMutationVariables>;
+
+/**
+ * __useCreateBattleMutation__
+ *
+ * To run a mutation, you first call `useCreateBattleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBattleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBattleMutation, { data, loading, error }] = useCreateBattleMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *   },
+ * });
+ */
+export function useCreateBattleMutation(baseOptions?: Apollo.MutationHookOptions<CreateBattleMutation, CreateBattleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBattleMutation, CreateBattleMutationVariables>(CreateBattleDocument, options);
+      }
+export type CreateBattleMutationHookResult = ReturnType<typeof useCreateBattleMutation>;
+export type CreateBattleMutationResult = Apollo.MutationResult<CreateBattleMutation>;
+export type CreateBattleMutationOptions = Apollo.BaseMutationOptions<CreateBattleMutation, CreateBattleMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
