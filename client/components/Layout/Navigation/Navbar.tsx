@@ -1,16 +1,24 @@
 import {
-  Avatar,
   Flex,
-  Icon,
   IconButton,
   Input,
   InputGroup,
   InputLeftElement,
-  useDisclosure,
+  Text,
 } from '@chakra-ui/react'
 import React from 'react'
+import { useMeQuery } from '../../../gql/graphql'
 
 function Navbar({ sidebarDisclosure }: any) {
+  const { data, error, loading } = useMeQuery()
+  let userNavItem
+  if (loading) {
+    userNavItem = <Text> Loading </Text>
+  } else if (error || !data) {
+    userNavItem = <Text> login/signup </Text>
+  } else {
+    userNavItem = <Text> {data?.me?.username}</Text>
+  }
   return (
     <Flex
       as='header'
@@ -51,17 +59,19 @@ function Navbar({ sidebarDisclosure }: any) {
       </InputGroup>
 
       <Flex align='center' position='fixed' right='1rem'>
-        <Icon
+        {/*<Icon
           color='gray.500' //as={FaBell}
           cursor='pointer'
-        />
-        <Avatar
+        />*/}
+        {/*<Avatar
           ml='4'
           size='sm'
           name='anubra266'
           src='https://avatars.githubusercontent.com/u/30869823?v=4'
           cursor='pointer'
-        />
+        />*/}
+
+        {userNavItem}
       </Flex>
     </Flex>
   )

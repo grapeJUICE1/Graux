@@ -1,12 +1,4 @@
-import {
-  VStack,
-  Heading,
-  Flex,
-  Center,
-  Button,
-  HStack,
-  Text,
-} from '@chakra-ui/react'
+import { VStack, Heading, Flex, Center, Button, Text } from '@chakra-ui/react'
 import Link from 'next/link'
 
 function Hero() {
