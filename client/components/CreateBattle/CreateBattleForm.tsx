@@ -9,12 +9,17 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react'
 import { useFormik } from 'formik'
 import React from 'react'
 import * as Yup from 'yup'
+import { useCreateBattleMutation } from '../../gql/graphql'
 
 function CreateBattleForm() {
+  let [createBattle] = useCreateBattleMutation()
+  const toast = useToast()
+
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -25,10 +30,52 @@ function CreateBattleForm() {
         .max(255, "Title can't exceed 255 characters")
         .required(),
     }),
-    onSubmit: async () => {
-      console.log('hiya')
+    onSubmit: async (values, { setFieldError }) => {
+      try {
+        const response = await createBattle({
+          variables: {
+            ...values,
+          },
+        })
+        toast.closeAll()
+        toast({
+          id: 'successToast',
+          description: 'Created Battle Successfully',
+          status: 'success',
+          duration: 1000,
+        })
+        console.log(response)
+      } catch (err) {
+        toast.closeAll()
+        //@ts-ignore
+        if (err?.graphQLErrors[0]?.extensions?.errors) {
+          //@ts-ignore
+          let errors = err?.graphQLErrors[0].extensions.errors as {
+            path: string
+            message: string
+          }[]
+          if (errors) {
+            if (errors[0]?.path) {
+              errors.forEach((error: { path: string; message: string }) => {
+                //@ts-ignore
+                setFieldError(error.path, error.message)
+              })
+            }
+          } else {
+            if (!toast.isActive('errorToast')) {
+              toast({
+                id: 'errorToast',
+                description: 'Error',
+                status: 'error',
+                duration: 2000,
+              })
+            }
+          }
+        }
+      }
     },
   })
+
   return (
     <Flex
       minH={'80vh'}

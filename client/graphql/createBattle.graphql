@@ -1,0 +1,10 @@
+mutation CreateBattle($title: String!) {
+  createBattle(title: $title) {
+    id
+    title
+    status
+    likeDislikeCount
+    expires
+    createdAt
+  }
+}
