@@ -12,6 +12,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { useFormik } from 'formik'
+import { useRouter } from 'next/router'
 import React from 'react'
 import * as Yup from 'yup'
 import { useCreateBattleMutation } from '../../gql/graphql'
@@ -19,6 +20,7 @@ import { useCreateBattleMutation } from '../../gql/graphql'
 function CreateBattleForm() {
   let [createBattle] = useCreateBattleMutation()
   const toast = useToast()
+  const router = useRouter()
 
   const formik = useFormik({
     initialValues: {
@@ -44,7 +46,9 @@ function CreateBattleForm() {
           status: 'success',
           duration: 1000,
         })
-        console.log(response)
+        if (response.data?.createBattle?.id) {
+          router.replace(`/battles/${response.data?.createBattle?.id}/users`)
+        }
       } catch (err) {
         toast.closeAll()
         //@ts-ignore

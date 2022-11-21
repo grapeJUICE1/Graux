@@ -55,7 +55,7 @@ function Battle({ battle }: { battle: BattleType }) {
         <Box mt={2}>
           <Link
             as={NextLink}
-            href={`/battle/${battle.id}`}
+            href={`/battles/${battle.id}`}
             fontSize='2xl'
             color='gray.700'
             _dark={{
