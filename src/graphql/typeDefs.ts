@@ -54,7 +54,7 @@ const typeDefs = `#graphql
     getBattle(battleId:Int!): Battle
 
     # User Queries
-    getUsers: [User]
+    getUsers(search:String):[User]
     getUser(userId:Int!): User
   
     # BattleUser Queries

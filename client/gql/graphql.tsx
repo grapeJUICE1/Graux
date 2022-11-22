@@ -64,6 +64,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addBattleUser?: Maybe<Scalars['Boolean']>;
   addComment?: Maybe<Comment>;
+  approveBattleRequest?: Maybe<Scalars['Boolean']>;
   chooseSong?: Maybe<BattleUser>;
   createBattle?: Maybe<Battle>;
   deleteBattle?: Maybe<Scalars['Boolean']>;
@@ -90,6 +91,11 @@ export type MutationAddBattleUserArgs = {
 export type MutationAddCommentArgs = {
   battleId: Scalars['Int'];
   body: Scalars['String'];
+};
+
+
+export type MutationApproveBattleRequestArgs = {
+  battleRequestId: Scalars['Int'];
 };
 
 
@@ -217,6 +223,11 @@ export type QueryGetUserBattlesArgs = {
   userId: Scalars['Int'];
 };
 
+
+export type QueryGetUsersArgs = {
+  search?: InputMaybe<Scalars['String']>;
+};
+
 export type User = {
   __typename?: 'User';
   battleSongs?: Maybe<Array<Maybe<BattleUser>>>;
@@ -236,12 +247,34 @@ export type GetUserBattlesResponse = {
   battle?: Maybe<Battle>;
 };
 
+export type AddBattleUserMutationVariables = Exact<{
+  battleId: Scalars['Int'];
+  userId: Scalars['Int'];
+}>;
+
+
+export type AddBattleUserMutation = { __typename?: 'Mutation', addBattleUser?: boolean | null };
+
+export type ApproveBattleRequestMutationVariables = Exact<{
+  battleRequestId: Scalars['Int'];
+}>;
+
+
+export type ApproveBattleRequestMutation = { __typename?: 'Mutation', approveBattleRequest?: boolean | null };
+
 export type CreateBattleMutationVariables = Exact<{
   title: Scalars['String'];
 }>;
 
 
 export type CreateBattleMutation = { __typename?: 'Mutation', createBattle?: { __typename?: 'Battle', id: string, title: string, status: string, likeDislikeCount?: number | null, expires?: string | null, createdAt?: string | null } | null };
+
+export type GetUsersQueryVariables = Exact<{
+  search?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type GetUsersQuery = { __typename?: 'Query', getUsers?: Array<{ __typename?: 'User', id: string, username: string, email: string, createdAt?: string | null } | null> | null };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
@@ -271,6 +304,69 @@ export type TestQueryVariables = Exact<{ [key: string]: never; }>;
 export type TestQuery = { __typename?: 'Query', test?: string | null };
 
 
+export const AddBattleUserDocument = gql`
+    mutation AddBattleUser($battleId: Int!, $userId: Int!) {
+  addBattleUser(battleId: $battleId, userId: $userId)
+}
+    `;
+export type AddBattleUserMutationFn = Apollo.MutationFunction<AddBattleUserMutation, AddBattleUserMutationVariables>;
+
+/**
+ * __useAddBattleUserMutation__
+ *
+ * To run a mutation, you first call `useAddBattleUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddBattleUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addBattleUserMutation, { data, loading, error }] = useAddBattleUserMutation({
+ *   variables: {
+ *      battleId: // value for 'battleId'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useAddBattleUserMutation(baseOptions?: Apollo.MutationHookOptions<AddBattleUserMutation, AddBattleUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddBattleUserMutation, AddBattleUserMutationVariables>(AddBattleUserDocument, options);
+      }
+export type AddBattleUserMutationHookResult = ReturnType<typeof useAddBattleUserMutation>;
+export type AddBattleUserMutationResult = Apollo.MutationResult<AddBattleUserMutation>;
+export type AddBattleUserMutationOptions = Apollo.BaseMutationOptions<AddBattleUserMutation, AddBattleUserMutationVariables>;
+export const ApproveBattleRequestDocument = gql`
+    mutation ApproveBattleRequest($battleRequestId: Int!) {
+  approveBattleRequest(battleRequestId: $battleRequestId)
+}
+    `;
+export type ApproveBattleRequestMutationFn = Apollo.MutationFunction<ApproveBattleRequestMutation, ApproveBattleRequestMutationVariables>;
+
+/**
+ * __useApproveBattleRequestMutation__
+ *
+ * To run a mutation, you first call `useApproveBattleRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useApproveBattleRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [approveBattleRequestMutation, { data, loading, error }] = useApproveBattleRequestMutation({
+ *   variables: {
+ *      battleRequestId: // value for 'battleRequestId'
+ *   },
+ * });
+ */
+export function useApproveBattleRequestMutation(baseOptions?: Apollo.MutationHookOptions<ApproveBattleRequestMutation, ApproveBattleRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ApproveBattleRequestMutation, ApproveBattleRequestMutationVariables>(ApproveBattleRequestDocument, options);
+      }
+export type ApproveBattleRequestMutationHookResult = ReturnType<typeof useApproveBattleRequestMutation>;
+export type ApproveBattleRequestMutationResult = Apollo.MutationResult<ApproveBattleRequestMutation>;
+export type ApproveBattleRequestMutationOptions = Apollo.BaseMutationOptions<ApproveBattleRequestMutation, ApproveBattleRequestMutationVariables>;
 export const CreateBattleDocument = gql`
     mutation CreateBattle($title: String!) {
   createBattle(title: $title) {
@@ -309,6 +405,44 @@ export function useCreateBattleMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateBattleMutationHookResult = ReturnType<typeof useCreateBattleMutation>;
 export type CreateBattleMutationResult = Apollo.MutationResult<CreateBattleMutation>;
 export type CreateBattleMutationOptions = Apollo.BaseMutationOptions<CreateBattleMutation, CreateBattleMutationVariables>;
+export const GetUsersDocument = gql`
+    query GetUsers($search: String) {
+  getUsers(search: $search) {
+    id
+    username
+    email
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetUsersQuery__
+ *
+ * To run a query within a React component, call `useGetUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUsersQuery({
+ *   variables: {
+ *      search: // value for 'search'
+ *   },
+ * });
+ */
+export function useGetUsersQuery(baseOptions?: Apollo.QueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+      }
+export function useGetUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+        }
+export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
+export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
+export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {

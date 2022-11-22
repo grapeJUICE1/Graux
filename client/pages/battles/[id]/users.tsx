@@ -1,5 +1,7 @@
+import AddBattleUserForm from '../../../components/AddBattleUserForm/AddBattleUserForm'
+
 function BattleUsersPage() {
-  return <div>Battle Users</div>
+  return <AddBattleUserForm />
 }
 
 export default BattleUsersPage

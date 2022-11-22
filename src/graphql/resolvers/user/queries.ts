@@ -6,14 +6,19 @@ import User from '../../../entities/User'
 import MyContext from '../../../MyContext'
 import addMiddleware from '../../../utils/addMiddleware'
 import isAuthMiddleware from '../../middlewares/isAuth'
+import { ILike } from 'typeorm'
 
 export default {
   test: addMiddleware(isAuthMiddleware, async () => {
     return 'testo desu ne'
   }),
-  getUsers: async () => {
+  getUsers: async (_, { search }) => {
     try {
-      const users = await User.find({})
+      const users = await User.find({
+        where: { username: search ? ILike(`%${search}%`) : undefined },
+        take: search ? 10 : undefined,
+      })
+
       return users
     } catch (err) {
       throw new Error(err)

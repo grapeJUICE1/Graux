@@ -12,6 +12,21 @@ export default {
     isAuthMiddleware,
     async (_, { battleId, userId }, { payload }) => {
       let errors = []
+      const battleRequest = await BattleRequest.findOne({
+        where: { battle: { id: battleId }, user: { id: userId } },
+        relations: { user: true, battle: true },
+      })
+
+      if (battleRequest) {
+        errors.push({
+          path: 'username',
+          message: 'You have already sent battle request once to this user',
+        })
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
+      }
+
       const battle = await Battle.findOne({
         where: { id: battleId },
         relations: { battleUsers: { user: true } },
@@ -69,11 +84,6 @@ export default {
           extensions: { errors, code: 'BAD_USER_INPUT' },
         })
 
-      // await BattleUser.insert({
-      //   battle: battle,
-      //   user: user,
-      // })
-
       await BattleRequest.insert({
         battle: battle,
         user: user,
@@ -89,7 +99,7 @@ export default {
         let errors = []
         const battleRequest = await BattleRequest.findOne({
           where: { id: battleRequestId },
-          relations: { user: true, battle: true },
+          relations: { user: true, battle: { battleUsers: true } },
         })
 
         if (!battleRequest) {
@@ -101,7 +111,16 @@ export default {
             extensions: { errors, code: 'BAD_USER_INPUT' },
           })
         }
-
+        if (battleRequest.battle.battleUsers.length >= 2) {
+          errors.push({
+            path: 'battleRequest',
+            message:
+              'Battle Already has 2 users , tell the battle creator to remove the other battle participant and add you again',
+          })
+          return new GraphQLError('Validation Error', {
+            extensions: { errors, code: 'BAD_USER_INPUT' },
+          })
+        }
         if (!battleRequest.validated) {
           if (battleRequest.user.id === +payload.userId) {
             await BattleUser.insert({
