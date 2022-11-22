@@ -1,0 +1,3 @@
+mutation ApproveBattleRequest($battleRequestId: Int!) {
+  approveBattleRequest(battleRequestId: $battleRequestId)
+}

@@ -1,0 +1,8 @@
+query GetUsers($search: String) {
+  getUsers(search: $search) {
+    id
+    username
+    email
+    createdAt
+  }
+}
