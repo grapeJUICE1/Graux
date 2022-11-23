@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm'
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm'
 import AppBaseEntity from './AppBaseEntity'
 import Battle from './Battle'
 import User from './User'
@@ -9,12 +9,20 @@ export default class BattleUser extends AppBaseEntity {
   @ManyToOne(() => Battle, (battle) => battle.battleUsers, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'battleId' })
   battle: Battle
+
+  @Column({ nullable: true })
+  battleId: number
 
   @ManyToOne(() => User, (user) => user.battleSongs, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'userId' })
   user: User
+
+  @Column({ nullable: true })
+  userId: number
 
   @OneToMany(() => Vote, (vote) => vote.battleUser)
   votes: Vote[]

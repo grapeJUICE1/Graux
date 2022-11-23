@@ -1,5 +1,5 @@
 import { Length } from 'class-validator'
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
 import AppBaseEntity from './AppBaseEntity'
 import Battle from './Battle'
 import LikeDislike from './LikeDislike'
@@ -10,12 +10,20 @@ export default class Comment extends AppBaseEntity {
   @ManyToOne(() => Battle, (battle) => battle.comments, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'battleId' })
   battle: Battle
+
+  @Column({ nullable: true })
+  battleId: number
 
   @ManyToOne(() => User, (user) => user.comments, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'userId' })
   user: User
+
+  @Column({ nullable: true })
+  userId: number
 
   @OneToMany(() => LikeDislike, (likeDislike) => likeDislike.battle)
   likeDislikes: LikeDislike[]

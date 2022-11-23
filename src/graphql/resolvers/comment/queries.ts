@@ -15,8 +15,8 @@ export default {
     try {
       let errors = []
       const comments = await Comment.find({
-        relations: { battle: { id: true }, user: true },
-        where: { battle: { id: battleId } },
+        relations: { user: true },
+        where: { battleId: battleId },
       })
       if (!comments) {
         errors.push({
