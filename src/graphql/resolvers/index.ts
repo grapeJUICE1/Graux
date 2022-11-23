@@ -1,6 +1,7 @@
 import { userQueries, userMutations } from './user'
 import { battleQueries, battleMutations } from './battle'
 import { battleUserQueries, battleUserMutations } from './battleUser'
+import { battleRequestQueries, battleRequestMutations } from './battleRequest'
 import { voteMutations, voteQueries } from './vote'
 import { ResolverMap } from '../../types/graphql-utils'
 import { commentMutations, commentQueries } from './comment'
@@ -23,6 +24,7 @@ const resolvers: ResolverMap = {
     ...battleQueries,
     ...userQueries,
     ...battleUserQueries,
+    ...battleRequestQueries,
     ...voteQueries,
     ...commentQueries,
     ...likeDislikeQueries,
@@ -31,6 +33,7 @@ const resolvers: ResolverMap = {
     ...battleMutations,
     ...userMutations,
     ...battleUserMutations,
+    ...battleRequestMutations,
     ...voteMutations,
     ...commentMutations,
     ...likeDislikeMutations,
