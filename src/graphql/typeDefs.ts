@@ -39,6 +39,12 @@ const typeDefs = `#graphql
     user: User
     likeDislikeCount: Int
   }
+  type BattleRequest {
+    id: ID!
+    battle: Battle
+    user: User
+  }
+
   type getUserBattlesResponse {
     battle:Battle
   }
@@ -61,6 +67,10 @@ const typeDefs = `#graphql
     getAllBattleUsers: [BattleUser]
     getBattleUsers(battleId:Int!): [getBattleUsersResponse]
     getUserBattles(userId: Int!): [getUserBattlesResponse]
+
+    getAllBattleRequests: [BattleRequest]
+    getBattleRequests(battleId:Int!): [BattleRequest]
+    getBattleRequest(battleRequestId:Int!): BattleRequest
 
     # Comment Queries
     getComments:[Comment]
