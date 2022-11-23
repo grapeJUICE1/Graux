@@ -1,13 +1,13 @@
 import { gql } from '@apollo/client'
 import client from '../../apollo-client'
 import { Battle as BattleType } from '../../gql/graphql'
-import Battle from '../../components/Battle/Battle'
+import BattleCard from '../../components/Battle/BattleCard'
 
 export default function BattlesPage({ battles }: any) {
   return (
     <>
       {battles.map((battle: BattleType) => {
-        return <Battle battle={battle} />
+        return <BattleCard battle={battle} />
       })}
     </>
   )
