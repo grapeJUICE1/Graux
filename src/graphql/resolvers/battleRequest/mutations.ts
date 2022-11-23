@@ -12,7 +12,7 @@ export default {
         let errors = []
         const battleRequest = await BattleRequest.findOne({
           where: { id: battleRequestId },
-          relations: { user: true, battle: { battleUsers: true } },
+          relations: { battle: { battleUsers: true }, user: true },
         })
 
         if (!battleRequest) {
@@ -35,7 +35,7 @@ export default {
           })
         }
         if (!battleRequest.validated) {
-          if (battleRequest.user.id === +payload.userId) {
+          if (battleRequest.userId === +payload.userId) {
             await BattleUser.insert({
               battle: battleRequest.battle,
               user: battleRequest.user,

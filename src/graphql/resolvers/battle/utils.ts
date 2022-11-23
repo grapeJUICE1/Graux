@@ -10,7 +10,7 @@ export const checkIfBattleExistsAndBattleCreatedByUser = async (
   //Check if battle exists
   const battle = await Battle.findOne({
     where: { id: battleId },
-    relations: { battleUsers: { user: true } },
+    relations: { battleUsers: true },
   })
   if (!battle) {
     errors.push({
@@ -23,8 +23,8 @@ export const checkIfBattleExistsAndBattleCreatedByUser = async (
   }
 
   // Check if battle has a user who created the battle
-  const battleCreator = battle.getBattleCreator
-  if (!battleCreator) {
+  const battleCreatorId = battle.getBattleCreator
+  if (!battleCreatorId) {
     errors.push({ path: 'battle', message: 'Battle does not exist' })
     return new GraphQLError('Validation Error', {
       extensions: { errors, code: 'BAD_USER_INPUT' },
@@ -32,7 +32,7 @@ export const checkIfBattleExistsAndBattleCreatedByUser = async (
   }
 
   // Check if battle was created by logged in user
-  if (user.id !== battleCreator.id) {
+  if (user.id !== battleCreatorId) {
     errors.push({
       path: 'battle',
       message: 'Battle was not created by you',

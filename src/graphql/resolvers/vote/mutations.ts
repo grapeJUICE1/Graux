@@ -36,42 +36,43 @@ export default {
           })
         }
 
-        const now = new Date()
-        if (now.getTime() > battleUser.battle.expires.getTime()) {
-          console.log('expired')
+        //        const now = new Date()
+        //        if (now.getTime() > battleUser.battle.expires.getTime()) {
+        //          console.log('expired')
 
-          battleUser.battle.status = BattleStatus.OVER
-          await battleUser.battle.save()
+        //          battleUser.battle.status = BattleStatus.OVER
+        ///          await battleUser.battle.save()
 
-          const winner = battleUser.battle.setBattleWinner()
-          console.log(winner)
-          if (winner instanceof BattleUser) {
-            winner.isWinner = true
-            BattleUser.save(winner)
-          }
-        }
+        //          const winner = battleUser.battle.setBattleWinner()
+        //          console.log(winner)
+        //          if (winner instanceof BattleUser) {
+        //            winner.isWinner = true
+        //            BattleUser.save(winner)
+        //          }
+        //        }
         const voteExists = await Vote.findOne({
           relations: { battleUser: true },
-          where: { battleUser: { id: battleUserId } },
+          where: { battleUserId: battleUserId },
         })
         if (voteExists) {
+          // remove the vote
           await Vote.remove(voteExists)
           const voteCount = await Vote.count({
-            relations: { battleUser: true },
-            where: { battleUser: { id: voteExists.battleUser.id } },
+            where: { battleUserId: voteExists.battleUserId },
           })
           voteExists.battleUser.voteCount = voteCount
           await BattleUser.save(voteExists.battleUser)
           return true
         }
+        // add the new vote
+
         await Vote.insert({
           user: req.user,
           battleUser: battleUser,
         })
 
         const voteCount = await Vote.count({
-          relations: { battleUser: true },
-          where: { battleUser: { id: battleUser.id } },
+          where: { battleUserId: battleUser.id },
         })
         battleUser.voteCount = voteCount
         await BattleUser.save(battleUser)

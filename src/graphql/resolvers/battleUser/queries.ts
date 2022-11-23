@@ -9,8 +9,8 @@ export default {
   },
   getBattleUsers: async (_: any, { battleId }) => {
     const battleUsers = await BattleUser.find({
-      where: { battle: { id: battleId } },
-      relations: { battle: true, user: true },
+      where: { battleId: battleId },
+      relations: { user: true },
     })
 
     if (!battleUsers) return new Error('The battle does not have any users yet')

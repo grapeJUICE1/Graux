@@ -1,5 +1,4 @@
 import { GraphQLError } from 'graphql'
-import { battleRequestQueries } from '.'
 import BattleRequest from '../../../entities/BattleRequest'
 
 export default {
@@ -13,8 +12,8 @@ export default {
   getBattleRequests: async (_, { battleId }) => {
     let errors = []
     const battleRequests = await BattleRequest.find({
-      relations: { battle: true, user: true },
-      where: { battle: { id: battleId } },
+      relations: { user: true },
+      where: { battleId: battleId },
     })
     if (!battleRequests) {
       errors.push({
@@ -35,6 +34,19 @@ export default {
       where: { id: battleRequestId },
       relations: { battle: true, user: true },
     })
+    if (!battleRequest) {
+      return new GraphQLError('Validation Error', {
+        extensions: {
+          errors: [
+            {
+              path: 'battleRequest',
+              message: 'Battle Request with that id was not found',
+            },
+          ],
+          code: 'BAD_USER_INPUT',
+        },
+      })
+    }
     return battleRequest
   },
 }

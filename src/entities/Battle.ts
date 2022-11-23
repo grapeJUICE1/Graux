@@ -45,7 +45,7 @@ export default class Battle extends AppBaseEntity {
     const battleUser = this.battleUsers.find(
       (battleUser) => battleUser.battleCreator === true
     )
-    return battleUser.user
+    return battleUser.userId
   }
 
   public setBattleWinner() {

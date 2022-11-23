@@ -64,7 +64,6 @@ export default {
         let errors = []
         const comment = await Comment.findOne({
           where: { id: commentId },
-          relations: { user: true },
         })
         if (!comment) {
           errors.push({
@@ -75,7 +74,7 @@ export default {
             extensions: { errors, code: 'BAD_USER_INPUT' },
           })
         }
-        if (comment.user.id !== Number(payload.userId)) {
+        if (comment.userId !== Number(payload.userId)) {
           errors.push({
             path: 'comment',
             message: 'Comment was not created by you',
@@ -105,7 +104,6 @@ export default {
         let errors = []
         const comment = await Comment.findOne({
           where: { id: commentId },
-          relations: { user: true },
         })
         if (!comment) {
           errors.push({
@@ -116,7 +114,7 @@ export default {
             extensions: { errors, code: 'BAD_USER_INPUT' },
           })
         }
-        if (comment.user.id !== Number(payload.userId)) {
+        if (comment.userId !== Number(payload.userId)) {
           errors.push({
             path: 'comment',
             message: 'Comment was not created by you',

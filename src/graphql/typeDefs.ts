@@ -43,6 +43,7 @@ const typeDefs = `#graphql
     id: ID!
     battle: Battle
     user: User
+    validated:Boolean
   }
 
   type getUserBattlesResponse {
