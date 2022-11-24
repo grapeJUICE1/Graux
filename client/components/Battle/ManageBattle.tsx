@@ -199,19 +199,68 @@ function ManageBattle() {
                       width='100%'
                       my='5'
                     >
-                      <Text fontSize='xl'>
+                      <span style={{ fontSize: '1.2rem' }}>
                         <Text display='inline' fontWeight='medium'>
                           Username:{' '}
                         </Text>
                         {battleUser?.user?.username}
-                      </Text>
-
-                      <Text fontSize='xl'>
+                      </span>
+                      <br />
+                      <span style={{ fontSize: '1.2rem' }}>
                         <Text display='inline' fontWeight='medium'>
                           Email:{' '}
                         </Text>
                         {battleUser?.user?.email}
-                      </Text>
+                      </span>
+                      {battleUser?.songName && (
+                        <Box
+                          border='1px'
+                          borderColor='cyan.500'
+                          width='90%'
+                          mt='5'
+                          p='5'
+                        >
+                          <span style={{ fontSize: '1rem' }}>
+                            <Text display='inline' fontWeight='medium'>
+                              Song Name:{' '}
+                            </Text>
+                            {battleUser?.songName}
+                          </span>
+                          <br />
+                          <span style={{ fontSize: '1rem' }}>
+                            <Text display='inline' fontWeight='medium'>
+                              Song Artist:{' '}
+                            </Text>
+                            {battleUser?.songArtist}
+                          </span>
+                          <br />
+                          <span style={{ fontSize: '1rem' }}>
+                            <Text display='inline' fontWeight='medium'>
+                              Song Album:{' '}
+                            </Text>
+                            {battleUser?.songAlbum}
+                          </span>
+                          <br />
+                          <span style={{ fontSize: '1rem' }}>
+                            <Text display='inline' fontWeight='medium'>
+                              Song Link:{' '}
+                            </Text>
+                            {battleUser?.songLink}
+                          </span>
+                          <br />
+                          <span style={{ fontSize: '1rem' }}>
+                            <Text display='inline' fontWeight='medium'>
+                              Song Image:{' '}
+                            </Text>
+                            <img
+                              style={{ width: '8rem' }}
+                              alt='song image'
+                              src={`${battleUser?.songImage}`}
+                            />
+                          </span>
+                          <br />
+                        </Box>
+                      )}
                       {battleCreator?.user?.username !==
                         battleUser?.user?.username && (
                         <Button
