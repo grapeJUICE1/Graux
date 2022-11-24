@@ -1,0 +1,38 @@
+query GetBattle($battleId: Int!, $manage: Boolean!) {
+  getBattle(battleId: $battleId, manage: $manage) {
+    id
+    uuid
+    title
+    status
+    likeDislikeCount
+    expires
+    createdAt
+    battleUsers {
+      battleCreator
+      createdAt
+      id
+      songArtist
+      songAlbum
+      isWinner
+      songImage
+      songLink
+      songName
+      user {
+        id
+        email
+        username
+      }
+      voteCount
+    }
+    battleRequests {
+      id
+      validated
+      user {
+        id
+        email
+        username
+        createdAt
+      }
+    }
+  }
+}

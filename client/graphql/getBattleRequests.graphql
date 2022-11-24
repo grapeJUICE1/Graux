@@ -1,0 +1,12 @@
+query GetBattleRequests($battleId: Int!) {
+  getBattleRequests(battleId: $battleId) {
+    id
+    user {
+      id
+      username
+      email
+      createdAt
+    }
+    validated
+  }
+}
