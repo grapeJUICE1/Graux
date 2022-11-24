@@ -9,27 +9,25 @@ export default {
     return battleRequests
   },
 
-  getBattleRequests: async (_, { battleId }) => {
-    let errors = []
+  getBattleRequests: async (_: any, { battleId }) => {
     const battleRequests = await BattleRequest.find({
       relations: { user: true },
       where: { battleId: battleId },
     })
-    if (!battleRequests) {
-      errors.push({
-        path: 'battleRequests',
-        message:
-          "Either this battle has no battle requests yet or battle with this id doesn't exist",
-      })
-      return new GraphQLError('Validation Error', {
-        extensions: { errors, code: 'BAD_USER_INPUT' },
-      })
-    }
 
     return battleRequests
   },
 
-  getBattleRequest: async (_, { battleRequestId }) => {
+  getUserBattleRequests: async (_: any, { userId }) => {
+    const battleRequests = await BattleRequest.find({
+      relations: { battle: true },
+      where: { userId: userId },
+    })
+
+    return battleRequests
+  },
+
+  getBattleRequest: async (_: any, { battleRequestId }) => {
     const battleRequest = BattleRequest.findOne({
       where: { id: battleRequestId },
       relations: { battle: true, user: true },
