@@ -1,16 +1,14 @@
 import {
   Alert,
-  AlertDescription,
   AlertIcon,
   AlertTitle,
   Box,
   Button,
   Center,
   Divider,
-  Flex,
-  HStack,
   Stack,
   Text,
+  useToast,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -19,13 +17,32 @@ import {
   BattleRequest,
   BattleUser,
   useGetBattleLazyQuery,
+  useMeLazyQuery,
 } from '../../gql/graphql'
 import formatDate from '../../utils/formatDate'
 
 function ManageBattle() {
   const router = useRouter()
+  const toast = useToast()
   const [getBattleQuery] = useGetBattleLazyQuery()
   const [battle, setBattle] = useState<Battle | null>(null)
+  const [battleCreator, setBattleCreator] = useState<BattleUser | null>(null)
+  const [meQuery] = useMeLazyQuery()
+
+  useEffect(() => {
+    if (battleCreator?.user?.username) {
+      meQuery().then((response) => {
+        if (response?.data?.me?.username !== battleCreator?.user?.username) {
+          toast({
+            description: 'You did not create this battle',
+            duration: 2000,
+            status: 'warning',
+          })
+          router.replace('/')
+        }
+      })
+    }
+  }, [battleCreator])
 
   useEffect(() => {
     if (router?.query?.id) {
@@ -33,11 +50,19 @@ function ManageBattle() {
         variables: { battleId: +router.query.id, manage: true },
       }).then((response) => {
         if (response?.data?.getBattle) {
-          setBattle(response?.data?.getBattle as Battle)
+          const battle = response?.data?.getBattle as Battle
+          setBattle(battle)
+          const battleCreator = battle?.battleUsers?.find(
+            (battleUser) => battleUser?.battleCreator === true
+          )
+          if (battleCreator) {
+            setBattleCreator(battleCreator)
+          }
         }
       })
     }
   }, [router.query.id])
+
   return (
     <Box>
       <Alert status='warning'>
