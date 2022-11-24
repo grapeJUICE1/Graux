@@ -204,7 +204,7 @@ export default {
 
         if (battleUser.battle.status !== BattleStatus.CREATION) {
           errors.push({
-            path: 'battle',
+            path: 'battleUser',
             message:
               'You can only add users to battle if battle is being created',
           })
@@ -214,12 +214,13 @@ export default {
         }
         battleUser.songName = songName
         battleUser.songArtist = songArtist
+        battleUser.songAlbum = songAlbum
         battleUser.songImage = songImage
         battleUser.songLink = songLink
 
         await BattleUser.save(battleUser)
 
-        return battleUser
+        return true
       } catch (err) {
         throw new Error(err)
       }

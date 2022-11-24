@@ -108,7 +108,7 @@ const typeDefs = `#graphql
     # Battle User Mutations
     addBattleUser(battleId:Int! ,userId:Int!): Boolean
     removeBattleUser(battleUserId:Int!): Boolean
-    chooseSong(battleId:Int!, songName:String! , songArtist:String! , songAlbum:String! , songImage:String! , songLink:String!):BattleUser
+    chooseSong(battleId:Int!, songName:String! , songArtist:String! , songAlbum:String! , songImage:String! , songLink:String!):Boolean
 
     # Vote Mutations
     vote(battleUserId:Int!):Boolean
