@@ -72,6 +72,7 @@ const typeDefs = `#graphql
 
     getAllBattleRequests: [BattleRequest]
     getBattleRequests(battleId:Int!): [BattleRequest]
+    getUserBattleRequests(userId:Int!): [BattleRequest]
     getBattleRequest(battleRequestId:Int!): BattleRequest
 
     # Comment Queries
