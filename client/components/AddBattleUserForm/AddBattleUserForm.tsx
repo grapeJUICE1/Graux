@@ -19,14 +19,17 @@ import React, { useEffect, useState } from 'react'
 import * as Yup from 'yup'
 import {
   useAddBattleUserMutation,
+  useGetUsersLazyQuery,
   useGetUsersQuery,
   User,
 } from '../../gql/graphql'
 
 function AddBattleUserForm() {
   let [addBattleUser] = useAddBattleUserMutation()
+
   const toast = useToast()
   const router = useRouter()
+
   const [options, setOptions] = useState<User[]>([])
   const [optionChoosed, setOptionChoosed] = useState<String | null>(null)
   const [optionWasChoosed, setOptionWasChoosed] = useState<boolean>(false)
@@ -41,7 +44,8 @@ function AddBattleUserForm() {
         .max(30, "Can't exceed 30 characters")
         .required('Required'),
     }),
-    onSubmit: async (values, { setFieldError }) => {
+
+    onSubmit: async (_, { setFieldError }) => {
       try {
         if (!optionChoosed) {
           toast.closeAll()
@@ -54,7 +58,7 @@ function AddBattleUserForm() {
           })
           return
         }
-        const response = await addBattleUser({
+        await addBattleUser({
           variables: {
             userId: +optionChoosed,
             battleId: +router?.query?.id! as number,
@@ -67,7 +71,7 @@ function AddBattleUserForm() {
           status: 'success',
           duration: 2000,
         })
-        router.replace(`/battles/${router.query.id}/`)
+        router.replace(`/battles/${router.query.id}/manage`)
       } catch (err) {
         toast.closeAll()
         //@ts-ignore
@@ -99,14 +103,13 @@ function AddBattleUserForm() {
     },
   })
 
-  const { refetch } = useGetUsersQuery({})
+  const [getUsersQuery] = useGetUsersLazyQuery({})
 
   useEffect(() => {
     if (!optionWasChoosed && formik.values.username.length > 0) {
-      refetch({
-        search: formik.values.username,
+      getUsersQuery({
+        variables: { search: formik.values.username },
       }).then(({ data }) => {
-        console.log(data)
         //@ts-ignore
         setOptions(data?.getUsers)
       })
@@ -114,6 +117,7 @@ function AddBattleUserForm() {
       setOptionWasChoosed(false)
     }
   }, [formik.values.username])
+
   return (
     <Flex
       minH={'80vh'}
@@ -151,6 +155,9 @@ function AddBattleUserForm() {
                   autoFocus
                   onChange={async (evt) => {
                     formik.handleChange(evt)
+                    if (optionChoosed) {
+                      setOptionChoosed(null)
+                    }
                   }}
                 />
                 {formik.touched.username && formik.errors.username ? (
@@ -180,7 +187,7 @@ function AddBattleUserForm() {
               </FormControl>
               <Stack spacing={10}>
                 <Button
-                  isDisabled={!formik.isValid}
+                  isDisabled={!optionChoosed}
                   type='submit'
                   bg={'cyan.400'}
                   color={'white'}

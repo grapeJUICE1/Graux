@@ -16,7 +16,6 @@ export default {
         where: { battleId: battleId, userId: userId },
         relations: { battle: { battleUsers: true }, user: true },
       })
-      console.log(battleRequest)
       if (battleRequest) {
         errors.push({
           path: 'username',
@@ -51,7 +50,15 @@ export default {
           extensions: { errors, code: 'BAD_USER_INPUT' },
         })
       }
-
+      if (battle.battleUsers.length >= 2) {
+        errors.push({
+          path: 'username',
+          message: 'Battle already has 2 users',
+        })
+        return new GraphQLError('Validation Error', {
+          extensions: { errors, code: 'BAD_USER_INPUT' },
+        })
+      }
       const user = await User.findOne({ where: { id: userId } })
       if (!user) {
         errors.push({
