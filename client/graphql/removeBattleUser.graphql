@@ -1,0 +1,3 @@
+mutation RemoveBattleUser($battleUserId: Int!) {
+  removeBattleUser(battleUserId: $battleUserId)
+}

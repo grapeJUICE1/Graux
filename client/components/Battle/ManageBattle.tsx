@@ -18,16 +18,75 @@ import {
   BattleUser,
   useGetBattleLazyQuery,
   useMeLazyQuery,
+  useRemoveBattleUserMutation,
+  useRemoveBattleRequestMutation,
 } from '../../gql/graphql'
 import formatDate from '../../utils/formatDate'
 
 function ManageBattle() {
   const router = useRouter()
   const toast = useToast()
-  const [getBattleQuery] = useGetBattleLazyQuery()
+
   const [battle, setBattle] = useState<Battle | null>(null)
   const [battleCreator, setBattleCreator] = useState<BattleUser | null>(null)
+
+  const [getBattleQuery] = useGetBattleLazyQuery()
   const [meQuery] = useMeLazyQuery()
+  const [removeBattleUser] = useRemoveBattleUserMutation()
+  const [removeBattleRequest] = useRemoveBattleRequestMutation()
+
+  function battleQuery(battleId: number) {
+    getBattleQuery({
+      variables: { battleId: battleId, manage: true },
+      fetchPolicy: 'network-only',
+    }).then((response) => {
+      if (response?.data?.getBattle) {
+        const battle = response?.data?.getBattle as Battle
+        setBattle(battle)
+        const battleCreator = battle?.battleUsers?.find(
+          (battleUser) => battleUser?.battleCreator === true
+        )
+        if (battleCreator) {
+          setBattleCreator(battleCreator)
+        }
+      }
+    })
+  }
+  async function handleRemoveButtonOnClick(
+    type: 'removeBattleUser' | 'removeBattleRequest',
+    id: number
+  ) {
+    try {
+      let mutationToUse =
+        type === 'removeBattleUser' ? removeBattleUser : removeBattleRequest
+
+      let mutationVariables:
+        | { battleUserId: number }
+        | { battleRequestId: number } =
+        type === 'removeBattleUser'
+          ? { battleUserId: id }
+          : { battleRequestId: id }
+
+      //@ts-ignore
+      await mutationToUse({ variables: mutationVariables })
+      if (router?.query?.id) battleQuery(+router?.query?.id)
+      toast({
+        description: 'Battle user removed successfully',
+        status: 'success',
+        duration: 2000,
+      })
+    } catch (err) {
+      let description = 'something went wrong'
+      //@ts-ignore
+      let error = err?.graphQLErrors[0].extensions?.errors[0]
+      if (error?.message) description = error?.message
+      toast({
+        description,
+        status: 'error',
+        duration: 2000,
+      })
+    }
+  }
 
   useEffect(() => {
     if (battleCreator?.user?.username) {
@@ -103,7 +162,9 @@ function ManageBattle() {
                 <Text display='inline' fontWeight='medium'>
                   Battle Expires At :{' '}
                 </Text>
-                {battle?.expires ? formatDate(+battle.expires) : ''}
+                {battle?.expires
+                  ? formatDate(+battle.expires)
+                  : 'No expiry date set yet as battle is not yet active'}
               </Text>
               <Divider />
               <Text py='2' fontSize='xl' textAlign='center'>
@@ -151,9 +212,21 @@ function ManageBattle() {
                         </Text>
                         {battleUser?.user?.email}
                       </Text>
-                      <Button colorScheme='red' mt='5'>
-                        Remove Battle User
-                      </Button>
+                      {battleCreator?.user?.username !==
+                        battleUser?.user?.username && (
+                        <Button
+                          onClick={async () =>
+                            handleRemoveButtonOnClick(
+                              'removeBattleUser',
+                              +battleUser?.id
+                            )
+                          }
+                          colorScheme='red'
+                          mt='5'
+                        >
+                          Remove Battle User
+                        </Button>
+                      )}
                     </Box>
                   )
                 })}
@@ -162,6 +235,14 @@ function ManageBattle() {
               <Text fontSize='2xl' mt='10'>
                 Battle Requests
               </Text>
+              <Button
+                colorScheme='cyan'
+                onClick={() =>
+                  router.push(`/battles/${router?.query?.id}/users`)
+                }
+              >
+                Request People To Join the battle
+              </Button>
               {battle?.battleRequests &&
                 //@ts-ignore
                 battle?.battleRequests?.map((battleRequest: BattleRequest) => {
@@ -187,11 +268,17 @@ function ManageBattle() {
                         </Text>
                         {battleRequest?.validated?.toString() || ''}
                       </Text>
-                      <Button colorScheme='cyan' mr='3' mt='5'>
-                        Approve Battle Request
-                      </Button>
-                      <Button colorScheme='red' mt='5'>
-                        Delete Battle Request
+                      <Button
+                        onClick={async () =>
+                          handleRemoveButtonOnClick(
+                            'removeBattleRequest',
+                            +battleRequest?.id
+                          )
+                        }
+                        colorScheme='red'
+                        mt='5'
+                      >
+                        Remove Battle Request
                       </Button>
                     </Box>
                   )
@@ -203,5 +290,4 @@ function ManageBattle() {
     </>
   )
 }
-
 export default ManageBattle
