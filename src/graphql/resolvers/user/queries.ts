@@ -45,13 +45,6 @@ export default {
   getUserBattles: async (_: any, { userId }) => {
     try {
       const battles = await BattleUser.find({
-        select: {
-          songName: false,
-          songArtist: false,
-          songAlbum: false,
-          songImage: false,
-          songLink: false,
-        },
         relations: { battle: true },
         where: { user: userId },
       })
