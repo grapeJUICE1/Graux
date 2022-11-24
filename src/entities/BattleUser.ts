@@ -43,9 +43,6 @@ export default class BattleUser extends AppBaseEntity {
   songArtist: string
 
   @Column({ nullable: true })
-  songAlbum: string
-
-  @Column({ nullable: true })
   songImage: string
 
   @Column({ nullable: true })

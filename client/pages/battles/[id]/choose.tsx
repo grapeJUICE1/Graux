@@ -1,5 +1,7 @@
+import Choose from '../../../components/Choose/Choose'
+
 function ChooseSongPage() {
-  return <div>Choose Song</div>
+  return <Choose />
 }
 
 export default ChooseSongPage

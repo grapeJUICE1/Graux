@@ -20,7 +20,6 @@ import * as Yup from 'yup'
 import {
   useAddBattleUserMutation,
   useGetUsersLazyQuery,
-  useGetUsersQuery,
   User,
 } from '../../gql/graphql'
 

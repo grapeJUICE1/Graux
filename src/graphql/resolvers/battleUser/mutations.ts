@@ -214,7 +214,6 @@ export default {
         }
         battleUser.songName = songName
         battleUser.songArtist = songArtist
-        battleUser.songAlbum = songAlbum
         battleUser.songImage = songImage
         battleUser.songLink = songLink
 
