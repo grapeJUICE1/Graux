@@ -63,6 +63,43 @@ export default {
         }
       } catch (err) {
         console.log(err)
+        throw new Error(err)
+      }
+    }
+  ),
+  removeBattleRequest: addMiddleware(
+    isAuthMiddleware,
+    async (_: any, { battleRequestId }, { payload }) => {
+      try {
+        let errors = []
+        const battleRequest = await BattleRequest.findOne({
+          where: { id: battleRequestId },
+          relations: { battle: { battleUsers: true } },
+        })
+
+        if (!battleRequest) {
+          errors.push({
+            path: 'battleRequest',
+            message: 'BattleRequest with that id does not exist',
+          })
+          return new GraphQLError('Validation Error', {
+            extensions: { errors, code: 'BAD_USER_INPUT' },
+          })
+        }
+        if (battleRequest.battle.getBattleCreator !== +payload.userId) {
+          errors.push({
+            path: 'battleRequest',
+            message: 'Battle was not created by you',
+          })
+          return new GraphQLError('Validation Error', {
+            extensions: { errors, code: 'BAD_USER_INPUT' },
+          })
+        }
+        await battleRequest.remove()
+        return true
+      } catch (err) {
+        console.log(err)
+        throw new Error(err)
       }
     }
   ),

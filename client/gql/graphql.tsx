@@ -81,6 +81,7 @@ export type Mutation = {
   likeDislike?: Maybe<BattleOrComment>;
   login?: Maybe<LoginResponse>;
   register?: Maybe<User>;
+  removeBattleRequest?: Maybe<Scalars['Boolean']>;
   removeBattleUser?: Maybe<Scalars['Boolean']>;
   removeComment?: Maybe<Scalars['Boolean']>;
   startBattle?: Maybe<Scalars['Boolean']>;
@@ -145,6 +146,11 @@ export type MutationRegisterArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
   username: Scalars['String'];
+};
+
+
+export type MutationRemoveBattleRequestArgs = {
+  battleRequestId: Scalars['Int'];
 };
 
 
@@ -335,6 +341,20 @@ export type RegisterMutationVariables = Exact<{
 
 
 export type RegisterMutation = { __typename?: 'Mutation', register?: { __typename?: 'User', id: string, email: string, createdAt?: string | null, username: string } | null };
+
+export type RemoveBattleRequestMutationVariables = Exact<{
+  battleRequestId: Scalars['Int'];
+}>;
+
+
+export type RemoveBattleRequestMutation = { __typename?: 'Mutation', removeBattleRequest?: boolean | null };
+
+export type RemoveBattleUserMutationVariables = Exact<{
+  battleUserId: Scalars['Int'];
+}>;
+
+
+export type RemoveBattleUserMutation = { __typename?: 'Mutation', removeBattleUser?: boolean | null };
 
 export type TestQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -705,6 +725,68 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const RemoveBattleRequestDocument = gql`
+    mutation RemoveBattleRequest($battleRequestId: Int!) {
+  removeBattleRequest(battleRequestId: $battleRequestId)
+}
+    `;
+export type RemoveBattleRequestMutationFn = Apollo.MutationFunction<RemoveBattleRequestMutation, RemoveBattleRequestMutationVariables>;
+
+/**
+ * __useRemoveBattleRequestMutation__
+ *
+ * To run a mutation, you first call `useRemoveBattleRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveBattleRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeBattleRequestMutation, { data, loading, error }] = useRemoveBattleRequestMutation({
+ *   variables: {
+ *      battleRequestId: // value for 'battleRequestId'
+ *   },
+ * });
+ */
+export function useRemoveBattleRequestMutation(baseOptions?: Apollo.MutationHookOptions<RemoveBattleRequestMutation, RemoveBattleRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveBattleRequestMutation, RemoveBattleRequestMutationVariables>(RemoveBattleRequestDocument, options);
+      }
+export type RemoveBattleRequestMutationHookResult = ReturnType<typeof useRemoveBattleRequestMutation>;
+export type RemoveBattleRequestMutationResult = Apollo.MutationResult<RemoveBattleRequestMutation>;
+export type RemoveBattleRequestMutationOptions = Apollo.BaseMutationOptions<RemoveBattleRequestMutation, RemoveBattleRequestMutationVariables>;
+export const RemoveBattleUserDocument = gql`
+    mutation RemoveBattleUser($battleUserId: Int!) {
+  removeBattleUser(battleUserId: $battleUserId)
+}
+    `;
+export type RemoveBattleUserMutationFn = Apollo.MutationFunction<RemoveBattleUserMutation, RemoveBattleUserMutationVariables>;
+
+/**
+ * __useRemoveBattleUserMutation__
+ *
+ * To run a mutation, you first call `useRemoveBattleUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveBattleUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeBattleUserMutation, { data, loading, error }] = useRemoveBattleUserMutation({
+ *   variables: {
+ *      battleUserId: // value for 'battleUserId'
+ *   },
+ * });
+ */
+export function useRemoveBattleUserMutation(baseOptions?: Apollo.MutationHookOptions<RemoveBattleUserMutation, RemoveBattleUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveBattleUserMutation, RemoveBattleUserMutationVariables>(RemoveBattleUserDocument, options);
+      }
+export type RemoveBattleUserMutationHookResult = ReturnType<typeof useRemoveBattleUserMutation>;
+export type RemoveBattleUserMutationResult = Apollo.MutationResult<RemoveBattleUserMutation>;
+export type RemoveBattleUserMutationOptions = Apollo.BaseMutationOptions<RemoveBattleUserMutation, RemoveBattleUserMutationVariables>;
 export const TestDocument = gql`
     query Test {
   test

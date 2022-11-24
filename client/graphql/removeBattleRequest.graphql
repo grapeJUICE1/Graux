@@ -1,0 +1,3 @@
+mutation RemoveBattleRequest($battleRequestId: Int!) {
+  removeBattleRequest(battleRequestId: $battleRequestId)
+}
