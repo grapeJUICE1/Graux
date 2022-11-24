@@ -1,4 +1,11 @@
-import { Box, Spinner, Text } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  Box,
+  Spinner,
+  Text,
+} from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import {
@@ -43,10 +50,16 @@ function BattleRequests() {
     <>
       {me ? (
         <Box>
-          {battleRequests &&
+          {battleRequests?.length ? (
             battleRequests.map((battleRequest: BattleRequestType) => {
               return <BattleRequest battleRequest={battleRequest} />
-            })}
+            })
+          ) : (
+            <Alert status='warning'>
+              <AlertIcon />
+              <AlertTitle>You currently have no battle requests</AlertTitle>
+            </Alert>
+          )}
         </Box>
       ) : (
         <Spinner />

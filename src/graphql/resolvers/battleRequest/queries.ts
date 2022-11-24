@@ -30,7 +30,7 @@ export default {
   getBattleRequest: async (_: any, { battleRequestId }) => {
     const battleRequest = BattleRequest.findOne({
       where: { id: battleRequestId },
-      relations: { battle: true, user: true },
+      relations: { battle: { battleUsers: { user: true } } },
     })
     if (!battleRequest) {
       return new GraphQLError('Validation Error', {

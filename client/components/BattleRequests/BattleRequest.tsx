@@ -15,9 +15,10 @@ function BattleRequest({ battleRequest }: { battleRequest: BattleRequest }) {
 
   return (
     <Box>
-      <Text>{battleRequest?.battle?.title}</Text>
-      <Text>{battleRequest?.battle?.status}</Text>
-      <Text> {battleCreator?.user?.username} </Text>
+      <Text> title : {battleRequest?.battle?.title}</Text>
+      <Text> status : {battleRequest?.battle?.status}</Text>
+      <Text> username : {battleCreator?.user?.username} </Text>
+      <Text> validated : {battleRequest?.validated?.toString()} </Text>
       <Button
         onClick={() =>
           router.push(`/users/approveBattleRequest/${battleRequest?.id}`)

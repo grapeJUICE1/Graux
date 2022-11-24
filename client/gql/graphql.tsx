@@ -33,6 +33,7 @@ export type BattleOrComment = Battle | Comment;
 export type BattleRequest = {
   __typename?: 'BattleRequest';
   battle?: Maybe<Battle>;
+  createdAt?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   user?: Maybe<User>;
   validated?: Maybe<Scalars['Boolean']>;
@@ -324,6 +325,13 @@ export type GetBattleQueryVariables = Exact<{
 
 export type GetBattleQuery = { __typename?: 'Query', getBattle?: { __typename?: 'Battle', id: string, uuid: string, title: string, status: string, likeDislikeCount?: number | null, expires?: string | null, createdAt?: string | null, battleUsers?: Array<{ __typename?: 'BattleUser', battleCreator?: boolean | null, createdAt?: string | null, id: string, songArtist?: string | null, songAlbum?: string | null, isWinner?: boolean | null, songImage?: string | null, songLink?: string | null, songName?: string | null, voteCount?: number | null, user?: { __typename?: 'User', id: string, email: string, username: string } | null } | null> | null, battleRequests?: Array<{ __typename?: 'BattleRequest', id: string, validated?: boolean | null, user?: { __typename?: 'User', id: string, email: string, username: string, createdAt?: string | null } | null } | null> | null } | null };
 
+export type GetBattleRequestQueryVariables = Exact<{
+  battleRequestId: Scalars['Int'];
+}>;
+
+
+export type GetBattleRequestQuery = { __typename?: 'Query', getBattleRequest?: { __typename?: 'BattleRequest', id: string, validated?: boolean | null, createdAt?: string | null, battle?: { __typename?: 'Battle', id: string, title: string, status: string, createdAt?: string | null, battleUsers?: Array<{ __typename?: 'BattleUser', id: string, battleCreator?: boolean | null, user?: { __typename?: 'User', id: string, email: string, username: string } | null } | null> | null } | null } | null };
+
 export type GetBattleRequestsQueryVariables = Exact<{
   battleId: Scalars['Int'];
 }>;
@@ -600,6 +608,58 @@ export function useGetBattleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type GetBattleQueryHookResult = ReturnType<typeof useGetBattleQuery>;
 export type GetBattleLazyQueryHookResult = ReturnType<typeof useGetBattleLazyQuery>;
 export type GetBattleQueryResult = Apollo.QueryResult<GetBattleQuery, GetBattleQueryVariables>;
+export const GetBattleRequestDocument = gql`
+    query GetBattleRequest($battleRequestId: Int!) {
+  getBattleRequest(battleRequestId: $battleRequestId) {
+    id
+    validated
+    createdAt
+    battle {
+      id
+      title
+      status
+      battleUsers {
+        id
+        battleCreator
+        user {
+          id
+          email
+          username
+        }
+      }
+      createdAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetBattleRequestQuery__
+ *
+ * To run a query within a React component, call `useGetBattleRequestQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBattleRequestQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBattleRequestQuery({
+ *   variables: {
+ *      battleRequestId: // value for 'battleRequestId'
+ *   },
+ * });
+ */
+export function useGetBattleRequestQuery(baseOptions: Apollo.QueryHookOptions<GetBattleRequestQuery, GetBattleRequestQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBattleRequestQuery, GetBattleRequestQueryVariables>(GetBattleRequestDocument, options);
+      }
+export function useGetBattleRequestLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBattleRequestQuery, GetBattleRequestQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBattleRequestQuery, GetBattleRequestQueryVariables>(GetBattleRequestDocument, options);
+        }
+export type GetBattleRequestQueryHookResult = ReturnType<typeof useGetBattleRequestQuery>;
+export type GetBattleRequestLazyQueryHookResult = ReturnType<typeof useGetBattleRequestLazyQuery>;
+export type GetBattleRequestQueryResult = Apollo.QueryResult<GetBattleRequestQuery, GetBattleRequestQueryVariables>;
 export const GetBattleRequestsDocument = gql`
     query GetBattleRequests($battleId: Int!) {
   getBattleRequests(battleId: $battleId) {
