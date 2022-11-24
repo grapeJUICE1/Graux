@@ -12,7 +12,7 @@ export default {
   test: addMiddleware(isAuthMiddleware, async () => {
     return 'testo desu ne'
   }),
-  getUsers: async (_, { search }) => {
+  getUsers: async (_: any, { search }) => {
     try {
       const users = await User.find({
         where: { username: search ? ILike(`%${search}%`) : undefined },

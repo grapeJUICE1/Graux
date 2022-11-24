@@ -74,7 +74,7 @@ export type Mutation = {
   addBattleUser?: Maybe<Scalars['Boolean']>;
   addComment?: Maybe<Comment>;
   approveBattleRequest?: Maybe<Scalars['Boolean']>;
-  chooseSong?: Maybe<BattleUser>;
+  chooseSong?: Maybe<Scalars['Boolean']>;
   createBattle?: Maybe<Battle>;
   deleteBattle?: Maybe<Scalars['Boolean']>;
   deleteUser?: Maybe<Scalars['Boolean']>;
@@ -291,6 +291,18 @@ export type ApproveBattleRequestMutationVariables = Exact<{
 
 export type ApproveBattleRequestMutation = { __typename?: 'Mutation', approveBattleRequest?: boolean | null };
 
+export type ChooseSongMutationVariables = Exact<{
+  battleId: Scalars['Int'];
+  songName: Scalars['String'];
+  songArtist: Scalars['String'];
+  songAlbum: Scalars['String'];
+  songImage: Scalars['String'];
+  songLink: Scalars['String'];
+}>;
+
+
+export type ChooseSongMutation = { __typename?: 'Mutation', chooseSong?: boolean | null };
+
 export type CreateBattleMutationVariables = Exact<{
   title: Scalars['String'];
 }>;
@@ -425,6 +437,49 @@ export function useApproveBattleRequestMutation(baseOptions?: Apollo.MutationHoo
 export type ApproveBattleRequestMutationHookResult = ReturnType<typeof useApproveBattleRequestMutation>;
 export type ApproveBattleRequestMutationResult = Apollo.MutationResult<ApproveBattleRequestMutation>;
 export type ApproveBattleRequestMutationOptions = Apollo.BaseMutationOptions<ApproveBattleRequestMutation, ApproveBattleRequestMutationVariables>;
+export const ChooseSongDocument = gql`
+    mutation ChooseSong($battleId: Int!, $songName: String!, $songArtist: String!, $songAlbum: String!, $songImage: String!, $songLink: String!) {
+  chooseSong(
+    battleId: $battleId
+    songName: $songName
+    songArtist: $songArtist
+    songAlbum: $songAlbum
+    songImage: $songImage
+    songLink: $songLink
+  )
+}
+    `;
+export type ChooseSongMutationFn = Apollo.MutationFunction<ChooseSongMutation, ChooseSongMutationVariables>;
+
+/**
+ * __useChooseSongMutation__
+ *
+ * To run a mutation, you first call `useChooseSongMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChooseSongMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [chooseSongMutation, { data, loading, error }] = useChooseSongMutation({
+ *   variables: {
+ *      battleId: // value for 'battleId'
+ *      songName: // value for 'songName'
+ *      songArtist: // value for 'songArtist'
+ *      songAlbum: // value for 'songAlbum'
+ *      songImage: // value for 'songImage'
+ *      songLink: // value for 'songLink'
+ *   },
+ * });
+ */
+export function useChooseSongMutation(baseOptions?: Apollo.MutationHookOptions<ChooseSongMutation, ChooseSongMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChooseSongMutation, ChooseSongMutationVariables>(ChooseSongDocument, options);
+      }
+export type ChooseSongMutationHookResult = ReturnType<typeof useChooseSongMutation>;
+export type ChooseSongMutationResult = Apollo.MutationResult<ChooseSongMutation>;
+export type ChooseSongMutationOptions = Apollo.BaseMutationOptions<ChooseSongMutation, ChooseSongMutationVariables>;
 export const CreateBattleDocument = gql`
     mutation CreateBattle($title: String!) {
   createBattle(title: $title) {

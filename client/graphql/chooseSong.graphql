@@ -1,0 +1,17 @@
+mutation ChooseSong(
+  $battleId: Int!
+  $songName: String!
+  $songArtist: String!
+  $songAlbum: String!
+  $songImage: String!
+  $songLink: String!
+) {
+  chooseSong(
+    battleId: $battleId
+    songName: $songName
+    songArtist: $songArtist
+    songAlbum: $songAlbum
+    songImage: $songImage
+    songLink: $songLink
+  )
+}
