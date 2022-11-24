@@ -6,6 +6,7 @@ import {
   Button,
   Center,
   Divider,
+  Spinner,
   Stack,
   Text,
   useToast,
@@ -31,7 +32,7 @@ function ManageBattle() {
   const [battleCreator, setBattleCreator] = useState<BattleUser | null>(null)
 
   const [getBattleQuery] = useGetBattleLazyQuery()
-  const [meQuery] = useMeLazyQuery()
+  const [meQuery, { data }] = useMeLazyQuery()
   const [removeBattleUser] = useRemoveBattleUserMutation()
   const [removeBattleRequest] = useRemoveBattleRequestMutation()
 
@@ -121,10 +122,10 @@ function ManageBattle() {
       })
     }
   }, [router.query.id])
-
+  console.log(data)
   return (
     <>
-      {battleCreator?.user?.username && (
+      {data?.me && battleCreator?.user?.username ? (
         <Box>
           <Alert status='warning'>
             <AlertIcon />
@@ -335,6 +336,8 @@ function ManageBattle() {
             </Box>
           </Stack>
         </Box>
+      ) : (
+        <Spinner size='xl' />
       )}
     </>
   )
