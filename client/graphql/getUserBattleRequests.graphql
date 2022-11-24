@@ -1,0 +1,21 @@
+query GetUserBattleRequests($userId: Int!) {
+  getUserBattleRequests(userId: $userId) {
+    id
+    validated
+    battle {
+      id
+      title
+      status
+      expires
+      createdAt
+      battleUsers {
+        user {
+          email
+          username
+          id
+        }
+        battleCreator
+      }
+    }
+  }
+}

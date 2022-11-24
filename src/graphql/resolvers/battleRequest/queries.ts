@@ -20,7 +20,7 @@ export default {
 
   getUserBattleRequests: async (_: any, { userId }) => {
     const battleRequests = await BattleRequest.find({
-      relations: { battle: true },
+      relations: { battle: { battleUsers: { user: true } } },
       where: { userId: userId },
     })
 
