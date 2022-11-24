@@ -213,7 +213,7 @@ function ManageBattle() {
                         </Text>
                         {battleUser?.user?.email}
                       </span>
-                      {battleUser?.songName && (
+                      {battleUser?.songName ? (
                         <Box
                           border='1px'
                           borderColor='cyan.500'
@@ -261,7 +261,10 @@ function ManageBattle() {
                           </span>
                           <br />
                         </Box>
+                      ) : (
+                        <Text>Song not chosen yet</Text>
                       )}
+                      <br />
                       {battleCreator?.user?.username !==
                         battleUser?.user?.username && (
                         <Button

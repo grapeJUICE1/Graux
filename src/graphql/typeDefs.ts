@@ -45,6 +45,7 @@ const typeDefs = `#graphql
     battle: Battle
     user: User
     validated:Boolean
+    createdAt:String
   }
 
   type getUserBattlesResponse {
