@@ -30,6 +30,7 @@ const typeDefs = `#graphql
    battleUsers: [BattleUser]
    createdAt:String
    likeDislikeCount: Int
+   battleRequests:[BattleRequest]
   }
 
   type Comment {
@@ -58,7 +59,7 @@ const typeDefs = `#graphql
     
     # Battle Queries
     getBattles: [Battle]
-    getBattle(battleId:Int!): Battle
+    getBattle(battleId:Int! manage:Boolean!): Battle
 
     # User Queries
     getUsers(search:String):[User]

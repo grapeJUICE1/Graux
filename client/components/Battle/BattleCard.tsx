@@ -2,14 +2,9 @@ import { Box, Flex, Link, Text } from '@chakra-ui/react'
 import React from 'react'
 import NextLink from 'next/link'
 import { Battle as BattleType } from '../../gql/graphql'
+import formatDate from '../../utils/formatDate'
 
 function Battle({ battle }: { battle: BattleType }) {
-  const options: Intl.DateTimeFormatOptions = {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }
   return (
     <Flex p={50} w='full' alignItems='center' justifyContent='center'>
       <Box
@@ -32,9 +27,7 @@ function Battle({ battle }: { battle: BattleType }) {
               color: 'gray.400',
             }}
           >
-            {battle.createdAt
-              ? new Date(+battle.createdAt).toLocaleString(undefined, options)
-              : ''}
+            {battle.createdAt ? formatDate(+battle.createdAt) : ''}
           </Text>
           <Link
             px={3}

@@ -13,11 +13,15 @@ export default {
     }
   },
 
-  async getBattle(_: any, { battleId }) {
+  async getBattle(_: any, { battleId, manage }) {
     try {
       const battle = await Battle.findOne({
         where: { id: battleId },
-        relations: { battleUsers: true },
+        relations: {
+          battleUsers: { user: true },
+          comments: manage ? undefined : true,
+          battleRequests: manage ? { user: true } : undefined,
+        },
       })
       if (!battle) {
         return new GraphQLError('Validation Error', {
