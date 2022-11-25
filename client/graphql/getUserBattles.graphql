@@ -1,0 +1,31 @@
+query GetUserBattles($userId: Int!) {
+  getUserBattles(userId: $userId) {
+    battle {
+      id
+      title
+      uuid
+      status
+      likeDislikeCount
+      expires
+      createdAt
+      battleUsers {
+        id
+        isWinner
+        songAlbum
+        songImage
+        songArtist
+        songLink
+        songName
+        voteCount
+        createdAt
+        battleCreator
+        user {
+          id
+          username
+          email
+          createdAt
+        }
+      }
+    }
+  }
+}

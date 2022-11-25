@@ -1,12 +1,18 @@
 import { Box, Flex, Link, Text } from '@chakra-ui/react'
-import React from 'react'
+import React, { useMemo } from 'react'
 import NextLink from 'next/link'
 import { Battle as BattleType } from '../../gql/graphql'
 import formatDate from '../../utils/formatDate'
 
 function Battle({ battle }: { battle: BattleType }) {
+  const battleCreator = useMemo(() => {
+    return battle?.battleUsers?.find((battleUser) => {
+      return battleUser?.battleCreator ? true : false
+    })
+  }, [battle])
+
   return (
-    <Flex p={50} w='full' alignItems='center' justifyContent='center'>
+    <Flex p={41} w='full' alignItems='center' justifyContent='center'>
       <Box
         mx='auto'
         px={8}
@@ -17,7 +23,7 @@ function Battle({ battle }: { battle: BattleType }) {
         _dark={{
           bg: 'gray.700',
         }}
-        w='50vw'
+        w='55rem'
       >
         <Flex justifyContent='space-between' alignItems='center'>
           <Text
@@ -118,9 +124,7 @@ function Battle({ battle }: { battle: BattleType }) {
               fontWeight='700'
               display='inline'
             >
-              {battle?.battleUsers
-                ? battle?.battleUsers[1]?.user?.username
-                : ''}
+              {battleCreator ? battleCreator?.user?.username : ''}
             </Text>
           </Link>
           <Flex alignItems='center'>
