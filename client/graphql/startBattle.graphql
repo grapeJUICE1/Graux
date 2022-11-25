@@ -1,0 +1,3 @@
+mutation StartBattle($battleId: Int!, $hoursTillActive: Int!) {
+  startBattle(battleId: $battleId, hoursTillActive: $hoursTillActive)
+}

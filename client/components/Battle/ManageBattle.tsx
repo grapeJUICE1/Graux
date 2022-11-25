@@ -6,13 +6,30 @@ import {
   Button,
   Center,
   Divider,
+  FormControl,
+  FormLabel,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Spinner,
   Stack,
   Text,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react'
+import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
+import * as Yup from 'yup'
 import {
   Battle,
   BattleRequest,
@@ -21,9 +38,127 @@ import {
   useMeLazyQuery,
   useRemoveBattleUserMutation,
   useRemoveBattleRequestMutation,
+  useStartBattleMutation,
 } from '../../gql/graphql'
 import formatDate from '../../utils/formatDate'
 
+function StartBattleButton({ battleId }: { battleId: number }) {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [startBattle] = useStartBattleMutation()
+  const toast = useToast()
+  const router = useRouter()
+
+  const formik = useFormik({
+    initialValues: { hours: 10 },
+    validationSchema: Yup.object({
+      hours: Yup.number()
+        .min(1, 'battle has to be active for atleast 1 hour')
+        .max(168, 'battle cannot be active for more than 7 days or 168 hours')
+        .required()
+        .positive()
+        .integer(),
+    }),
+    onSubmit: async (values, { setFieldError }) => {
+      if (true) {
+        try {
+          toast.closeAll()
+          toast({
+            description: 'Please wait for a few seconds',
+            duration: null,
+            isClosable: true,
+          })
+          await startBattle({
+            variables: { battleId, hoursTillActive: values.hours },
+          })
+          toast.closeAll()
+          toast({
+            description: 'Battle started successfully',
+            duration: 3000,
+            status: 'success',
+          })
+          router.push(`/battles/${router.query.id}`)
+        } catch (err) {
+          toast.closeAll()
+          //@ts-ignore
+          let error = err?.graphQLErrors[0].extensions?.errors[0] as {
+            path: string
+            message: string
+          }
+          if (error) {
+            setFieldError('hours', error.message)
+          } else {
+            toast({
+              description: 'Something went wrong',
+              duration: 3000,
+              status: 'error',
+            })
+          }
+        }
+      }
+    },
+  })
+  return (
+    <>
+      <Button
+        colorScheme='green'
+        mt='5'
+        textAlign='center'
+        mx='3'
+        onClick={onOpen}
+      >
+        Start Battle
+      </Button>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <form onSubmit={formik.handleSubmit}>
+            <ModalHeader mt='5'>
+              How many hours do you want the battle to be active
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Box p={8}>
+                <Stack spacing={4}>
+                  <FormControl id='songLink'>
+                    <FormLabel>Hours</FormLabel>
+                    <NumberInput
+                      id='hours'
+                      name='hours'
+                      onChange={(val) => {
+                        formik.setFieldValue('hours', +val)
+                      }}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.hours}
+                      defaultValue={1}
+                      min={1}
+                      max={168}
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                    {formik.touched.hours && formik.errors.hours ? (
+                      <Text color='red.500'>{formik.errors.hours}</Text>
+                    ) : null}
+                  </FormControl>
+                </Stack>
+              </Box>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button colorScheme='green' mr={3} type='submit'>
+                Start Battle
+              </Button>
+            </ModalFooter>
+          </form>
+        </ModalContent>
+      </Modal>
+    </>
+  )
+}
 function ManageBattle() {
   const router = useRouter()
   const toast = useToast()
@@ -35,6 +170,18 @@ function ManageBattle() {
   const [meQuery, { data }] = useMeLazyQuery()
   const [removeBattleUser] = useRemoveBattleUserMutation()
   const [removeBattleRequest] = useRemoveBattleRequestMutation()
+
+  const isBattleStartable = useMemo(() => {
+    if (battle?.status !== 'creation') return false
+    let battleHasEnoughUsers = battle?.battleUsers?.length === 2
+    let battleUsersHaveNotChosenSong = battle?.battleUsers?.find(
+      (battleUser) => {
+        return !battleUser?.songName
+      }
+    )
+
+    return battleHasEnoughUsers && !battleUsersHaveNotChosenSong
+  }, [battle])
 
   function battleQuery(battleId: number) {
     getBattleQuery({
@@ -176,10 +323,14 @@ function ManageBattle() {
               </Text>
               <Divider />
               <Center>
-                <Button colorScheme='cyan' mt='5' mx='auto' textAlign='center'>
-                  {' '}
-                  Edit Title
-                </Button>
+                <Box>
+                  <Button colorScheme='cyan' mt='5' textAlign='center' mx='3'>
+                    Edit Title
+                  </Button>
+                  {battle && isBattleStartable && (
+                    <StartBattleButton battleId={+battle?.id} />
+                  )}
+                </Box>
               </Center>
             </Box>
           </Box>
