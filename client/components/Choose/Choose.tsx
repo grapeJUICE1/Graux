@@ -36,10 +36,14 @@ function Choose() {
             variables: {
               battleId: +router?.query?.id as unknown as number,
               songName: optionChoosed?.name as string,
-              songAlbum: optionChoosed?.album?.title as string,
-              songLink: optionChoosed?.url as string,
-              songArtist: optionChoosed?.artist?.name as string,
-              songImage: optionChoosed?.album?.image[2]['#text'] as string,
+              songAlbum:
+                (optionChoosed?.album?.title as string) || 'No album found',
+              songLink: (optionChoosed?.url as string) || 'No Song Link found',
+              songArtist:
+                (optionChoosed?.artist?.name as string) || 'No artist found',
+              songImage:
+                (optionChoosed?.album?.image[2]['#text'] as string) ||
+                '/images/404.png',
             },
           })
           toast({
@@ -104,6 +108,7 @@ function Choose() {
           <Box>
             {optionChoosed ? (
               <>
+                {console.log(optionChoosed)}
                 {optionChoosed?.album?.image ? (
                   <img
                     style={{ width: '12rem' }}
@@ -111,12 +116,30 @@ function Choose() {
                     src={`${optionChoosed?.album?.image[2]['#text']}`}
                   />
                 ) : (
-                  ''
+                  <img
+                    style={{ width: '12rem' }}
+                    alt='song image'
+                    src='/images/404.png'
+                  />
                 )}
-                <div>song name : {optionChoosed?.name}</div>
-                <div>song album : {optionChoosed?.album?.title}</div>
-                <div>song artist : {optionChoosed?.artist?.name}</div>
-                <div>song link : {optionChoosed?.url}</div>
+                <div>
+                  song name :{' '}
+                  {optionChoosed?.name || 'No name found for this song'}
+                </div>
+                <div>
+                  song album :{' '}
+                  {optionChoosed?.album?.title ||
+                    'No album found for this song'}
+                </div>
+                <div>
+                  song artist :{' '}
+                  {optionChoosed?.artist?.name ||
+                    'No Artist found for this song'}
+                </div>
+                <div>
+                  song link :{' '}
+                  {optionChoosed?.url || 'No link found for this song'}
+                </div>
               </>
             ) : (
               ''

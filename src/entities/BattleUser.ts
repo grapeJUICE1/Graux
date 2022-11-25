@@ -12,7 +12,7 @@ export default class BattleUser extends AppBaseEntity {
   @JoinColumn({ name: 'battleId' })
   battle: Battle
 
-  @Column({ nullable: true })
+  @Column()
   battleId: number
 
   @ManyToOne(() => User, (user) => user.battleSongs, {
@@ -21,7 +21,7 @@ export default class BattleUser extends AppBaseEntity {
   @JoinColumn({ name: 'userId' })
   user: User
 
-  @Column({ nullable: true })
+  @Column()
   userId: number
 
   @OneToMany(() => Vote, (vote) => vote.battleUser)

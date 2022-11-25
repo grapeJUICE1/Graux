@@ -13,7 +13,7 @@ export default class Battle extends AppBaseEntity {
   uuid: string
 
   @Length(10, 255)
-  @Column()
+  @Column({ unique: true })
   title: string
 
   @Column({ nullable: true })

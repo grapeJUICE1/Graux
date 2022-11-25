@@ -396,6 +396,14 @@ export type RemoveBattleUserMutationVariables = Exact<{
 
 export type RemoveBattleUserMutation = { __typename?: 'Mutation', removeBattleUser?: boolean | null };
 
+export type StartBattleMutationVariables = Exact<{
+  battleId: Scalars['Int'];
+  hoursTillActive: Scalars['Int'];
+}>;
+
+
+export type StartBattleMutation = { __typename?: 'Mutation', startBattle?: boolean | null };
+
 export type TestQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1034,6 +1042,38 @@ export function useRemoveBattleUserMutation(baseOptions?: Apollo.MutationHookOpt
 export type RemoveBattleUserMutationHookResult = ReturnType<typeof useRemoveBattleUserMutation>;
 export type RemoveBattleUserMutationResult = Apollo.MutationResult<RemoveBattleUserMutation>;
 export type RemoveBattleUserMutationOptions = Apollo.BaseMutationOptions<RemoveBattleUserMutation, RemoveBattleUserMutationVariables>;
+export const StartBattleDocument = gql`
+    mutation StartBattle($battleId: Int!, $hoursTillActive: Int!) {
+  startBattle(battleId: $battleId, hoursTillActive: $hoursTillActive)
+}
+    `;
+export type StartBattleMutationFn = Apollo.MutationFunction<StartBattleMutation, StartBattleMutationVariables>;
+
+/**
+ * __useStartBattleMutation__
+ *
+ * To run a mutation, you first call `useStartBattleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStartBattleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [startBattleMutation, { data, loading, error }] = useStartBattleMutation({
+ *   variables: {
+ *      battleId: // value for 'battleId'
+ *      hoursTillActive: // value for 'hoursTillActive'
+ *   },
+ * });
+ */
+export function useStartBattleMutation(baseOptions?: Apollo.MutationHookOptions<StartBattleMutation, StartBattleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<StartBattleMutation, StartBattleMutationVariables>(StartBattleDocument, options);
+      }
+export type StartBattleMutationHookResult = ReturnType<typeof useStartBattleMutation>;
+export type StartBattleMutationResult = Apollo.MutationResult<StartBattleMutation>;
+export type StartBattleMutationOptions = Apollo.BaseMutationOptions<StartBattleMutation, StartBattleMutationVariables>;
 export const TestDocument = gql`
     query Test {
   test
