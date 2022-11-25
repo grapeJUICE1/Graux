@@ -9,23 +9,23 @@ a {
 * {
   box-sizing: border-box;
 }
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 580px) {
   html {
     font-size: 10px;
   }
 }
 
-@media only screen and (max-width: 340px) {
+@media only screen and (max-width: 400px) {
   html {
     font-size: 8px;
   }
 }
-@media only screen and (max-width: 290px) {
+@media only screen and (max-width: 330px) {
   html {
     font-size: 6px;
   }
 }
-@media only screen and (max-width: 220px) {
+@media only screen and (max-width: 260px) {
   html {
     font-size: 5px;
   }
