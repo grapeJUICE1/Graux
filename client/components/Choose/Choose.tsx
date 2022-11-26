@@ -29,7 +29,7 @@ function Choose() {
     initialValues: {
       songName: '',
     },
-    onSubmit: async (_, { setFieldError }) => {
+    onSubmit: async () => {
       if (optionChoosed?.name && router?.query?.id) {
         try {
           await chooseSong({
@@ -54,14 +54,15 @@ function Choose() {
           router.replace(`/battles/${router.query.id}/manage`)
         } catch (err) {
           //@ts-ignore
-          let errors = err?.graphQLErrors[0].extensions.errors as {
+          let error = err?.graphQLErrors[0].extensions.errors[0] as {
             path: string
             message: string
-          }[]
-          if (errors) {
-            errors.forEach((error: { path: string; message: string }) => {
-              //@ts-ignore
-              setFieldError('songName', error.message)
+          }
+          if (error) {
+            toast({
+              description: error.message,
+              status: 'error',
+              duration: 3000,
             })
           }
         }

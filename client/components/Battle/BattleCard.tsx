@@ -4,7 +4,7 @@ import NextLink from 'next/link'
 import { Battle as BattleType } from '../../gql/graphql'
 import formatDate from '../../utils/formatDate'
 
-function Battle({ battle }: { battle: BattleType }) {
+function BattleCard({ battle }: { battle: BattleType }) {
   const battleCreator = useMemo(() => {
     return battle?.battleUsers?.find((battleUser) => {
       return battleUser?.battleCreator ? true : false
@@ -159,4 +159,4 @@ function Battle({ battle }: { battle: BattleType }) {
   )
 }
 
-export default Battle
+export default BattleCard
