@@ -113,7 +113,7 @@ const typeDefs = `#graphql
     chooseSong(battleId:Int!, songName:String! , songArtist:String! , songAlbum:String! , songImage:String! , songLink:String!):Boolean
 
     # Vote Mutations
-    vote(battleUserId:Int!):Boolean
+    vote(battleUserId:Int!):String
   
     # LikeDislike Mutations 
     likeDislike(battleId:Int , commentId:Int , value:Int!): BattleOrComment

@@ -8,7 +8,7 @@ import isAuthMiddleware from '../../middlewares/isAuth'
 export default {
   vote: addMiddleware(
     isAuthMiddleware,
-    async (_: any, { battleUserId }, { req }) => {
+    async (_: any, { battleUserId }, { req, payload }) => {
       try {
         let errors = []
         const battleUser = await BattleUser.findOne({
@@ -36,23 +36,8 @@ export default {
           })
         }
 
-        //        const now = new Date()
-        //        if (now.getTime() > battleUser.battle.expires.getTime()) {
-        //          console.log('expired')
-
-        //          battleUser.battle.status = BattleStatus.OVER
-        ///          await battleUser.battle.save()
-
-        //          const winner = battleUser.battle.setBattleWinner()
-        //          console.log(winner)
-        //          if (winner instanceof BattleUser) {
-        //            winner.isWinner = true
-        //            BattleUser.save(winner)
-        //          }
-        //        }
         const voteExists = await Vote.findOne({
-          relations: { battleUser: true },
-          where: { battleUserId: battleUserId },
+          where: { battleUserId: battleUserId, userId: +payload.userId },
         })
         if (voteExists) {
           // remove the vote
@@ -60,9 +45,9 @@ export default {
           const voteCount = await Vote.count({
             where: { battleUserId: voteExists.battleUserId },
           })
-          voteExists.battleUser.voteCount = voteCount
-          await BattleUser.save(voteExists.battleUser)
-          return true
+          battleUser.voteCount = voteCount
+          await BattleUser.save(battleUser)
+          return '-1'
         }
         // add the new vote
 
@@ -76,7 +61,7 @@ export default {
         })
         battleUser.voteCount = voteCount
         await BattleUser.save(battleUser)
-        return true
+        return '+1'
       } catch (err) {
         throw new Error(err)
       }

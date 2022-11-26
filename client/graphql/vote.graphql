@@ -1,0 +1,3 @@
+mutation Vote($battleUserId: Int!) {
+  vote(battleUserId: $battleUserId)
+}

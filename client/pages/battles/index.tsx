@@ -3,7 +3,7 @@ import client from '../../apollo-client'
 import { Battle as BattleType } from '../../gql/graphql'
 import BattleCard from '../../components/Battle/BattleCard'
 
-export default function BattlesPage({ battles }: any) {
+export default function BattlesPage({ battles }: { battles: BattleType[] }) {
   return (
     <>
       {battles.map((battle: BattleType) => {
@@ -45,7 +45,6 @@ export async function getServerSideProps() {
     `,
     fetchPolicy: 'network-only',
   })
-  console.log(data.getBattles)
   return {
     props: {
       battles: data.getBattles,
