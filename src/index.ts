@@ -52,7 +52,6 @@ async function main() {
     if (!token) {
       return res.send({ status: 'failure', accessToken: '' })
     }
-
     let payload: any = null
     try {
       payload = verify(token, config.REFRESH_TOKEN_SECRET)
@@ -70,10 +69,15 @@ async function main() {
         return res.send({ status: 'failure', accessToken: '' })
       }
       sendRefreshToken(res, user)
-
+      const newToken = createAccessToken(user)
+      res.cookie('jid', newToken, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      })
       return res.send({
         status: 'success',
-        accessToken: createAccessToken(user),
+        accessToken: newToken,
       })
     } catch (err) {
       return res.send({ status: 'failure', accessToken: '' })

@@ -7,7 +7,6 @@ function BattleRequest({ battleRequest }: { battleRequest: BattleRequest }) {
   const router = useRouter()
 
   const battleCreator = useMemo(() => {
-    console.log(battleRequest)
     return battleRequest?.battle?.battleUsers?.find((battleUser) => {
       return battleUser?.battleCreator ? true : false
     })

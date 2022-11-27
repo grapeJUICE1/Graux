@@ -46,7 +46,6 @@ function LoginCard() {
             ...values,
           },
           update: (store, { data }) => {
-            console.log(data)
             if (!data) return null
             store.writeQuery<MeQuery>({
               query: MeDocument,

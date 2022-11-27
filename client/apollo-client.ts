@@ -27,14 +27,19 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 })
 
 const authLink = setContext((_, { headers }) => {
+  let authorizationHeader: string
   // get the authentication token from local storage if it exists
   const token = getAccessToken()
-
   // return the headers to the context so httpLink can read them
+  if (token) authorizationHeader = `Bearer ${token}`
+  else if (headers?.authorization)
+    authorizationHeader = `Bearer ${headers.authorization}`
+  else authorizationHeader = ''
+
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : '',
+      authorization: authorizationHeader,
     },
   }
 })

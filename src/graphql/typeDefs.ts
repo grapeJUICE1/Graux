@@ -31,6 +31,7 @@ const typeDefs = `#graphql
    createdAt:String
    likeDislikeCount: Int
    battleRequests:[BattleRequest]
+   userLikeDislike:Int
   }
 
   type Comment {
@@ -92,7 +93,6 @@ const typeDefs = `#graphql
     user:User
   }
   
-  union BattleOrComment = Battle | Comment
 
   type Mutation {
     # User Mutations
@@ -116,7 +116,7 @@ const typeDefs = `#graphql
     vote(battleUserId:Int!):String
   
     # LikeDislike Mutations 
-    likeDislike(battleId:Int , commentId:Int , value:Int!): BattleOrComment
+    likeDislike(battleId:Int , commentId:Int , value:Int!): Int
   
     # Comment Mutations
     addComment(battleId:Int! , body:String!):Comment

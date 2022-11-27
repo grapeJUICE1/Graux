@@ -18,5 +18,6 @@ export type GraphQLMiddlewareFunc = (
   parent: any,
   args: any,
   context: MyContext,
-  info: any
+  info: any,
+  additionalMiddlewareArg: any
 ) => any

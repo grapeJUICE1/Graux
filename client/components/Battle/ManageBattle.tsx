@@ -269,7 +269,6 @@ function ManageBattle() {
       })
     }
   }, [router.query.id])
-  console.log(data)
   return (
     <>
       {data?.me && battleCreator?.user?.username ? (

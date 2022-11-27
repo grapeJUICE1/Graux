@@ -38,7 +38,7 @@ export default {
         }
         // check if likeDislike by this user already exists for battle
         likeDislike = await LikeDislike.findOne({
-          where: { battle: { id: battleId }, user: { id: user.id } },
+          where: { battleId: battleId, userId: user.id },
         })
       } else if (commentId) {
         //find comment if comment given
@@ -54,7 +54,7 @@ export default {
         }
         // check if likeDislike by this user already exists for comment
         likeDislike = await LikeDislike.findOne({
-          where: { comment: { id: commentId }, user: { id: user.id } },
+          where: { commentId: commentId, userId: user.id },
         })
       } else {
         // if none battle and comment given , then return error
@@ -99,10 +99,10 @@ export default {
       if (battle) {
         battle.setUserLikeDislike(user.id)
         const likes = await LikeDislike.count({
-          where: { battle: { id: battle.id }, value: 1 },
+          where: { battleId: battle.id, value: 1 },
         })
         const dislikes = await LikeDislike.count({
-          where: { battle: { id: battle.id }, value: 0 },
+          where: { battleId: battle.id, value: 0 },
         })
 
         let likeDislikeCount = 0
@@ -113,16 +113,17 @@ export default {
         else likeDislikeCount = likes - dislikes
 
         battle.likeDislikeCount = likeDislikeCount
-
-        return await battle.save()
+        await battle.setUserLikeDislike(user?.id)
+        await battle.save()
+        return battle?.userLikeDislike || 0
       } else {
         comment.setUserLikeDislike(user.id)
 
         const likes = await LikeDislike.count({
-          where: { comment: { id: comment.id }, value: 1 },
+          where: { commentId: comment.id, value: 1 },
         })
         const dislikes = await LikeDislike.count({
-          where: { comment: { id: comment.id }, value: 0 },
+          where: { commentId: comment.id, value: 0 },
         })
 
         let likeDislikeCount = 0
@@ -133,7 +134,8 @@ export default {
         else likeDislikeCount = likes - dislikes
 
         comment.likeDislikeCount = likeDislikeCount
-        return await comment.save()
+        await comment.save()
+        return comment?.userLikeDislike || 0
       }
     }
   ),

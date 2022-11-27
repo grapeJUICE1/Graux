@@ -25,10 +25,9 @@ export type Battle = {
   likeDislikeCount?: Maybe<Scalars['Int']>;
   status: Scalars['String'];
   title: Scalars['String'];
+  userLikeDislike?: Maybe<Scalars['Int']>;
   uuid: Scalars['String'];
 };
-
-export type BattleOrComment = Battle | Comment;
 
 export type BattleRequest = {
   __typename?: 'BattleRequest';
@@ -79,7 +78,7 @@ export type Mutation = {
   createBattle?: Maybe<Battle>;
   deleteBattle?: Maybe<Scalars['Boolean']>;
   deleteUser?: Maybe<Scalars['Boolean']>;
-  likeDislike?: Maybe<BattleOrComment>;
+  likeDislike?: Maybe<Scalars['Int']>;
   login?: Maybe<LoginResponse>;
   register?: Maybe<User>;
   removeBattleRequest?: Maybe<Scalars['Boolean']>;
@@ -359,6 +358,14 @@ export type GetUsersQueryVariables = Exact<{
 
 
 export type GetUsersQuery = { __typename?: 'Query', getUsers?: Array<{ __typename?: 'User', id: string, username: string, email: string, createdAt?: string | null } | null> | null };
+
+export type LikeDislikeMutationVariables = Exact<{
+  value: Scalars['Int'];
+  battleId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type LikeDislikeMutation = { __typename?: 'Mutation', likeDislike?: number | null };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
@@ -874,6 +881,38 @@ export function useGetUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
 export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
 export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
+export const LikeDislikeDocument = gql`
+    mutation LikeDislike($value: Int!, $battleId: Int) {
+  likeDislike(value: $value, battleId: $battleId)
+}
+    `;
+export type LikeDislikeMutationFn = Apollo.MutationFunction<LikeDislikeMutation, LikeDislikeMutationVariables>;
+
+/**
+ * __useLikeDislikeMutation__
+ *
+ * To run a mutation, you first call `useLikeDislikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLikeDislikeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [likeDislikeMutation, { data, loading, error }] = useLikeDislikeMutation({
+ *   variables: {
+ *      value: // value for 'value'
+ *      battleId: // value for 'battleId'
+ *   },
+ * });
+ */
+export function useLikeDislikeMutation(baseOptions?: Apollo.MutationHookOptions<LikeDislikeMutation, LikeDislikeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LikeDislikeMutation, LikeDislikeMutationVariables>(LikeDislikeDocument, options);
+      }
+export type LikeDislikeMutationHookResult = ReturnType<typeof useLikeDislikeMutation>;
+export type LikeDislikeMutationResult = Apollo.MutationResult<LikeDislikeMutation>;
+export type LikeDislikeMutationOptions = Apollo.BaseMutationOptions<LikeDislikeMutation, LikeDislikeMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {

@@ -7,17 +7,15 @@ import {
   Text,
 } from '@chakra-ui/react'
 import React from 'react'
-import { useMeQuery } from '../../../gql/graphql'
 
-function Navbar({ sidebarDisclosure }: any) {
-  const { data, error, loading } = useMeQuery()
+function Navbar({ sidebarDisclosure, meQuery }: any) {
   let userNavItem
-  if (loading) {
+  if (meQuery?.loading) {
     userNavItem = <Text> Loading </Text>
-  } else if (error || !data) {
+  } else if (meQuery?.error || !meQuery?.data) {
     userNavItem = <Text> login/signup </Text>
   } else {
-    userNavItem = <Text> {data?.me?.username}</Text>
+    userNavItem = <Text> {meQuery?.data?.me?.username}</Text>
   }
   return (
     <Flex
