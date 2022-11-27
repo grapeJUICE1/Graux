@@ -6,8 +6,10 @@ import { Battle as BattleType } from '../../../gql/graphql'
 
 export async function getServerSideProps({
   params,
+  req,
 }: GetServerSidePropsContext) {
   if (params?.id) {
+    console.log(req.cookies?.jid)
     const { data } = await client.query({
       query: gql`
 query GetBattle {
@@ -19,6 +21,7 @@ query GetBattle {
     likeDislikeCount
     expires
     createdAt
+    userLikeDislike
     battleUsers {
       battleCreator
       createdAt
@@ -51,6 +54,11 @@ query GetBattle {
 `,
 
       fetchPolicy: 'network-only',
+      context: {
+        headers: {
+          authorization: req?.cookies?.jid ? req?.cookies?.jid : undefined,
+        },
+      },
     })
 
     return {

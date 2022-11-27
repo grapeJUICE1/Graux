@@ -8,15 +8,22 @@ const isAuthMiddleware: GraphQLMiddlewareFunc = async (
   parent,
   args,
   context,
-  info
+  info,
+  justCheckIfAuthorized: boolean = false
 ) => {
-  const authorization = context.req.headers['authorization'] // bearer token
+  let authorized = false
 
+  const authorization = context.req.headers['authorization'] // bearer token
   if (!authorization) {
+    if (justCheckIfAuthorized) {
+      const result = await resolver(parent, args, context, info)
+      return result
+    }
     throw new Error('not authenticated')
   }
   try {
     const token = authorization.split(' ')[1]
+    console.log('lel', token)
     const payload: any = verify(token, config.ACCESS_TOKEN_SECRET)
 
     const user = await User.findOne({ where: { id: payload.userId } })
@@ -27,13 +34,15 @@ const isAuthMiddleware: GraphQLMiddlewareFunc = async (
 
     context.payload = payload
     context.req.user = user
-
+    authorized = true
+  } catch (err) {
+    console.log(err)
+    if (!justCheckIfAuthorized) throw new Error(err)
+  }
+  if (authorized || justCheckIfAuthorized) {
     const result = await resolver(parent, args, context, info)
 
     return result
-  } catch (err) {
-    console.log(err)
-    throw new Error(err)
   }
 }
 

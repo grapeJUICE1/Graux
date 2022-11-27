@@ -1,10 +1,16 @@
+import { ArrowDownIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import { Box, Button, HStack, Stack, Text, useToast } from '@chakra-ui/react'
 import { useMemo, useState } from 'react'
-import { Battle, BattleUser, useVoteMutation } from '../../gql/graphql'
+import {
+  Battle,
+  BattleUser,
+  useLikeDislikeMutation,
+  useVoteMutation,
+} from '../../gql/graphql'
 import formatDate from '../../utils/formatDate'
-
 function Battle({ initialBattle }: { initialBattle: Battle }) {
   const [vote] = useVoteMutation()
+  const [likeDislike] = useLikeDislikeMutation()
   const [battle, setBattle] = useState(() => initialBattle)
   const toast = useToast()
   const totalVotes = useMemo(() => {
@@ -54,6 +60,7 @@ function Battle({ initialBattle }: { initialBattle: Battle }) {
           status: 'success',
         })
       } catch (err) {
+        console.log(err)
         toast.closeAll()
         //@ts-ignore
         let error = err?.graphQLErrors[0].extensions.errors[0] as {
@@ -67,6 +74,62 @@ function Battle({ initialBattle }: { initialBattle: Battle }) {
             duration: 3000,
           })
         }
+      }
+    } else {
+      toast.closeAll()
+      toast({
+        description: 'voting time over',
+        status: 'error',
+        duration: 1000,
+      })
+    }
+  }
+  async function likeDislikeButtonOnClick(value: number, battleId: number) {
+    try {
+      toast.closeAll()
+      toast({
+        description: 'Please wait for a few seconds',
+        duration: null,
+        isClosable: true,
+      })
+      let { data } = await likeDislike({ variables: { battleId, value } })
+      let likeCountToIncrementBy = 0
+      setBattle((oldBattle) => {
+        return {
+          ...oldBattle,
+          likeDislikeCount:
+            oldBattle.likeDislikeCount! +
+            (data?.likeDislike
+              ? data.likeDislike
+              : data?.likeDislike === 0
+              ? oldBattle?.userLikeDislike === 1
+                ? -1
+                : 1
+              : 0),
+          userLikeDislike: data?.likeDislike || 0,
+        }
+      })
+
+      toast.closeAll()
+      toast({
+        description: 'voting successfull',
+        duration: 1000,
+        status: 'success',
+      })
+    } catch (err) {
+      console.log(err)
+      toast.closeAll()
+      //@ts-ignore
+      let error = err?.graphQLErrors[0].extensions.errors[0] as {
+        path: string
+        message: string
+      }
+      if (error) {
+        toast({
+          description: error.message,
+          status: 'error',
+          duration: 3000,
+        })
       }
     }
   }
@@ -96,6 +159,39 @@ function Battle({ initialBattle }: { initialBattle: Battle }) {
           </Text>
           {totalVotes !== null ? totalVotes : 'no votes yet'}
         </Text>
+        {battle?.id && (
+          <HStack
+            width='100%'
+            alignItems='center'
+            justifyContent='center'
+            gap='10'
+            my='5'
+          >
+            <Button
+              colorScheme={battle?.userLikeDislike === 1 ? `orange` : 'gray'}
+              onClick={() =>
+                likeDislikeButtonOnClick(
+                  battle?.userLikeDislike === 1 ? 0 : 1,
+                  +battle?.id
+                )
+              }
+            >
+              <ArrowUpIcon />
+            </Button>
+            <Text>{battle?.likeDislikeCount} likes</Text>
+            <Button
+              colorScheme={battle?.userLikeDislike === -1 ? `red` : 'gray'}
+              onClick={() =>
+                likeDislikeButtonOnClick(
+                  battle?.userLikeDislike === -1 ? 0 : -1,
+                  +battle?.id
+                )
+              }
+            >
+              <ArrowDownIcon />
+            </Button>
+          </HStack>
+        )}
         <HStack
           width='100%'
           alignItems='center'
@@ -124,6 +220,7 @@ function Battle({ initialBattle }: { initialBattle: Battle }) {
         {battle?.battleUsers?.map((battleUser: BattleUser | null) => {
           return (
             <Box
+              key={battleUser?.id}
               border='1px'
               borderColor='cyan.500'
               width={{ base: '100%', sm: '100%', md: '100%', lg: '50%' }}

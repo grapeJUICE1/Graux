@@ -8,18 +8,6 @@ import { commentMutations, commentQueries } from './comment'
 import { likeDislikeMutations, likeDislikeQueries } from './likeDislike'
 
 const resolvers: ResolverMap = {
-  BattleOrComment: {
-    __resolveType(obj) {
-      if (obj.title) {
-        return 'Battle'
-      }
-
-      if (obj.body) {
-        return 'Comment'
-      }
-      return null
-    },
-  },
   Query: {
     ...battleQueries,
     ...userQueries,

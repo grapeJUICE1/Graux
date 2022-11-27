@@ -59,7 +59,6 @@ function ApproveBattleRequest() {
   }
 
   useEffect(() => {
-    console.log(router?.query)
     if (router?.query?.battleRequestId) {
       getBattleRequest({
         variables: { battleRequestId: +router?.query?.battleRequestId },

@@ -1,10 +1,12 @@
 import { Box, useDisclosure } from '@chakra-ui/react'
 import { ReactNode } from 'react'
+import { useMeQuery } from '../../gql/graphql'
 import Navbar from './Navigation/Navbar'
 import Sidebar from './Navigation/Sidebar'
 
 function Layout({ children }: { children: ReactNode }) {
   const sidebar = useDisclosure()
+  const { data, error, loading } = useMeQuery()
   return (
     <Box
       as='section'
@@ -22,9 +24,12 @@ function Layout({ children }: { children: ReactNode }) {
         }}
         transition='.3s ease'
       >
-        <Navbar sidebarDisclosure={sidebar} />
+        <Navbar
+          sidebarDisclosure={sidebar}
+          meQuery={{ data, error, loading }}
+        />
         <Box as='main' p='4' pt='20'>
-          {children}
+          {(data || error) && children}
         </Box>
       </Box>
     </Box>

@@ -109,7 +109,6 @@ function Choose() {
           <Box>
             {optionChoosed ? (
               <>
-                {console.log(optionChoosed)}
                 {optionChoosed?.album?.image ? (
                   <img
                     style={{ width: '12rem' }}

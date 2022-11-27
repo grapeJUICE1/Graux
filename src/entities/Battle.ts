@@ -78,10 +78,10 @@ export default class Battle extends AppBaseEntity {
     return true
   }
 
-  protected userLikeDislike: number
+  public userLikeDislike: number
   async setUserLikeDislike(userId: number) {
     const likeDislike = await LikeDislike.findOne({
-      where: { user: { id: userId }, battle: { id: this.id } },
+      where: { userId: userId, battleId: this.id },
     })
     this.userLikeDislike = likeDislike ? likeDislike.value : 0
   }
