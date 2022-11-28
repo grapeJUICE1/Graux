@@ -1,6 +1,7 @@
-import { Box, Text } from '@chakra-ui/react'
+import { Box, Center, Text } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { Comment, useGetCommentsOfBattleLazyQuery } from '../../gql/graphql'
+import AddCommentButton from './AddCommentButton'
 
 function Comments({ battleId }: { battleId: number }) {
   const [comments, setComments] = useState<Comment[] | null>([])
@@ -19,11 +20,21 @@ function Comments({ battleId }: { battleId: number }) {
         .catch()
     }
   }, [battleId])
+
   return (
     <Box mt='10'>
       <Text textAlign='center' fontSize='2rem'>
         Comments
       </Text>
+      <Center>
+        {battleId && (
+          <AddCommentButton
+            battleId={battleId}
+            comments={comments}
+            setComments={setComments}
+          />
+        )}
+      </Center>
       {comments &&
         comments?.map((comment: Comment) => {
           return (

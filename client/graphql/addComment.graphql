@@ -1,0 +1,12 @@
+mutation AddComment($battleId: Int!, $body: String!) {
+  addComment(battleId: $battleId, body: $body) {
+    id
+    body
+    likeDislikeCount
+    user {
+      id
+      email
+      username
+    }
+  }
+}

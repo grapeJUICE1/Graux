@@ -290,6 +290,14 @@ export type AddBattleUserMutationVariables = Exact<{
 
 export type AddBattleUserMutation = { __typename?: 'Mutation', addBattleUser?: boolean | null };
 
+export type AddCommentMutationVariables = Exact<{
+  battleId: Scalars['Int'];
+  body: Scalars['String'];
+}>;
+
+
+export type AddCommentMutation = { __typename?: 'Mutation', addComment?: { __typename?: 'Comment', id: string, body: string, likeDislikeCount?: number | null, user?: { __typename?: 'User', id: string, email: string, username: string } | null } | null };
+
 export type ApproveBattleRequestMutationVariables = Exact<{
   battleRequestId: Scalars['Int'];
 }>;
@@ -463,6 +471,47 @@ export function useAddBattleUserMutation(baseOptions?: Apollo.MutationHookOption
 export type AddBattleUserMutationHookResult = ReturnType<typeof useAddBattleUserMutation>;
 export type AddBattleUserMutationResult = Apollo.MutationResult<AddBattleUserMutation>;
 export type AddBattleUserMutationOptions = Apollo.BaseMutationOptions<AddBattleUserMutation, AddBattleUserMutationVariables>;
+export const AddCommentDocument = gql`
+    mutation AddComment($battleId: Int!, $body: String!) {
+  addComment(battleId: $battleId, body: $body) {
+    id
+    body
+    likeDislikeCount
+    user {
+      id
+      email
+      username
+    }
+  }
+}
+    `;
+export type AddCommentMutationFn = Apollo.MutationFunction<AddCommentMutation, AddCommentMutationVariables>;
+
+/**
+ * __useAddCommentMutation__
+ *
+ * To run a mutation, you first call `useAddCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addCommentMutation, { data, loading, error }] = useAddCommentMutation({
+ *   variables: {
+ *      battleId: // value for 'battleId'
+ *      body: // value for 'body'
+ *   },
+ * });
+ */
+export function useAddCommentMutation(baseOptions?: Apollo.MutationHookOptions<AddCommentMutation, AddCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddCommentMutation, AddCommentMutationVariables>(AddCommentDocument, options);
+      }
+export type AddCommentMutationHookResult = ReturnType<typeof useAddCommentMutation>;
+export type AddCommentMutationResult = Apollo.MutationResult<AddCommentMutation>;
+export type AddCommentMutationOptions = Apollo.BaseMutationOptions<AddCommentMutation, AddCommentMutationVariables>;
 export const ApproveBattleRequestDocument = gql`
     mutation ApproveBattleRequest($battleRequestId: Int!) {
   approveBattleRequest(battleRequestId: $battleRequestId)
