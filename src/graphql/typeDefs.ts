@@ -40,6 +40,7 @@ const typeDefs = `#graphql
     battle: Battle
     user: User
     likeDislikeCount: Int
+    userLikeDislike:Int
   }
   type BattleRequest {
     id: ID!

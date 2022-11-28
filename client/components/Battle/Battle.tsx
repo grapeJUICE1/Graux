@@ -1,4 +1,3 @@
-import { ArrowDownIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import { Box, Button, HStack, Stack, Text, useToast } from '@chakra-ui/react'
 import { useMemo, useState } from 'react'
 import {
@@ -9,6 +8,7 @@ import {
 } from '../../gql/graphql'
 import formatDate from '../../utils/formatDate'
 import Comments from '../Comments/Comments'
+import LikeDislike from '../LikeDislike/LikeDislike'
 
 function Battle({ initialBattle }: { initialBattle: Battle }) {
   const [vote] = useVoteMutation()
@@ -86,72 +86,6 @@ function Battle({ initialBattle }: { initialBattle: Battle }) {
       })
     }
   }
-  async function likeDislikeButtonOnClick(value: number, battleId: number) {
-    try {
-      toast.closeAll()
-      toast({
-        description: 'Please wait for a few seconds',
-        duration: null,
-        isClosable: true,
-      })
-      let { data } = await likeDislike({ variables: { battleId, value } })
-      let likeCountToIncrementBy = 0
-
-      if (data?.likeDislike === 0) {
-        if (battle?.userLikeDislike === 1) {
-          likeCountToIncrementBy = -1
-        } else if (battle?.userLikeDislike === -1) {
-          likeCountToIncrementBy = 1
-        }
-      } else if (data?.likeDislike) {
-        if (data?.likeDislike === 1) {
-          if (
-            battle?.userLikeDislike === 0 ||
-            battle?.userLikeDislike === undefined
-          )
-            likeCountToIncrementBy = 1
-          else likeCountToIncrementBy = 2
-        } else if (data?.likeDislike === -1) {
-          if (
-            battle?.userLikeDislike === 0 ||
-            battle?.userLikeDislike === undefined
-          )
-            likeCountToIncrementBy = -1
-          else likeCountToIncrementBy = -2
-        }
-      }
-      setBattle((oldBattle) => {
-        return {
-          ...oldBattle,
-          likeDislikeCount:
-            oldBattle.likeDislikeCount! + likeCountToIncrementBy,
-          userLikeDislike: data?.likeDislike || 0,
-        }
-      })
-
-      toast.closeAll()
-      toast({
-        description: 'voting successfull',
-        duration: 1000,
-        status: 'success',
-      })
-    } catch (err) {
-      console.log(err)
-      toast.closeAll()
-      //@ts-ignore
-      let error = err?.graphQLErrors[0].extensions.errors[0] as {
-        path: string
-        message: string
-      }
-      if (error) {
-        toast({
-          description: error.message,
-          status: 'error',
-          duration: 3000,
-        })
-      }
-    }
-  }
   return (
     <Box>
       <Box border='1px' borderColor='cyan.500' width='100%' p='10'>
@@ -179,37 +113,11 @@ function Battle({ initialBattle }: { initialBattle: Battle }) {
           {totalVotes !== null ? totalVotes : 'no votes yet'}
         </Text>
         {battle?.id && (
-          <HStack
-            width='100%'
-            alignItems='center'
-            justifyContent='center'
-            gap='10'
-            my='5'
-          >
-            <Button
-              colorScheme={battle?.userLikeDislike === 1 ? `orange` : 'gray'}
-              onClick={() =>
-                likeDislikeButtonOnClick(
-                  battle?.userLikeDislike === 1 ? 0 : 1,
-                  +battle?.id
-                )
-              }
-            >
-              <ArrowUpIcon />
-            </Button>
-            <Text>{battle?.likeDislikeCount} likes</Text>
-            <Button
-              colorScheme={battle?.userLikeDislike === -1 ? `red` : 'gray'}
-              onClick={() =>
-                likeDislikeButtonOnClick(
-                  battle?.userLikeDislike === -1 ? 0 : -1,
-                  +battle?.id
-                )
-              }
-            >
-              <ArrowDownIcon />
-            </Button>
-          </HStack>
+          <LikeDislike
+            entityType='Battle'
+            setEntity={setBattle}
+            entity={battle}
+          />
         )}
         <HStack
           width='100%'
