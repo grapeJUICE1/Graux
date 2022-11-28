@@ -101,15 +101,17 @@ export default {
         const likes = await LikeDislike.count({
           where: { battleId: battle.id, value: 1 },
         })
+        console.log(likes)
         const dislikes = await LikeDislike.count({
-          where: { battleId: battle.id, value: 0 },
+          where: { battleId: battle.id, value: -1 },
         })
+        console.log(dislikes)
 
         let likeDislikeCount = 0
 
-        if (!likes && !dislikes) likeDislikeCount = 0
-        else if (!likes) likeDislikeCount = dislikes
-        else if (!dislikes) likeDislikeCount = likes
+        if (likes === undefined && dislikes === undefined) likeDislikeCount = 0
+        else if (likes === undefined) likeDislikeCount = dislikes
+        else if (dislikes === undefined) likeDislikeCount = likes
         else likeDislikeCount = likes - dislikes
 
         battle.likeDislikeCount = likeDislikeCount
