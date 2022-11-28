@@ -61,6 +61,7 @@ export type Comment = {
   id: Scalars['ID'];
   likeDislikeCount?: Maybe<Scalars['Int']>;
   user?: Maybe<User>;
+  userLikeDislike?: Maybe<Scalars['Int']>;
 };
 
 export type LoginResponse = {
@@ -351,7 +352,7 @@ export type GetCommentsOfBattleQueryVariables = Exact<{
 }>;
 
 
-export type GetCommentsOfBattleQuery = { __typename?: 'Query', getCommentsOfBattle?: Array<{ __typename?: 'Comment', id: string, body: string, likeDislikeCount?: number | null, user?: { __typename?: 'User', id: string, email: string, username: string } | null } | null> | null };
+export type GetCommentsOfBattleQuery = { __typename?: 'Query', getCommentsOfBattle?: Array<{ __typename?: 'Comment', id: string, body: string, likeDislikeCount?: number | null, userLikeDislike?: number | null, user?: { __typename?: 'User', id: string, email: string, username: string } | null } | null> | null };
 
 export type GetUserBattleRequestsQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -377,6 +378,7 @@ export type GetUsersQuery = { __typename?: 'Query', getUsers?: Array<{ __typenam
 export type LikeDislikeMutationVariables = Exact<{
   value: Scalars['Int'];
   battleId?: InputMaybe<Scalars['Int']>;
+  commentId?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -793,6 +795,7 @@ export const GetCommentsOfBattleDocument = gql`
     id
     body
     likeDislikeCount
+    userLikeDislike
     user {
       id
       email
@@ -980,8 +983,8 @@ export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
 export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
 export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
 export const LikeDislikeDocument = gql`
-    mutation LikeDislike($value: Int!, $battleId: Int) {
-  likeDislike(value: $value, battleId: $battleId)
+    mutation LikeDislike($value: Int!, $battleId: Int, $commentId: Int) {
+  likeDislike(value: $value, battleId: $battleId, commentId: $commentId)
 }
     `;
 export type LikeDislikeMutationFn = Apollo.MutationFunction<LikeDislikeMutation, LikeDislikeMutationVariables>;
@@ -1001,6 +1004,7 @@ export type LikeDislikeMutationFn = Apollo.MutationFunction<LikeDislikeMutation,
  *   variables: {
  *      value: // value for 'value'
  *      battleId: // value for 'battleId'
+ *      commentId: // value for 'commentId'
  *   },
  * });
  */

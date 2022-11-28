@@ -1,6 +1,7 @@
 import { Box, Center, Text } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { Comment, useGetCommentsOfBattleLazyQuery } from '../../gql/graphql'
+import LikeDislike from '../LikeDislike/LikeDislike'
 import AddCommentButton from './AddCommentButton'
 
 function Comments({ battleId }: { battleId: number }) {
@@ -21,6 +22,23 @@ function Comments({ battleId }: { battleId: number }) {
     }
   }, [battleId])
 
+  function setComment(commentToReplaceWith: Comment) {
+    if (comments) {
+      const commentIndex = comments?.findIndex((comment: Comment) => {
+        return comment.id === commentToReplaceWith.id
+      })
+      console.log(commentIndex)
+
+      if (typeof commentIndex === 'number' && commentIndex !== -1) {
+        const commentsCopy = [...comments]
+        commentsCopy[commentIndex] = commentToReplaceWith
+        setComments(commentsCopy)
+        return true
+      }
+    }
+    return false
+  }
+
   return (
     <Box mt='10'>
       <Text textAlign='center' fontSize='2rem'>
@@ -38,11 +56,16 @@ function Comments({ battleId }: { battleId: number }) {
       {comments &&
         comments?.map((comment: Comment) => {
           return (
-            <Box border='1px' borderColor='cyan.500' my='3' p='5'>
-              <Text fontSize='1.3rem' textAlign='center'>
+            <Box border='1px' borderColor='cyan.500' my='3' p='3'>
+              <Text fontSize='1.1rem' textAlign='center'>
                 {comment?.body}
               </Text>
               <Text textAlign='center'>-{comment?.user?.username}</Text>
+              <LikeDislike
+                entityType='Comment'
+                setEntity={setComment}
+                entity={comment}
+              />
             </Box>
           )
         })}

@@ -3,6 +3,7 @@ query GetCommentsOfBattle($battleId: Int!) {
     id
     body
     likeDislikeCount
+    userLikeDislike
     user {
       id
       email
