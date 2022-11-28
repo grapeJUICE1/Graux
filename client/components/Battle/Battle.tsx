@@ -8,6 +8,7 @@ import {
   useVoteMutation,
 } from '../../gql/graphql'
 import formatDate from '../../utils/formatDate'
+
 function Battle({ initialBattle }: { initialBattle: Battle }) {
   const [vote] = useVoteMutation()
   const [likeDislike] = useLikeDislikeMutation()
@@ -94,18 +95,35 @@ function Battle({ initialBattle }: { initialBattle: Battle }) {
       })
       let { data } = await likeDislike({ variables: { battleId, value } })
       let likeCountToIncrementBy = 0
+
+      if (data?.likeDislike === 0) {
+        if (battle?.userLikeDislike === 1) {
+          likeCountToIncrementBy = -1
+        } else if (battle?.userLikeDislike === -1) {
+          likeCountToIncrementBy = 1
+        }
+      } else if (data?.likeDislike) {
+        if (data?.likeDislike === 1) {
+          if (
+            battle?.userLikeDislike === 0 ||
+            battle?.userLikeDislike === undefined
+          )
+            likeCountToIncrementBy = 1
+          else likeCountToIncrementBy = 2
+        } else if (data?.likeDislike === -1) {
+          if (
+            battle?.userLikeDislike === 0 ||
+            battle?.userLikeDislike === undefined
+          )
+            likeCountToIncrementBy = -1
+          else likeCountToIncrementBy = -2
+        }
+      }
       setBattle((oldBattle) => {
         return {
           ...oldBattle,
           likeDislikeCount:
-            oldBattle.likeDislikeCount! +
-            (data?.likeDislike
-              ? data.likeDislike
-              : data?.likeDislike === 0
-              ? oldBattle?.userLikeDislike === 1
-                ? -1
-                : 1
-              : 0),
+            oldBattle.likeDislikeCount! + likeCountToIncrementBy,
           userLikeDislike: data?.likeDislike || 0,
         }
       })
