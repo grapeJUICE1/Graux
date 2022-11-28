@@ -244,8 +244,12 @@ function Battle({ initialBattle }: { initialBattle: Battle }) {
               width={{ base: '100%', sm: '100%', md: '100%', lg: '50%' }}
               p='10'
               m='0'
+              bgColor={battleUser?.isWinner ? 'green.700' : ''}
             >
               <Box h='90%'>
+                <Text fontSize='2rem'>
+                  {battleUser?.isWinner ? 'Winner' : ''}
+                </Text>
                 <Text>{battleUser?.songName}</Text>
                 <Text>{battleUser?.songArtist}</Text>
                 <Text>{battleUser?.songAlbum}</Text>
