@@ -1,18 +1,12 @@
 import { Box, Button, HStack, Stack, Text, useToast } from '@chakra-ui/react'
 import { useMemo, useState } from 'react'
-import {
-  Battle,
-  BattleUser,
-  useLikeDislikeMutation,
-  useVoteMutation,
-} from '../../gql/graphql'
+import { Battle, BattleUser, useVoteMutation } from '../../gql/graphql'
 import formatDate from '../../utils/formatDate'
 import Comments from '../Comments/Comments'
 import LikeDislike from '../LikeDislike/LikeDislike'
 
 function Battle({ initialBattle }: { initialBattle: Battle }) {
   const [vote] = useVoteMutation()
-  const [likeDislike] = useLikeDislikeMutation()
   const [battle, setBattle] = useState(() => initialBattle)
   const toast = useToast()
   const totalVotes = useMemo(() => {
@@ -152,7 +146,7 @@ function Battle({ initialBattle }: { initialBattle: Battle }) {
               borderColor='cyan.500'
               width={{ base: '100%', sm: '100%', md: '100%', lg: '50%' }}
               p='10'
-              m='0'
+              mx='0 !important'
               bgColor={battleUser?.isWinner ? 'green.700' : ''}
             >
               <Box h='90%'>
