@@ -1,0 +1,12 @@
+query GetCommentsOfBattle($battleId: Int!) {
+  getCommentsOfBattle(battleId: $battleId) {
+    id
+    body
+    likeDislikeCount
+    user {
+      id
+      email
+      username
+    }
+  }
+}

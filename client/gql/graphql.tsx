@@ -338,6 +338,13 @@ export type GetBattleRequestsQueryVariables = Exact<{
 
 export type GetBattleRequestsQuery = { __typename?: 'Query', getBattleRequests?: Array<{ __typename?: 'BattleRequest', id: string, validated?: boolean | null, user?: { __typename?: 'User', id: string, username: string, email: string, createdAt?: string | null } | null } | null> | null };
 
+export type GetCommentsOfBattleQueryVariables = Exact<{
+  battleId: Scalars['Int'];
+}>;
+
+
+export type GetCommentsOfBattleQuery = { __typename?: 'Query', getCommentsOfBattle?: Array<{ __typename?: 'Comment', id: string, body: string, likeDislikeCount?: number | null, user?: { __typename?: 'User', id: string, email: string, username: string } | null } | null> | null };
+
 export type GetUserBattleRequestsQueryVariables = Exact<{
   userId: Scalars['Int'];
 }>;
@@ -731,6 +738,48 @@ export function useGetBattleRequestsLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetBattleRequestsQueryHookResult = ReturnType<typeof useGetBattleRequestsQuery>;
 export type GetBattleRequestsLazyQueryHookResult = ReturnType<typeof useGetBattleRequestsLazyQuery>;
 export type GetBattleRequestsQueryResult = Apollo.QueryResult<GetBattleRequestsQuery, GetBattleRequestsQueryVariables>;
+export const GetCommentsOfBattleDocument = gql`
+    query GetCommentsOfBattle($battleId: Int!) {
+  getCommentsOfBattle(battleId: $battleId) {
+    id
+    body
+    likeDislikeCount
+    user {
+      id
+      email
+      username
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCommentsOfBattleQuery__
+ *
+ * To run a query within a React component, call `useGetCommentsOfBattleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommentsOfBattleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommentsOfBattleQuery({
+ *   variables: {
+ *      battleId: // value for 'battleId'
+ *   },
+ * });
+ */
+export function useGetCommentsOfBattleQuery(baseOptions: Apollo.QueryHookOptions<GetCommentsOfBattleQuery, GetCommentsOfBattleQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCommentsOfBattleQuery, GetCommentsOfBattleQueryVariables>(GetCommentsOfBattleDocument, options);
+      }
+export function useGetCommentsOfBattleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommentsOfBattleQuery, GetCommentsOfBattleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCommentsOfBattleQuery, GetCommentsOfBattleQueryVariables>(GetCommentsOfBattleDocument, options);
+        }
+export type GetCommentsOfBattleQueryHookResult = ReturnType<typeof useGetCommentsOfBattleQuery>;
+export type GetCommentsOfBattleLazyQueryHookResult = ReturnType<typeof useGetCommentsOfBattleLazyQuery>;
+export type GetCommentsOfBattleQueryResult = Apollo.QueryResult<GetCommentsOfBattleQuery, GetCommentsOfBattleQueryVariables>;
 export const GetUserBattleRequestsDocument = gql`
     query GetUserBattleRequests($userId: Int!) {
   getUserBattleRequests(userId: $userId) {

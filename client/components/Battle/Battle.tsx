@@ -8,6 +8,7 @@ import {
   useVoteMutation,
 } from '../../gql/graphql'
 import formatDate from '../../utils/formatDate'
+import Comments from '../Comments/Comments'
 
 function Battle({ initialBattle }: { initialBattle: Battle }) {
   const [vote] = useVoteMutation()
@@ -287,6 +288,7 @@ function Battle({ initialBattle }: { initialBattle: Battle }) {
           )
         })}
       </Stack>
+      {battle?.id && <Comments battleId={+battle?.id} />}
     </Box>
   )
 }
