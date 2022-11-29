@@ -184,7 +184,9 @@ function Choose() {
                                     `https://ws.audioscrobbler.com/2.0/?limit=15&method=track.getInfo&track=${song.name}&artist=${song.artist}&api_key=095ee494d48c0071adda4e2816787daa&format=json`
                                   )
                                   const data = await trackResponse.json()
+
                                   const track = data?.track
+                                  console.log(track)
                                   formik.setFieldValue('songName', song.name)
                                   setOptions(null)
                                   setOptionChoosed(track)

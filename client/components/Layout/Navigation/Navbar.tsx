@@ -6,16 +6,23 @@ import {
   InputLeftElement,
   Text,
 } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useMeLazyQuery } from '../../../gql/graphql'
 
-function Navbar({ sidebarDisclosure, meQuery }: any) {
+function Navbar({ sidebarDisclosure }: any) {
+  const [meQuery, { data, error, loading }] = useMeLazyQuery()
+
+  useEffect(() => {
+    meQuery()
+  }, [])
+
   let userNavItem
-  if (meQuery?.loading) {
+  if (loading) {
     userNavItem = <Text> Loading </Text>
-  } else if (meQuery?.error || !meQuery?.data) {
+  } else if (error || !data) {
     userNavItem = <Text> login/signup </Text>
   } else {
-    userNavItem = <Text> {meQuery?.data?.me?.username}</Text>
+    userNavItem = <Text> {data?.me?.username}</Text>
   }
   return (
     <Flex
@@ -57,18 +64,6 @@ function Navbar({ sidebarDisclosure, meQuery }: any) {
       </InputGroup>
 
       <Flex align='center' position='fixed' right='1rem'>
-        {/*<Icon
-          color='gray.500' //as={FaBell}
-          cursor='pointer'
-        />*/}
-        {/*<Avatar
-          ml='4'
-          size='sm'
-          name='anubra266'
-          src='https://avatars.githubusercontent.com/u/30869823?v=4'
-          cursor='pointer'
-        />*/}
-
         {userNavItem}
       </Flex>
     </Flex>

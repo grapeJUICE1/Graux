@@ -1,8 +1,16 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
 import Link from 'next/link'
+import { useEffect } from 'react'
+import { useMeLazyQuery } from '../../../gql/graphql'
 import SidebarItem from './SidebarItem'
 
 function SidebarContent(props: any) {
+  const [meQuery, { data, error }] = useMeLazyQuery()
+
+  useEffect(() => {
+    meQuery()
+  }, [])
+
   return (
     <Box
       as='nav'
@@ -53,14 +61,33 @@ function SidebarContent(props: any) {
         <SidebarItem as={Link} href='/users'>
           Users
         </SidebarItem>
-        <SidebarItem as={Link} href='/auth/login'>
-          Log In
-        </SidebarItem>
+        {(error || !data?.me?.username) && (
+          <>
+            <SidebarItem as={Link} href='/auth/login'>
+              Log In
+            </SidebarItem>
 
-        <SidebarItem as={Link} href='/auth/register'>
-          Register
-        </SidebarItem>
-        <SidebarItem>Logout</SidebarItem>
+            <SidebarItem as={Link} href='/auth/register'>
+              Register
+            </SidebarItem>
+          </>
+        )}
+
+        {data?.me?.username && (
+          <>
+            <SidebarItem as={Link} href='/'>
+              Your Profile
+            </SidebarItem>
+            <SidebarItem as={Link} href='/'>
+              Your Battles
+            </SidebarItem>
+            <SidebarItem as={Link} href='/'>
+              Battle Requests
+            </SidebarItem>
+
+            <SidebarItem>Logout</SidebarItem>
+          </>
+        )}
       </Flex>
     </Box>
   )

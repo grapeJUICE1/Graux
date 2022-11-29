@@ -29,35 +29,10 @@ function LikeDislike({
           value,
         },
       })
-      let likeCountToIncrementBy = 0
-
-      if (data?.likeDislike === 0) {
-        if (entity.userLikeDislike === 1) {
-          likeCountToIncrementBy = -1
-        } else if (entity.userLikeDislike === -1) {
-          likeCountToIncrementBy = 1
-        }
-      } else if (data?.likeDislike) {
-        if (data?.likeDislike === 1) {
-          if (
-            entity.userLikeDislike === 0 ||
-            entity.userLikeDislike === undefined
-          )
-            likeCountToIncrementBy = 1
-          else likeCountToIncrementBy = 2
-        } else if (data?.likeDislike === -1) {
-          if (
-            entity.userLikeDislike === 0 ||
-            entity.userLikeDislike === undefined
-          )
-            likeCountToIncrementBy = -1
-          else likeCountToIncrementBy = -2
-        }
-      }
       setEntity({
         ...entity,
-        likeDislikeCount: entity.likeDislikeCount! + likeCountToIncrementBy,
-        userLikeDislike: data?.likeDislike || 0,
+        likeDislikeCount: entity.likeDislikeCount! + data?.likeDislike!,
+        userLikeDislike: value,
       })
 
       toast.closeAll()

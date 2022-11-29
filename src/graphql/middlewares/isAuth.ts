@@ -23,7 +23,6 @@ const isAuthMiddleware: GraphQLMiddlewareFunc = async (
   }
   try {
     const token = authorization.split(' ')[1]
-    console.log('lel', token)
     const payload: any = verify(token, config.ACCESS_TOKEN_SECRET)
 
     const user = await User.findOne({ where: { id: payload.userId } })
@@ -36,7 +35,14 @@ const isAuthMiddleware: GraphQLMiddlewareFunc = async (
     context.req.user = user
     authorized = true
   } catch (err) {
+    console.log('samasita mama')
     console.log(err)
+
+    context?.res?.cookie('jid', '', {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    })
     if (!justCheckIfAuthorized) throw new Error(err)
   }
   if (authorized || justCheckIfAuthorized) {

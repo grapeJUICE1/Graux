@@ -45,6 +45,7 @@ export default {
   },
 
   login: async (_: any, { username, password }, { req, res }) => {
+    console.log('sepas')
     try {
       let errors = []
 
@@ -59,7 +60,7 @@ export default {
         })
       }
       const user = await User.findOne({ where: { username } })
-
+      console.log(user)
       if (!user) {
         errors.push({
           path: 'username',

@@ -1,6 +1,6 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { ChakraProvider, Text } from '@chakra-ui/react'
+import { Center, ChakraProvider, Spinner, Text } from '@chakra-ui/react'
 import { ApolloProvider } from '@apollo/client'
 import client from '../apollo-client'
 import Layout from '../components/Layout/Layout'
@@ -14,17 +14,23 @@ export default function App({ Component, pageProps }: AppProps) {
     fetch('http://localhost:3000/refresh_token', {
       credentials: 'include',
       method: 'POST',
-    }).then(async (response) => {
-      const { accessToken } = await response.json()
-      setAccessToken(accessToken)
-      setLoading(false)
     })
+      .then(async (response) => {
+        const { accessToken } = await response.json()
+        setAccessToken(accessToken)
+        setLoading(false)
+      })
+      .catch((err) => {
+        console.log(err), setLoading(false)
+      })
   }, [])
   return (
     <ApolloProvider client={client}>
       <ChakraProvider theme={theme}>
         {loading ? (
-          ''
+          <Center>
+            <Spinner size='xl' />
+          </Center>
         ) : (
           <Layout>
             <Component {...pageProps} />

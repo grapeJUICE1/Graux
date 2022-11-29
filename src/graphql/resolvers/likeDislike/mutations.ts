@@ -117,7 +117,7 @@ export default {
         battle.likeDislikeCount = likeDislikeCount
         await battle.setUserLikeDislike(user?.id)
         await battle.save()
-        return battle?.userLikeDislike || 0
+        return likeDislikeCount
       } else {
         comment.setUserLikeDislike(user.id)
 
@@ -130,14 +130,14 @@ export default {
 
         let likeDislikeCount = 0
 
-        if (!likes && !dislikes) likeDislikeCount = 0
-        else if (!likes) likeDislikeCount = dislikes
-        else if (!dislikes) likeDislikeCount = likes
+        if (likes === undefined && dislikes === undefined) likeDislikeCount = 0
+        else if (likes === undefined) likeDislikeCount = dislikes
+        else if (dislikes === undefined) likeDislikeCount = likes
         else likeDislikeCount = likes - dislikes
 
         comment.likeDislikeCount = likeDislikeCount
         await comment.save()
-        return comment?.userLikeDislike || 0
+        return likeDislikeCount
       }
     }
   ),
