@@ -1,13 +1,18 @@
-import { Box, Flex, Link, Text } from '@chakra-ui/react'
+import { Box, Flex, HStack, Link, Text } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
 import NextLink from 'next/link'
-import { Battle as BattleType } from '../../gql/graphql'
+import { Battle as BattleType, BattleUser } from '../../gql/graphql'
 import formatDate from '../../utils/formatDate'
 
 function BattleCard({ battle }: { battle: BattleType }) {
   const battleCreator = useMemo(() => {
     return battle?.battleUsers?.find((battleUser) => {
       return battleUser?.battleCreator ? true : false
+    })
+  }, [battle])
+  const battleWinner = useMemo(() => {
+    return battle?.battleUsers?.find((battleUser) => {
+      return battleUser?.isWinner ? true : false
     })
   }, [battle])
 
@@ -71,7 +76,7 @@ function BattleCard({ battle }: { battle: BattleType }) {
           >
             {battle.title}
           </Link>
-          <Flex justifyContent='space-between' alignItems='center' mt={4}>
+          {/*<Flex justifyContent='space-between' alignItems='center' mt={4}>
             <Text
               color='cyan.600'
               _dark={{
@@ -106,54 +111,126 @@ function BattleCard({ battle }: { battle: BattleType }) {
                 </Text>
               </Text>
             </Flex>
-          </Flex>
+          </Flex>*/}
         </Box>
 
         <Flex justifyContent='space-between' alignItems='center' mt={4}>
-          <Link
-            color='brand.600'
-            _dark={{
-              color: 'brand.400',
-            }}
-          >
-            <Text display='inline'>battle created by : </Text>
-            <Text
-              _hover={{
-                textDecor: 'underline',
-              }}
-              fontWeight='700'
-              display='inline'
-            >
-              {battleCreator ? battleCreator?.user?.username : ''}
-            </Text>
-          </Link>
-          <Flex alignItems='center'>
-            <Link
-              color='gray.700'
-              _dark={{
-                color: 'gray.200',
-              }}
-              fontWeight='700'
-              cursor='pointer'
-            >
-              {battle?.battleUsers
-                ? battle?.battleUsers[0]?.user?.username
-                : ''}
-            </Link>
+          {battle?.battleUsers &&
+            battle.battleUsers?.map((battleUser: BattleUser | null) => {
+              return (
+                <Box bgColor={battleUser?.isWinner ? 'green.700' : ''}>
+                  <Box>
+                    <Link
+                      color='brand.600'
+                      _dark={{
+                        color: 'brand.400',
+                      }}
+                    >
+                      {battleCreator?.user?.id === battleUser?.user?.id && (
+                        <Text display='inline'>battle created by : </Text>
+                      )}
+                      <Text
+                        _hover={{
+                          textDecor: 'underline',
+                        }}
+                        fontWeight='700'
+                        display='inline'
+                      >
+                        {battleUser?.user?.username || ''}
+                      </Text>
+                    </Link>
+                  </Box>
+                  <HStack>
+                    {battleUser?.songImage && (
+                      <img
+                        style={{ width: '5rem' }}
+                        onError={({ currentTarget }) => {
+                          if (currentTarget.src != '/images/404.png')
+                            currentTarget.src = '/images/404.png'
+                        }}
+                        src={battleUser?.songImage}
+                      />
+                    )}
+                    <Box>
+                      {battleUser?.songName && (
+                        <Box>
+                          <Text display='inline'>Song Name: </Text>
+                          <Text
+                            style={{ wordWrap: 'break-word' }}
+                            fontWeight='medium'
+                            display='inline'
+                          >
+                            {battleUser?.songName}
+                          </Text>
+                        </Box>
+                      )}
+                      {battleUser?.songAlbum && (
+                        <Box>
+                          <Text display='inline'>Song Album: </Text>
+                          <Text
+                            style={{ wordWrap: 'break-word' }}
+                            fontWeight='medium'
+                            display='inline'
+                          >
+                            {battleUser?.songAlbum}
+                          </Text>
+                        </Box>
+                      )}
+                      {battleUser?.songArtist && (
+                        <Box>
+                          <Text display='inline'>Song Artist: </Text>
+                          <Text
+                            style={{ wordWrap: 'break-word' }}
+                            display='inline'
+                            fontWeight='medium'
+                          >
+                            {battleUser?.songArtist}
+                          </Text>
+                        </Box>
+                      )}
+                    </Box>
+                  </HStack>
+                </Box>
+              )
+            })}
+        </Flex>
+        {battle?.status === 'over' && (
+          <Flex justifyContent='space-between' alignItems='center' mt={4}>
+            {battle.status === 'over' ? (
+              <Box mx='auto'>
+                <Text mx='auto' display='inline'>
+                  Battle won by :{' '}
+                </Text>
+                <Text display='inline' fontWeight='medium'>
+                  {battleWinner?.user?.username || "None cuz it's a tie"}
+                </Text>
+              </Box>
+            ) : (
+              ''
+            )}
           </Flex>
-        </Flex>
-        <Flex justifyContent='space-between' alignItems='center' mt={4}>
-          {battle.status === 'over' ? (
-            <Text mx='auto'>
-              Battle won by:{' '}
-              {battle?.battleUsers?.find((el) => {
-                return el?.isWinner === true
-              })?.user?.username || "None cuz it's a tie"}
-            </Text>
-          ) : (
-            ''
-          )}
-        </Flex>
+        )}
+
+        {battle?.status === 'active' && battle?.expires && (
+          <Flex justifyContent='space-between' alignItems='center' mt={4}>
+            <Box mx='auto'>
+              <Text mx='auto' display='inline'>
+                Ends at :{' '}
+              </Text>
+              <Text
+                fontSize='sm'
+                color='gray.600'
+                _dark={{
+                  color: 'gray.400',
+                }}
+                display='inline'
+                fontWeight='medium'
+              >
+                {formatDate(+battle.expires) || ''}
+              </Text>
+            </Box>
+          </Flex>
+        )}
       </Box>
     </Flex>
   )
