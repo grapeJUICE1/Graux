@@ -2,10 +2,14 @@ import { gql } from '@apollo/client'
 import client from '../../apollo-client'
 import { Battle as BattleType } from '../../gql/graphql'
 import BattleCard from '../../components/Battle/BattleCard'
+import { Heading } from '@chakra-ui/react'
 
 export default function BattlesPage({ battles }: { battles: BattleType[] }) {
   return (
     <>
+      <Heading textAlign='center' mt='5'>
+        All Battles
+      </Heading>
       {battles.map((battle: BattleType) => {
         return <BattleCard battle={battle} />
       })}
