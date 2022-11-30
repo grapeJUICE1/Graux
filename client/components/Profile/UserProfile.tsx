@@ -14,15 +14,22 @@ import {
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { useGetUserLazyQuery, useMeLazyQuery, User } from '../../gql/graphql'
+import {
+  useDeleteUserMutation,
+  useGetUserLazyQuery,
+  useMeLazyQuery,
+  User,
+} from '../../gql/graphql'
 import UserBattles from '../Battle/UserBattles'
 import BattleRequests from '../BattleRequests/BattleRequests'
 import Comments from '../Comments/Comments'
+import DeleteButton from '../DeleteButton/DeleteButton'
 
 function UserProfile() {
   const [getUser] = useGetUserLazyQuery()
   const [meQuery, { data }] = useMeLazyQuery()
   const [user, setUser] = useState<User | null>()
+  const [deleteUser] = useDeleteUserMutation()
   const router = useRouter()
 
   useEffect(() => {
@@ -74,6 +81,14 @@ function UserProfile() {
               >
                 TODO
               </Text>
+              {user?.id && data?.me?.id && user?.id === data?.me?.id && (
+                <DeleteButton
+                  modalHeader='Delete Account'
+                  buttonProps={{ mt: '5' }}
+                  modalBody='Are you sure you want to delete your account? All your battles , comments , votes etc will be deleted as well.'
+                  mutationFunc={() => deleteUser()}
+                />
+              )}
             </Box>
           </Center>
           <Tabs

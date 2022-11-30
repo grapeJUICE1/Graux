@@ -328,6 +328,18 @@ export type CreateBattleMutationVariables = Exact<{
 
 export type CreateBattleMutation = { __typename?: 'Mutation', createBattle?: { __typename?: 'Battle', id: string, title: string, status: string, likeDislikeCount?: number | null, expires?: string | null, createdAt?: string | null } | null };
 
+export type DeleteBattleMutationVariables = Exact<{
+  battleId: Scalars['Int'];
+}>;
+
+
+export type DeleteBattleMutation = { __typename?: 'Mutation', deleteBattle?: boolean | null };
+
+export type DeleteUserMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser?: boolean | null };
+
 export type GetBattleQueryVariables = Exact<{
   battleId: Scalars['Int'];
   manage: Scalars['Boolean'];
@@ -432,6 +444,13 @@ export type RemoveBattleUserMutationVariables = Exact<{
 
 
 export type RemoveBattleUserMutation = { __typename?: 'Mutation', removeBattleUser?: boolean | null };
+
+export type RemoveCommentMutationVariables = Exact<{
+  commentId: Scalars['Int'];
+}>;
+
+
+export type RemoveCommentMutation = { __typename?: 'Mutation', removeComment?: boolean | null };
 
 export type StartBattleMutationVariables = Exact<{
   battleId: Scalars['Int'];
@@ -639,6 +658,67 @@ export function useCreateBattleMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateBattleMutationHookResult = ReturnType<typeof useCreateBattleMutation>;
 export type CreateBattleMutationResult = Apollo.MutationResult<CreateBattleMutation>;
 export type CreateBattleMutationOptions = Apollo.BaseMutationOptions<CreateBattleMutation, CreateBattleMutationVariables>;
+export const DeleteBattleDocument = gql`
+    mutation DeleteBattle($battleId: Int!) {
+  deleteBattle(battleId: $battleId)
+}
+    `;
+export type DeleteBattleMutationFn = Apollo.MutationFunction<DeleteBattleMutation, DeleteBattleMutationVariables>;
+
+/**
+ * __useDeleteBattleMutation__
+ *
+ * To run a mutation, you first call `useDeleteBattleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteBattleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteBattleMutation, { data, loading, error }] = useDeleteBattleMutation({
+ *   variables: {
+ *      battleId: // value for 'battleId'
+ *   },
+ * });
+ */
+export function useDeleteBattleMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBattleMutation, DeleteBattleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteBattleMutation, DeleteBattleMutationVariables>(DeleteBattleDocument, options);
+      }
+export type DeleteBattleMutationHookResult = ReturnType<typeof useDeleteBattleMutation>;
+export type DeleteBattleMutationResult = Apollo.MutationResult<DeleteBattleMutation>;
+export type DeleteBattleMutationOptions = Apollo.BaseMutationOptions<DeleteBattleMutation, DeleteBattleMutationVariables>;
+export const DeleteUserDocument = gql`
+    mutation DeleteUser {
+  deleteUser
+}
+    `;
+export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
+
+/**
+ * __useDeleteUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserMutation, { data, loading, error }] = useDeleteUserMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, options);
+      }
+export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
+export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
+export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
 export const GetBattleDocument = gql`
     query GetBattle($battleId: Int!, $manage: Boolean!) {
   getBattle(battleId: $battleId, manage: $manage) {
@@ -1248,6 +1328,37 @@ export function useRemoveBattleUserMutation(baseOptions?: Apollo.MutationHookOpt
 export type RemoveBattleUserMutationHookResult = ReturnType<typeof useRemoveBattleUserMutation>;
 export type RemoveBattleUserMutationResult = Apollo.MutationResult<RemoveBattleUserMutation>;
 export type RemoveBattleUserMutationOptions = Apollo.BaseMutationOptions<RemoveBattleUserMutation, RemoveBattleUserMutationVariables>;
+export const RemoveCommentDocument = gql`
+    mutation RemoveComment($commentId: Int!) {
+  removeComment(commentId: $commentId)
+}
+    `;
+export type RemoveCommentMutationFn = Apollo.MutationFunction<RemoveCommentMutation, RemoveCommentMutationVariables>;
+
+/**
+ * __useRemoveCommentMutation__
+ *
+ * To run a mutation, you first call `useRemoveCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeCommentMutation, { data, loading, error }] = useRemoveCommentMutation({
+ *   variables: {
+ *      commentId: // value for 'commentId'
+ *   },
+ * });
+ */
+export function useRemoveCommentMutation(baseOptions?: Apollo.MutationHookOptions<RemoveCommentMutation, RemoveCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveCommentMutation, RemoveCommentMutationVariables>(RemoveCommentDocument, options);
+      }
+export type RemoveCommentMutationHookResult = ReturnType<typeof useRemoveCommentMutation>;
+export type RemoveCommentMutationResult = Apollo.MutationResult<RemoveCommentMutation>;
+export type RemoveCommentMutationOptions = Apollo.BaseMutationOptions<RemoveCommentMutation, RemoveCommentMutationVariables>;
 export const StartBattleDocument = gql`
     mutation StartBattle($battleId: Int!, $hoursTillActive: Int!) {
   startBattle(battleId: $battleId, hoursTillActive: $hoursTillActive)

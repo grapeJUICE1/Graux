@@ -1,6 +1,12 @@
 import { Box, Center, Text } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { Comment, useGetCommentsLazyQuery } from '../../gql/graphql'
+import {
+  Comment,
+  useGetCommentsLazyQuery,
+  useMeLazyQuery,
+  useRemoveCommentMutation,
+} from '../../gql/graphql'
+import DeleteButton from '../DeleteButton/DeleteButton'
 import LikeDislike from '../LikeDislike/LikeDislike'
 import AddCommentButton from './AddCommentButton'
 
@@ -11,10 +17,13 @@ function Comments({
   battleId?: number
   userId?: number
 }) {
+  const [meQuery, { data }] = useMeLazyQuery()
+  const [removeComment] = useRemoveCommentMutation()
   const [comments, setComments] = useState<Comment[] | null>([])
-
   const [getComments] = useGetCommentsLazyQuery()
-
+  useEffect(() => {
+    meQuery()
+  }, [])
   useEffect(() => {
     if (battleId || userId) {
       getComments({ variables: { battleId, userId } })
@@ -44,7 +53,11 @@ function Comments({
     }
     return false
   }
-
+  const shaniqua = () => {
+    return removeComment({
+      variables: { commentId: 2 },
+    })
+  }
   return (
     <Box mt='10'>
       <Text textAlign='center' fontSize='2rem'>
@@ -72,6 +85,19 @@ function Comments({
                 setEntity={setComment}
                 entity={comment}
               />
+              {data?.me && data?.me?.id === comment?.user?.id && (
+                <Center mt='7'>
+                  <DeleteButton
+                    modalHeader='Delete Comment'
+                    modalBody='Are you sure you want to remove this comment?'
+                    mutationFunc={() =>
+                      removeComment({
+                        variables: { commentId: +comment?.id },
+                      })
+                    }
+                  />
+                </Center>
+              )}
             </Box>
           )
         })}
