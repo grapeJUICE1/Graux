@@ -75,13 +75,19 @@ function SidebarContent(props: any) {
 
         {data?.me?.username && (
           <>
-            <SidebarItem as={Link} href='/'>
+            <SidebarItem as={Link} href={`/users/${data?.me?.id}`}>
               Your Profile
             </SidebarItem>
-            <SidebarItem as={Link} href='/'>
+            <SidebarItem
+              as={Link}
+              href={`/users/${data?.me?.id}?tab=battlesCreated`}
+            >
               Your Battles
             </SidebarItem>
-            <SidebarItem as={Link} href='/'>
+            <SidebarItem
+              as={Link}
+              href={`/users/${data?.me?.id}?tab=battleRequests`}
+            >
               Battle Requests
             </SidebarItem>
 

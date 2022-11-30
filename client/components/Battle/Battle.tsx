@@ -165,7 +165,7 @@ function Battle({ initialBattle }: { initialBattle: Battle }) {
                   <Button
                     onClick={() => voteButtonOnClick(+battleUser?.id)}
                     mt='10'
-                    colorScheme='blue'
+                    colorScheme={battleUser?.userVote ? 'orange' : 'blue'}
                   >
                     Vote ({battleUser?.voteCount} votes)
                   </Button>

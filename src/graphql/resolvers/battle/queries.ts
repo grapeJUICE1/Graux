@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql'
 import Battle from '../../../entities/Battle'
+import BattleStatus from '../../../types/BattleStatusEnum'
 import addMiddleware from '../../../utils/addMiddleware'
 import isAuthMiddleware from '../../middlewares/isAuth'
 
@@ -40,7 +41,15 @@ export default {
             },
           })
         }
-        if (payload?.userId) await battle.setUserLikeDislike(+payload?.userId)
+        if (payload?.userId) {
+          await battle.setUserLikeDislike(+payload?.userId)
+
+          if (battle?.status !== BattleStatus.CREATION) {
+            for (const battleUser of battle?.battleUsers) {
+              await battleUser.setUserVote(+payload?.userId)
+            }
+          }
+        }
         return battle
       } catch (err) {
         throw new Error(err)

@@ -32,6 +32,7 @@ query GetBattle {
       songImage
       songLink
       songName
+      userVote
       user {
         id
         email
