@@ -4,34 +4,17 @@ import addMiddleware from '../../../utils/addMiddleware'
 import isAuthMiddleware from '../../middlewares/isAuth'
 
 export default {
-  getComments: async () => {
-    try {
-      const comments = await Comment.find({})
-      return comments
-    } catch (err) {
-      throw new Error(err)
-    }
-  },
-
-  getCommentsOfBattle: addMiddleware(
+  getComments: addMiddleware(
     isAuthMiddleware,
-    async (_: any, { battleId }, { payload }) => {
+    async (_: any, { battleId, userId }, { payload }) => {
       try {
-        let errors = []
         const comments = await Comment.find({
           relations: { user: true },
-          where: { battleId: battleId },
+          where: {
+            battleId: battleId || undefined,
+            userId: userId || undefined,
+          },
         })
-
-        if (!comments) {
-          errors.push({
-            path: 'comment',
-            message: 'Battle does not have any comments yet',
-          })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
-          })
-        }
 
         if (payload?.userId) {
           for (const comment of comments) {

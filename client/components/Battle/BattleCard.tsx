@@ -17,7 +17,7 @@ function BattleCard({ battle }: { battle: BattleType }) {
   }, [battle])
 
   return (
-    <Flex p={41} w='full' alignItems='center' justifyContent='center'>
+    <Flex py='10' w='full' alignItems='center' justifyContent='center'>
       <Box
         mx='auto'
         px={8}
@@ -28,7 +28,7 @@ function BattleCard({ battle }: { battle: BattleType }) {
         _dark={{
           bg: 'gray.700',
         }}
-        w='55rem'
+        w='90%'
       >
         <Flex justifyContent='space-between' alignItems='center'>
           <Text
@@ -76,42 +76,6 @@ function BattleCard({ battle }: { battle: BattleType }) {
           >
             {battle.title}
           </Link>
-          {/*<Flex justifyContent='space-between' alignItems='center' mt={4}>
-            <Text
-              color='cyan.600'
-              _dark={{
-                color: 'cyan.400',
-              }}
-              fontWeight='500'
-              display='inline'
-            >
-              <Text style={{ textDecoration: 'underline' }} display='inline'>
-                {battle?.battleUsers ? battle?.battleUsers[1]?.songName : ''}
-              </Text>{' '}
-              by{' '}
-              <Text display='inline' style={{ textDecoration: 'underline' }}>
-                {battle?.battleUsers ? battle?.battleUsers[1]?.songAlbum : ''}
-              </Text>
-            </Text>
-            <Flex alignItems='center'>
-              <Text
-                color='cyan.600'
-                _dark={{
-                  color: 'cyan.400',
-                }}
-                fontWeight='500'
-                display='inline'
-              >
-                <Text style={{ textDecoration: 'underline' }} display='inline'>
-                  {battle?.battleUsers ? battle?.battleUsers[0]?.songName : ''}
-                </Text>{' '}
-                by{' '}
-                <Text display='inline' style={{ textDecoration: 'underline' }}>
-                  {battle?.battleUsers ? battle?.battleUsers[0]?.songAlbum : ''}
-                </Text>
-              </Text>
-            </Flex>
-          </Flex>*/}
         </Box>
 
         <Flex justifyContent='space-between' alignItems='center' mt={4}>
@@ -121,10 +85,12 @@ function BattleCard({ battle }: { battle: BattleType }) {
                 <Box bgColor={battleUser?.isWinner ? 'green.700' : ''}>
                   <Box>
                     <Link
+                      as={NextLink}
                       color='brand.600'
                       _dark={{
                         color: 'brand.400',
                       }}
+                      href={`/users/${battleUser?.user?.id}`}
                     >
                       {battleCreator?.user?.id === battleUser?.user?.id && (
                         <Text display='inline'>battle created by : </Text>
@@ -154,7 +120,7 @@ function BattleCard({ battle }: { battle: BattleType }) {
                     <Box>
                       {battleUser?.songName && (
                         <Box>
-                          <Text display='inline'>Song Name: </Text>
+                          <Text display='inline'>Name: </Text>
                           <Text
                             style={{ wordWrap: 'break-word' }}
                             fontWeight='medium'
@@ -166,7 +132,7 @@ function BattleCard({ battle }: { battle: BattleType }) {
                       )}
                       {battleUser?.songAlbum && (
                         <Box>
-                          <Text display='inline'>Song Album: </Text>
+                          <Text display='inline'>Album: </Text>
                           <Text
                             style={{ wordWrap: 'break-word' }}
                             fontWeight='medium'
@@ -178,7 +144,7 @@ function BattleCard({ battle }: { battle: BattleType }) {
                       )}
                       {battleUser?.songArtist && (
                         <Box>
-                          <Text display='inline'>Song Artist: </Text>
+                          <Text display='inline'>Artist: </Text>
                           <Text
                             style={{ wordWrap: 'break-word' }}
                             display='inline'
