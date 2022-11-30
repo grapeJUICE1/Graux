@@ -42,7 +42,7 @@ function UserBattles({
       </Heading>
       {battles ? (
         battles.map(({ battle }: { battle: BattleType }) => {
-          return <BattleCard battle={battle} />
+          return <BattleCard key={battle?.id} battle={battle} />
         })
       ) : (
         <Spinner size='xl' />

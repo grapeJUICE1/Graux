@@ -18,6 +18,7 @@ const typeDefs = `#graphql
     songImage: String
     songLink : String
     voteCount: Int
+    userVote: Int
     createdAt:String
   }
 

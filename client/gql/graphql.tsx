@@ -51,6 +51,7 @@ export type BattleUser = {
   songLink?: Maybe<Scalars['String']>;
   songName?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
+  userVote?: Maybe<Scalars['Int']>;
   voteCount?: Maybe<Scalars['Int']>;
 };
 

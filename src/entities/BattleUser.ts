@@ -50,4 +50,12 @@ export default class BattleUser extends AppBaseEntity {
 
   @Column({ nullable: true })
   songLink: string
+
+  public userVote: number
+  async setUserVote(userId: number) {
+    const vote = await Vote.findOne({
+      where: { battleUserId: this.id, userId },
+    })
+    this.userVote = vote ? 1 : 0
+  }
 }

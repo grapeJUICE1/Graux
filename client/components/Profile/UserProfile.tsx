@@ -22,8 +22,9 @@ import Comments from '../Comments/Comments'
 function UserProfile() {
   const [getUser] = useGetUserLazyQuery()
   const [meQuery, { data }] = useMeLazyQuery()
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | null>()
   const router = useRouter()
+
   useEffect(() => {
     if (router?.query?.id) {
       meQuery().then(({ data }) => {
@@ -39,6 +40,7 @@ function UserProfile() {
       })
     }
   }, [router?.query?.id])
+
   return (
     <>
       {user?.id ? (

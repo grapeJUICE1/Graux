@@ -82,7 +82,10 @@ function BattleCard({ battle }: { battle: BattleType }) {
           {battle?.battleUsers &&
             battle.battleUsers?.map((battleUser: BattleUser | null) => {
               return (
-                <Box bgColor={battleUser?.isWinner ? 'green.700' : ''}>
+                <Box
+                  key={battleUser?.user?.id}
+                  bgColor={battleUser?.isWinner ? 'green.700' : ''}
+                >
                   <Box>
                     <Link
                       as={NextLink}
