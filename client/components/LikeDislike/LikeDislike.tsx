@@ -31,7 +31,7 @@ function LikeDislike({
       })
       setEntity({
         ...entity,
-        likeDislikeCount: entity.likeDislikeCount! + data?.likeDislike!,
+        likeDislikeCount: data?.likeDislike!,
         userLikeDislike: value,
       })
 

@@ -39,8 +39,10 @@ import {
   useRemoveBattleUserMutation,
   useRemoveBattleRequestMutation,
   useStartBattleMutation,
+  useDeleteBattleMutation,
 } from '../../gql/graphql'
 import formatDate from '../../utils/formatDate'
+import DeleteButton from '../DeleteButton/DeleteButton'
 
 function StartBattleButton({ battleId }: { battleId: number }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -170,6 +172,7 @@ function ManageBattle() {
   const [meQuery, { data }] = useMeLazyQuery()
   const [removeBattleUser] = useRemoveBattleUserMutation()
   const [removeBattleRequest] = useRemoveBattleRequestMutation()
+  const [deleteBattle] = useDeleteBattleMutation()
 
   const isBattleStartable = useMemo(() => {
     if (battle?.status !== 'creation') return false
@@ -271,7 +274,9 @@ function ManageBattle() {
   }, [router.query.id])
   return (
     <>
-      {data?.me && battleCreator?.user?.username ? (
+      {data?.me?.username &&
+      battleCreator?.user?.username &&
+      data?.me?.username === battleCreator?.user?.username ? (
         <Box>
           <Alert status='warning'>
             <AlertIcon />
@@ -323,11 +328,23 @@ function ManageBattle() {
               <Divider />
               <Center>
                 <Box>
-                  <Button colorScheme='cyan' mt='5' textAlign='center' mx='3'>
+                  <Button colorScheme='cyan' mt='5' mx='3'>
                     Edit Title
                   </Button>
                   {battle && isBattleStartable && (
                     <StartBattleButton battleId={+battle?.id} />
+                  )}
+                  {battle && (
+                    <DeleteButton
+                      modalHeader='Delete Battle'
+                      modalBody='Are you sure you want to remove this battle??'
+                      mutationFunc={() =>
+                        deleteBattle({
+                          variables: { battleId: +battle?.id },
+                        })
+                      }
+                      buttonProps={{ mt: '5', mx: '3' }}
+                    />
                   )}
                 </Box>
               </Center>

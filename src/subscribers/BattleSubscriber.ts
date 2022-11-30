@@ -1,7 +1,7 @@
 import { EntitySubscriberInterface, EventSubscriber, LoadEvent } from 'typeorm'
 import BattleStatus from '../types/BattleStatusEnum'
-import Battle from './Battle'
-import BattleUser from './BattleUser'
+import Battle from '../entities/Battle'
+import BattleUser from '../entities/BattleUser'
 
 @EventSubscriber()
 export class BattleSubscriber implements EntitySubscriberInterface<Battle> {

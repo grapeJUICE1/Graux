@@ -29,7 +29,9 @@ export default class Battle extends AppBaseEntity {
   @Column({ default: 0 })
   likeDislikeCount: Number
 
-  @OneToMany(() => BattleUser, (battleUser) => battleUser.battle)
+  @OneToMany(() => BattleUser, (battleUser) => battleUser.battle, {
+    onDelete: 'CASCADE',
+  })
   battleUsers: BattleUser[]
 
   @OneToMany(() => Comment, (comment) => comment.battle)

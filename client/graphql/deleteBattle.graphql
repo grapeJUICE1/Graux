@@ -1,0 +1,3 @@
+mutation DeleteBattle($battleId: Int!) {
+  deleteBattle(battleId: $battleId)
+}

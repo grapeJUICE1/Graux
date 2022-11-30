@@ -9,7 +9,7 @@ export default class LikeDislike extends AppBaseEntity {
   @Column()
   value: number
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: User
 
