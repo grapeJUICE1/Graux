@@ -47,7 +47,7 @@ export default {
           })
           battleUser.voteCount = voteCount
           await BattleUser.save(battleUser)
-          return '-1'
+          return voteCount
         }
         // add the new vote
 
@@ -61,7 +61,7 @@ export default {
         })
         battleUser.voteCount = voteCount
         await BattleUser.save(battleUser)
-        return '+1'
+        return voteCount
       } catch (err) {
         throw new Error(err)
       }
