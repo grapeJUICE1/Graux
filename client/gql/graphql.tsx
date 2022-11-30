@@ -90,7 +90,7 @@ export type Mutation = {
   updateBattle?: Maybe<Battle>;
   updateComment?: Maybe<Comment>;
   updateUser?: Maybe<User>;
-  vote?: Maybe<Scalars['String']>;
+  vote?: Maybe<Scalars['Int']>;
 };
 
 
@@ -470,7 +470,7 @@ export type VoteMutationVariables = Exact<{
 }>;
 
 
-export type VoteMutation = { __typename?: 'Mutation', vote?: string | null };
+export type VoteMutation = { __typename?: 'Mutation', vote?: number | null };
 
 
 export const AddBattleUserDocument = gql`

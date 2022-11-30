@@ -28,20 +28,40 @@ function Battle({ initialBattle }: { initialBattle: Battle }) {
           isClosable: true,
         })
         const { data } = await vote({ variables: { battleUserId } })
+        console.log(data)
         let battleUser1 = battle?.battleUsers[0]
         let battleUser2 = battle?.battleUsers[1]
 
         if (battleUser1?.id && battleUser2?.id) {
           if (+battleUser1?.id === battleUserId) {
+            battleUser2.userVote = 0
             if (typeof battleUser1?.voteCount === 'number') {
-              if (data?.vote === '+1') battleUser1.voteCount += 1
-              else if (data?.vote === '-1') battleUser1.voteCount -= 1
+              if (typeof battleUser1?.userVote === 'number') {
+                if (battleUser1?.voteCount! > data?.vote!) {
+                  battleUser1.userVote = 0
+                }
+                if (battleUser1?.voteCount! < data?.vote!) {
+                  battleUser1.userVote = 1
+                }
+              }
+              battleUser1.voteCount = data?.vote!
+              if (typeof battleUser2?.voteCount === 'number')
+                battleUser2.voteCount =
+                  data?.vote! + battleUser2.voteCount - data?.vote!
             }
           }
           if (+battleUser2?.id === battleUserId) {
+            battleUser1.userVote = 0
             if (typeof battleUser2?.voteCount === 'number') {
-              if (data?.vote === '+1') battleUser2.voteCount += 1
-              else if (data?.vote === '-1') battleUser2.voteCount -= 1
+              if (typeof battleUser2?.userVote === 'number') {
+                if (battleUser2?.voteCount! > data?.vote!) {
+                  battleUser2.userVote = 0
+                }
+                if (battleUser2?.voteCount! < data?.vote!) {
+                  battleUser2.userVote = 1
+                }
+              }
+              battleUser2.voteCount = data?.vote!
             }
           }
         }
@@ -165,7 +185,7 @@ function Battle({ initialBattle }: { initialBattle: Battle }) {
                   <Button
                     onClick={() => voteButtonOnClick(+battleUser?.id)}
                     mt='10'
-                    colorScheme={battleUser?.userVote ? 'orange' : 'blue'}
+                    colorScheme={battleUser?.userVote === 1 ? 'orange' : 'blue'}
                   >
                     Vote ({battleUser?.voteCount} votes)
                   </Button>
