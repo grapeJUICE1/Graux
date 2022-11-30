@@ -1,5 +1,13 @@
-query GetUserBattles($userId: Int!) {
-  getUserBattles(userId: $userId) {
+query GetUserBattles(
+  $userId: Int!
+  $battlesWon: Boolean
+  $battlesCreated: Boolean
+) {
+  getUserBattles(
+    userId: $userId
+    battlesWon: $battlesWon
+    battlesCreated: $battlesCreated
+  ) {
     battle {
       id
       title

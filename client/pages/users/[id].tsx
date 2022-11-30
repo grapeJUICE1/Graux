@@ -1,5 +1,7 @@
+import UserProfile from '../../components/Profile/UserProfile'
+
 function User() {
-  return <div>User</div>
+  return <UserProfile />
 }
 
 export default User

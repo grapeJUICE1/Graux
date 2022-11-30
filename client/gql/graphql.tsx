@@ -204,7 +204,6 @@ export type Query = {
   getBattles?: Maybe<Array<Maybe<Battle>>>;
   getComment?: Maybe<Comment>;
   getComments?: Maybe<Array<Maybe<Comment>>>;
-  getCommentsOfBattle?: Maybe<Array<Maybe<Comment>>>;
   getUser?: Maybe<User>;
   getUserBattleRequests?: Maybe<Array<Maybe<BattleRequest>>>;
   getUserBattles?: Maybe<Array<Maybe<GetUserBattlesResponse>>>;
@@ -240,8 +239,9 @@ export type QueryGetCommentArgs = {
 };
 
 
-export type QueryGetCommentsOfBattleArgs = {
-  battleId: Scalars['Int'];
+export type QueryGetCommentsArgs = {
+  battleId?: InputMaybe<Scalars['Int']>;
+  userId?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -256,6 +256,8 @@ export type QueryGetUserBattleRequestsArgs = {
 
 
 export type QueryGetUserBattlesArgs = {
+  battlesCreated?: InputMaybe<Scalars['Boolean']>;
+  battlesWon?: InputMaybe<Scalars['Boolean']>;
   userId: Scalars['Int'];
 };
 
@@ -347,12 +349,20 @@ export type GetBattleRequestsQueryVariables = Exact<{
 
 export type GetBattleRequestsQuery = { __typename?: 'Query', getBattleRequests?: Array<{ __typename?: 'BattleRequest', id: string, validated?: boolean | null, user?: { __typename?: 'User', id: string, username: string, email: string, createdAt?: string | null } | null } | null> | null };
 
-export type GetCommentsOfBattleQueryVariables = Exact<{
-  battleId: Scalars['Int'];
+export type GetCommentsQueryVariables = Exact<{
+  battleId?: InputMaybe<Scalars['Int']>;
+  userId?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type GetCommentsOfBattleQuery = { __typename?: 'Query', getCommentsOfBattle?: Array<{ __typename?: 'Comment', id: string, body: string, likeDislikeCount?: number | null, userLikeDislike?: number | null, user?: { __typename?: 'User', id: string, email: string, username: string } | null } | null> | null };
+export type GetCommentsQuery = { __typename?: 'Query', getComments?: Array<{ __typename?: 'Comment', id: string, body: string, likeDislikeCount?: number | null, userLikeDislike?: number | null, user?: { __typename?: 'User', id: string, email: string, username: string } | null } | null> | null };
+
+export type GetUserQueryVariables = Exact<{
+  userId: Scalars['Int'];
+}>;
+
+
+export type GetUserQuery = { __typename?: 'Query', getUser?: { __typename?: 'User', id: string, email: string, username: string, createdAt?: string | null } | null };
 
 export type GetUserBattleRequestsQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -363,6 +373,8 @@ export type GetUserBattleRequestsQuery = { __typename?: 'Query', getUserBattleRe
 
 export type GetUserBattlesQueryVariables = Exact<{
   userId: Scalars['Int'];
+  battlesWon?: InputMaybe<Scalars['Boolean']>;
+  battlesCreated?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
@@ -789,9 +801,9 @@ export function useGetBattleRequestsLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetBattleRequestsQueryHookResult = ReturnType<typeof useGetBattleRequestsQuery>;
 export type GetBattleRequestsLazyQueryHookResult = ReturnType<typeof useGetBattleRequestsLazyQuery>;
 export type GetBattleRequestsQueryResult = Apollo.QueryResult<GetBattleRequestsQuery, GetBattleRequestsQueryVariables>;
-export const GetCommentsOfBattleDocument = gql`
-    query GetCommentsOfBattle($battleId: Int!) {
-  getCommentsOfBattle(battleId: $battleId) {
+export const GetCommentsDocument = gql`
+    query GetComments($battleId: Int, $userId: Int) {
+  getComments(battleId: $battleId, userId: $userId) {
     id
     body
     likeDislikeCount
@@ -806,32 +818,71 @@ export const GetCommentsOfBattleDocument = gql`
     `;
 
 /**
- * __useGetCommentsOfBattleQuery__
+ * __useGetCommentsQuery__
  *
- * To run a query within a React component, call `useGetCommentsOfBattleQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCommentsOfBattleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetCommentsOfBattleQuery({
+ * const { data, loading, error } = useGetCommentsQuery({
  *   variables: {
  *      battleId: // value for 'battleId'
+ *      userId: // value for 'userId'
  *   },
  * });
  */
-export function useGetCommentsOfBattleQuery(baseOptions: Apollo.QueryHookOptions<GetCommentsOfBattleQuery, GetCommentsOfBattleQueryVariables>) {
+export function useGetCommentsQuery(baseOptions?: Apollo.QueryHookOptions<GetCommentsQuery, GetCommentsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetCommentsOfBattleQuery, GetCommentsOfBattleQueryVariables>(GetCommentsOfBattleDocument, options);
+        return Apollo.useQuery<GetCommentsQuery, GetCommentsQueryVariables>(GetCommentsDocument, options);
       }
-export function useGetCommentsOfBattleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommentsOfBattleQuery, GetCommentsOfBattleQueryVariables>) {
+export function useGetCommentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommentsQuery, GetCommentsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetCommentsOfBattleQuery, GetCommentsOfBattleQueryVariables>(GetCommentsOfBattleDocument, options);
+          return Apollo.useLazyQuery<GetCommentsQuery, GetCommentsQueryVariables>(GetCommentsDocument, options);
         }
-export type GetCommentsOfBattleQueryHookResult = ReturnType<typeof useGetCommentsOfBattleQuery>;
-export type GetCommentsOfBattleLazyQueryHookResult = ReturnType<typeof useGetCommentsOfBattleLazyQuery>;
-export type GetCommentsOfBattleQueryResult = Apollo.QueryResult<GetCommentsOfBattleQuery, GetCommentsOfBattleQueryVariables>;
+export type GetCommentsQueryHookResult = ReturnType<typeof useGetCommentsQuery>;
+export type GetCommentsLazyQueryHookResult = ReturnType<typeof useGetCommentsLazyQuery>;
+export type GetCommentsQueryResult = Apollo.QueryResult<GetCommentsQuery, GetCommentsQueryVariables>;
+export const GetUserDocument = gql`
+    query GetUser($userId: Int!) {
+  getUser(userId: $userId) {
+    id
+    email
+    username
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetUserQuery__
+ *
+ * To run a query within a React component, call `useGetUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetUserQuery(baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+      }
+export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        }
+export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
+export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
+export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
 export const GetUserBattleRequestsDocument = gql`
     query GetUserBattleRequests($userId: Int!) {
   getUserBattleRequests(userId: $userId) {
@@ -884,8 +935,12 @@ export type GetUserBattleRequestsQueryHookResult = ReturnType<typeof useGetUserB
 export type GetUserBattleRequestsLazyQueryHookResult = ReturnType<typeof useGetUserBattleRequestsLazyQuery>;
 export type GetUserBattleRequestsQueryResult = Apollo.QueryResult<GetUserBattleRequestsQuery, GetUserBattleRequestsQueryVariables>;
 export const GetUserBattlesDocument = gql`
-    query GetUserBattles($userId: Int!) {
-  getUserBattles(userId: $userId) {
+    query GetUserBattles($userId: Int!, $battlesWon: Boolean, $battlesCreated: Boolean) {
+  getUserBattles(
+    userId: $userId
+    battlesWon: $battlesWon
+    battlesCreated: $battlesCreated
+  ) {
     battle {
       id
       title
@@ -930,6 +985,8 @@ export const GetUserBattlesDocument = gql`
  * const { data, loading, error } = useGetUserBattlesQuery({
  *   variables: {
  *      userId: // value for 'userId'
+ *      battlesWon: // value for 'battlesWon'
+ *      battlesCreated: // value for 'battlesCreated'
  *   },
  * });
  */

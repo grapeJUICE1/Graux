@@ -1,47 +1,52 @@
-import { Heading } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
+import { Heading, Spinner } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import {
   Battle as BattleType,
-  useMeLazyQuery,
-  User,
   useGetUserBattlesLazyQuery,
 } from '../../gql/graphql'
 import BattleCard from './BattleCard'
 
-function UserBattles() {
+function UserBattles({
+  battlesCreated,
+  battlesWon,
+  userId,
+}: {
+  battlesWon?: boolean
+  battlesCreated?: boolean
+  battlesPartOf?: boolean
+  userId: number
+}) {
   const [battles, setBattles] = useState<{ battle: BattleType }[] | null>(null)
-  const [me, setMe] = useState<User | null>(null)
-
-  const [meQuery] = useMeLazyQuery()
   const [getUserBattles] = useGetUserBattlesLazyQuery()
-  const router = useRouter()
 
   useEffect(() => {
-    meQuery().then(({ data }) => {
-      if (!data?.me) router.replace('/')
-      setMe(data?.me || null)
+    getUserBattles({
+      variables: {
+        userId: userId,
+        battlesCreated: battlesCreated ? true : false,
+        battlesWon: battlesWon ? true : false,
+      },
+    }).then(({ data }) => {
+      setBattles((data?.getUserBattles as { battle: BattleType }[]) || null)
     })
   }, [])
-
-  useEffect(() => {
-    if (me) {
-      getUserBattles({ variables: { userId: +me.id } }).then(({ data }) => {
-        setBattles((data?.getUserBattles as { battle: BattleType }[]) || null)
-      })
-    }
-  }, [me])
 
   return (
     <>
       <Heading textAlign='center' mt='5'>
-        All Battles You Are Part Of
+        {battlesCreated
+          ? 'All Battles Created By User'
+          : battlesWon
+          ? 'All Battles Won By User'
+          : 'All Battles User Is Part Of'}
       </Heading>
-      {battles
-        ? battles.map(({ battle }: { battle: BattleType }) => {
-            return <BattleCard battle={battle} />
-          })
-        : ''}
+      {battles ? (
+        battles.map(({ battle }: { battle: BattleType }) => {
+          return <BattleCard battle={battle} />
+        })
+      ) : (
+        <Spinner size='xl' />
+      )}
     </>
   )
 }

@@ -1,5 +1,5 @@
-query GetCommentsOfBattle($battleId: Int!) {
-  getCommentsOfBattle(battleId: $battleId) {
+query GetComments($battleId: Int, $userId: Int) {
+  getComments(battleId: $battleId, userId: $userId) {
     id
     body
     likeDislikeCount

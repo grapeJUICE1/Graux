@@ -71,7 +71,7 @@ const typeDefs = `#graphql
     # BattleUser Queries
     getAllBattleUsers: [BattleUser]
     getBattleUsers(battleId:Int!): [getBattleUsersResponse]
-    getUserBattles(userId: Int!): [getUserBattlesResponse]
+    getUserBattles(userId: Int! ,battlesWon:Boolean,battlesCreated:Boolean ): [getUserBattlesResponse]
 
     getAllBattleRequests: [BattleRequest]
     getBattleRequests(battleId:Int!): [BattleRequest]
@@ -79,9 +79,8 @@ const typeDefs = `#graphql
     getBattleRequest(battleRequestId:Int!): BattleRequest
 
     # Comment Queries
-    getComments:[Comment]
+    getComments(battleId:Int , userId:Int):[Comment]
     getComment(commentId:Int!):Comment
-    getCommentsOfBattle(battleId:Int!):[Comment]
 
     test:String
 

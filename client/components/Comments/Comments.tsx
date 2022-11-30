@@ -1,19 +1,25 @@
 import { Box, Center, Text } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { Comment, useGetCommentsOfBattleLazyQuery } from '../../gql/graphql'
+import { Comment, useGetCommentsLazyQuery } from '../../gql/graphql'
 import LikeDislike from '../LikeDislike/LikeDislike'
 import AddCommentButton from './AddCommentButton'
 
-function Comments({ battleId }: { battleId: number }) {
+function Comments({
+  battleId,
+  userId,
+}: {
+  battleId?: number
+  userId?: number
+}) {
   const [comments, setComments] = useState<Comment[] | null>([])
 
-  const [getCommentsOfBattle] = useGetCommentsOfBattleLazyQuery()
+  const [getComments] = useGetCommentsLazyQuery()
 
   useEffect(() => {
-    if (battleId) {
-      getCommentsOfBattle({ variables: { battleId } })
+    if (battleId || userId) {
+      getComments({ variables: { battleId, userId } })
         .then((response) => {
-          const comments = response?.data?.getCommentsOfBattle
+          const comments = response?.data?.getComments
           if (comments) {
             setComments(comments as Comment[])
           }

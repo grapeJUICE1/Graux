@@ -42,11 +42,15 @@ export default {
       throw new Error(err)
     }
   },
-  getUserBattles: async (_: any, { userId }) => {
+  getUserBattles: async (_: any, { userId, battlesWon, battlesCreated }) => {
     try {
       const battles = await BattleUser.find({
         relations: { battle: { battleUsers: { user: true } } },
-        where: { userId: userId },
+        where: {
+          userId: userId,
+          isWinner: battlesWon ? true : undefined,
+          battleCreator: battlesCreated ? true : undefined,
+        },
       })
 
       if (!battles) return new Error('Given user has no battles')
