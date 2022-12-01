@@ -43,6 +43,7 @@ import {
 } from '../../gql/graphql'
 import formatDate from '../../utils/formatDate'
 import DeleteButton from '../DeleteButton/DeleteButton'
+import EditTitleButton from './EditTitleButton'
 
 function StartBattleButton({ battleId }: { battleId: number }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -328,9 +329,12 @@ function ManageBattle() {
               <Divider />
               <Center>
                 <Box>
-                  <Button colorScheme='cyan' mt='5' mx='3'>
-                    Edit Title
-                  </Button>
+                  {battle?.id && (
+                    <EditTitleButton
+                      buttonProps={{ colorScheme: 'cyan', mt: '5', mx: '3' }}
+                      battleId={+battle?.id}
+                    />
+                  )}
                   {battle && isBattleStartable && (
                     <StartBattleButton battleId={+battle?.id} />
                   )}
