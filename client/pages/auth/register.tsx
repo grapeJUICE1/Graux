@@ -1,7 +1,7 @@
-import RegisterCard from '../../components/Auth/Register'
+import AuthCard from '../../features/authentication/components/AuthCard'
 
 function RegisterPage() {
-  return <RegisterCard />
+  return <AuthCard authType='register' />
 }
 
 export default RegisterPage

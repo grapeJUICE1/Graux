@@ -1,7 +1,7 @@
-import LoginCard from '../../components/Auth/Login'
+import { AuthCard } from '../../features/authentication'
 
 function LoginPage() {
-  return <LoginCard />
+  return <AuthCard authType='login' />
 }
 
 export default LoginPage

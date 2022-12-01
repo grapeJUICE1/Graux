@@ -204,6 +204,16 @@ function ManageBattle() {
       }
     })
   }
+  function copyLinkButtonOnClick(requestId: number) {
+    navigator.clipboard.writeText(
+      window.location.origin + `/users/approveBattleRequest/${requestId}`
+    )
+    toast({
+      title: 'Copied Link To Clipboard',
+      status: 'success',
+      duration: 2000,
+    })
+  }
   async function handleRemoveButtonOnClick(
     type: 'removeBattleUser' | 'removeBattleRequest',
     id: number
@@ -357,7 +367,7 @@ function ManageBattle() {
           <Stack direction={{ base: 'column', sm: 'column', md: 'row' }}>
             <Box width={{ base: '100%', sm: '100%', md: '50%' }}>
               <Text fontSize='2xl' mt='10'>
-                Battle Users
+                Battle Participants
               </Text>
               {battle?.battleUsers &&
                 //@ts-ignore
@@ -492,6 +502,16 @@ function ManageBattle() {
                         </Text>
                         {battleRequest?.validated?.toString() || ''}
                       </Text>
+                      <Button
+                        onClick={() =>
+                          copyLinkButtonOnClick(+battleRequest?.id)
+                        }
+                        colorScheme='cyan'
+                        mr='5'
+                        mt='5'
+                      >
+                        Copy Link To Approve Request
+                      </Button>
                       <Button
                         onClick={async () =>
                           handleRemoveButtonOnClick(
