@@ -98,7 +98,7 @@ export default {
           })
 
         await Battle.save(battle)
-        return battle
+        return true
       } catch (err) {
         throw new Error(err)
       }

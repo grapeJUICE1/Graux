@@ -87,7 +87,7 @@ export type Mutation = {
   removeBattleUser?: Maybe<Scalars['Boolean']>;
   removeComment?: Maybe<Scalars['Boolean']>;
   startBattle?: Maybe<Scalars['Boolean']>;
-  updateBattle?: Maybe<Battle>;
+  updateBattle?: Maybe<Scalars['Boolean']>;
   updateComment?: Maybe<Comment>;
   updateUser?: Maybe<User>;
   vote?: Maybe<Scalars['Int']>;
@@ -464,6 +464,14 @@ export type TestQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type TestQuery = { __typename?: 'Query', test?: string | null };
+
+export type UpdateBattleMutationVariables = Exact<{
+  battleId: Scalars['Int'];
+  title: Scalars['String'];
+}>;
+
+
+export type UpdateBattleMutation = { __typename?: 'Mutation', updateBattle?: boolean | null };
 
 export type VoteMutationVariables = Exact<{
   battleUserId: Scalars['Int'];
@@ -1423,6 +1431,38 @@ export function useTestLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TestQ
 export type TestQueryHookResult = ReturnType<typeof useTestQuery>;
 export type TestLazyQueryHookResult = ReturnType<typeof useTestLazyQuery>;
 export type TestQueryResult = Apollo.QueryResult<TestQuery, TestQueryVariables>;
+export const UpdateBattleDocument = gql`
+    mutation UpdateBattle($battleId: Int!, $title: String!) {
+  updateBattle(battleId: $battleId, title: $title)
+}
+    `;
+export type UpdateBattleMutationFn = Apollo.MutationFunction<UpdateBattleMutation, UpdateBattleMutationVariables>;
+
+/**
+ * __useUpdateBattleMutation__
+ *
+ * To run a mutation, you first call `useUpdateBattleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateBattleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateBattleMutation, { data, loading, error }] = useUpdateBattleMutation({
+ *   variables: {
+ *      battleId: // value for 'battleId'
+ *      title: // value for 'title'
+ *   },
+ * });
+ */
+export function useUpdateBattleMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBattleMutation, UpdateBattleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateBattleMutation, UpdateBattleMutationVariables>(UpdateBattleDocument, options);
+      }
+export type UpdateBattleMutationHookResult = ReturnType<typeof useUpdateBattleMutation>;
+export type UpdateBattleMutationResult = Apollo.MutationResult<UpdateBattleMutation>;
+export type UpdateBattleMutationOptions = Apollo.BaseMutationOptions<UpdateBattleMutation, UpdateBattleMutationVariables>;
 export const VoteDocument = gql`
     mutation Vote($battleUserId: Int!) {
   vote(battleUserId: $battleUserId)

@@ -1,0 +1,3 @@
+mutation UpdateBattle($battleId: Int!, $title: String!) {
+  updateBattle(battleId: $battleId, title: $title)
+}

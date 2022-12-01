@@ -104,7 +104,7 @@ const typeDefs = `#graphql
 
     # Battle Mutations
     createBattle(title:String!): Battle
-    updateBattle(battleId:Int! , title:String! ):Battle
+    updateBattle(battleId:Int! , title:String! ):Boolean
     deleteBattle(battleId:Int!):Boolean
     startBattle(battleId:Int! , hoursTillActive:Int!):Boolean
     
