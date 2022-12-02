@@ -5,7 +5,7 @@ function useMutation(mutationFn: any) {
 
   async function mutation(
     mutationOptions: {},
-    onSuccess: () => void,
+    onSuccess: (data: any) => void = () => {},
     setFieldError?: any
   ) {
     try {
@@ -14,14 +14,14 @@ function useMutation(mutationFn: any) {
         description: 'Please wait for a few seconds',
         duration: null,
       })
-      await mutationFn(mutationOptions)
+      const { data } = await mutationFn(mutationOptions)
       toast.closeAll()
       toast({
         description: 'Successful',
         duration: 2000,
         status: 'success',
       })
-      onSuccess()
+      onSuccess(data)
     } catch (err) {
       toast.closeAll()
       //@ts-ignore
@@ -41,20 +41,22 @@ function useMutation(mutationFn: any) {
               })
             } else {
               toast({
-                description: errors?.at(0)?.message,
+                description:
+                  errors?.at(0)?.message ||
+                  //@ts-ignore
+                  errors?.message ||
+                  'Something went wrong',
                 status: 'error',
                 duration: 2000,
               })
             }
           }
         } else {
-          if (!toast.isActive('errorToast')) {
-            toast({
-              description: 'Something Went Wrong',
-              status: 'error',
-              duration: 2000,
-            })
-          }
+          toast({
+            description: 'Something Went Wrong',
+            status: 'error',
+            duration: 2000,
+          })
         }
       }
     }

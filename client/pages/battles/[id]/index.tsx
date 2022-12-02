@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 import { GetServerSidePropsContext } from 'next'
 import client from '../../../apollo-client'
-import Battle from '../../../components/Battle/Battle'
+import { IndividualBattle } from '../../../features/battles'
 import { Battle as BattleType } from '../../../gql/graphql'
 
 export async function getServerSideProps({
@@ -75,7 +75,7 @@ query GetBattle {
   }
 }
 function BattlePage({ battle }: { battle: BattleType }) {
-  return <Battle initialBattle={battle} />
+  return <IndividualBattle initialBattle={battle} />
 }
 
 export default BattlePage
