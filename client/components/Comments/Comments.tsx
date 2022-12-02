@@ -53,11 +53,6 @@ function Comments({
     }
     return false
   }
-  const shaniqua = () => {
-    return removeComment({
-      variables: { commentId: 2 },
-    })
-  }
   return (
     <Box mt='10'>
       <Text textAlign='center' fontSize='2rem'>
@@ -75,7 +70,13 @@ function Comments({
       {comments &&
         comments?.map((comment: Comment) => {
           return (
-            <Box border='1px' borderColor='cyan.500' my='3' p='3'>
+            <Box
+              key={comment?.id}
+              border='1px'
+              borderColor='cyan.500'
+              my='3'
+              p='3'
+            >
               <Text fontSize='1.1rem' textAlign='center'>
                 {comment?.body}
               </Text>
