@@ -15,6 +15,8 @@ import {
 import {
   DeleteBattleMutation,
   DeleteUserMutation,
+  RemoveBattleRequestMutation,
+  RemoveBattleUserMutation,
   RemoveCommentMutation,
 } from '../../gql/graphql'
 
@@ -40,6 +42,20 @@ interface DeleteButtonProps {
     | (() => Promise<
         FetchResult<
           DeleteUserMutation,
+          Record<string, any>,
+          Record<string, any>
+        >
+      >)
+    | (() => Promise<
+        FetchResult<
+          RemoveBattleUserMutation,
+          Record<string, any>,
+          Record<string, any>
+        >
+      >)
+    | (() => Promise<
+        FetchResult<
+          RemoveBattleRequestMutation,
           Record<string, any>,
           Record<string, any>
         >
