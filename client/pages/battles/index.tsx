@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 import client from '../../apollo-client'
 import { Battle as BattleType } from '../../gql/graphql'
-import BattleCard from '../../components/Battle/BattleCard'
 import { Heading } from '@chakra-ui/react'
+import { BattleCard } from '../../features/battles'
 
 export default function BattlesPage({ battles }: { battles: BattleType[] }) {
   return (
