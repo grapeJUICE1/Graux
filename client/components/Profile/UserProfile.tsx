@@ -34,17 +34,29 @@ function UserProfile() {
 
   useEffect(() => {
     if (router?.query?.id) {
-      meQuery().then(({ data }) => {
-        if (data?.me?.id === router?.query?.id) {
-          setUser(data?.me!)
-        } else {
-          getUser({ variables: { userId: +router?.query?.id! } }).then(
-            (response) => {
+      meQuery()
+        .then(({ data }) => {
+          if (data?.me?.id === router?.query?.id) {
+            setUser(data?.me!)
+          } else {
+            console.log('i came here')
+            getUser({ variables: { userId: +router?.query?.id! } }).then(
+              (response) => {
+                if (response?.data?.getUser) setUser(response?.data?.getUser)
+              }
+            )
+          }
+        })
+        .catch((_) => {
+          console.log('i came here')
+          getUser({ variables: { userId: +router?.query?.id! } })
+            .then((response) => {
               if (response?.data?.getUser) setUser(response?.data?.getUser)
-            }
-          )
-        }
-      })
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        })
     }
   }, [router?.query?.id])
 

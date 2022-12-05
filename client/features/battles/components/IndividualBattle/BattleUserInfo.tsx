@@ -1,4 +1,4 @@
-import { Box, Button, Text, useToast } from '@chakra-ui/react'
+import { Box, Button, Text } from '@chakra-ui/react'
 import { Dispatch, SetStateAction } from 'react'
 import { Battle, BattleUser, useVoteMutation } from '../../../../gql/graphql'
 import useMutation from '../../../../hooks/useMutation'

@@ -1,4 +1,4 @@
-import ManageBattle from '../../../components/Battle/ManageBattle'
+import { ManageBattle } from '../../../features/battles'
 
 function ManageBattlePage() {
   return <ManageBattle />

@@ -26,6 +26,7 @@ export default {
   },
   getUser: async (_: any, { userId }) => {
     try {
+      console.log('Am i coming here')
       const user = await User.findOne({ where: { id: userId } })
       if (!user) {
         return new GraphQLError('Validation Error', {
