@@ -10,6 +10,7 @@ import {
   Heading,
   Text,
   useColorModeValue,
+  Center,
 } from '@chakra-ui/react'
 import { useFormik } from 'formik'
 import NextLink from 'next/link'
@@ -139,18 +140,20 @@ function AuthCard({ authType }: AuthCardProps) {
               <Stack pt={6}>
                 <Text align={'center'}>
                   {authType === 'login'
-                    ? "Don't have and account?"
-                    : 'Already have a account?'}
+                    ? "Don't have an account?"
+                    : 'Already have an account?'}
                 </Text>
-                <Link
-                  //@ts-ignore
-                  align={'center'}
-                  as={NextLink}
-                  href={`/auth/${authType === 'login' ? 'register' : 'login'}`}
-                  color={'blue.400'}
-                >
-                  {authType === 'login' ? 'Register' : 'Log In'}
-                </Link>
+                <Center>
+                  <Link
+                    as={NextLink}
+                    href={`/auth/${
+                      authType === 'login' ? 'register' : 'login'
+                    }`}
+                    color={'blue.400'}
+                  >
+                    {authType === 'login' ? 'Register' : 'Log In'}
+                  </Link>
+                </Center>
               </Stack>
             </Stack>
           </Box>
