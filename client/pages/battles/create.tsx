@@ -1,7 +1,7 @@
-import CreateBattleForm from '../../components/CreateBattle/CreateBattleForm'
+import { CreateBattle } from '../../features/battles'
 
 function CreateBattlePage() {
-  return <CreateBattleForm />
+  return <CreateBattle />
 }
 
 export default CreateBattlePage
