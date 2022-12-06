@@ -14,13 +14,13 @@ import {
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { UserBattles } from '../../features/battles'
 import {
   useDeleteUserMutation,
   useGetUserLazyQuery,
   useMeLazyQuery,
   User,
 } from '../../gql/graphql'
-import UserBattles from '../Battle/UserBattles'
 import BattleRequests from '../BattleRequests/BattleRequests'
 import Comments from '../Comments/Comments'
 import DeleteButton from '../DeleteButton/DeleteButton'

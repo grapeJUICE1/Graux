@@ -1,7 +1,7 @@
 import { Box, Center, Divider, Text } from '@chakra-ui/react'
 import { useMemo } from 'react'
-import EditTitleButton from '../../../../components/Battle/EditTitleButton'
 import DeleteButton from '../../../../components/DeleteButton/DeleteButton'
+import EditTitleButton from '../../../../components/EditTitleButton'
 import { Battle, useDeleteBattleMutation } from '../../../../gql/graphql'
 import formatDate from '../../../../utils/formatDate'
 import StartBattleButton from './StartBattleButton'

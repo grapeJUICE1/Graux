@@ -58,6 +58,7 @@ function ManageBattle() {
     if (router?.query?.id) {
       getBattleQuery({
         variables: { battleId: +router.query.id, manage: true },
+        fetchPolicy: 'network-only',
       }).then((response) => {
         if (response?.data?.getBattle) {
           const battle = response?.data?.getBattle as Battle
