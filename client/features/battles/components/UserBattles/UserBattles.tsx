@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react'
 import {
   Battle as BattleType,
   useGetUserBattlesLazyQuery,
-} from '../../gql/graphql'
-import BattleCard from './BattleCard'
+} from '../../../../gql/graphql'
+import BattleCard from '../BattleCard/BattleCard'
 
 function UserBattles({
   battlesCreated,

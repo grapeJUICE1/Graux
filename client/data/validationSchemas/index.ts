@@ -37,4 +37,6 @@ export const loginSchema = Yup.object({
 
 export const createBattleSchema = Yup.object({ title: titleValidation })
 
+export const addBattleUserSchema = Yup.object({ username: usernameValidation })
+
 export const startBattleSchema = Yup.object({ hours: hoursValidation })

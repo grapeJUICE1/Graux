@@ -16,16 +16,18 @@ import {
 import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import * as Yup from 'yup'
+import { addBattleUserSchema } from '../../../../data/validationSchemas'
 import {
   useAddBattleUserMutation,
   useGetUsersLazyQuery,
   User,
-} from '../../gql/graphql'
+} from '../../../../gql/graphql'
+import useMutation from '../../../../hooks/useMutation'
 
-function AddBattleUserForm() {
-  let [addBattleUser] = useAddBattleUserMutation()
-
+function AddBattleUser() {
+  const [getUsersQuery] = useGetUsersLazyQuery({})
+  const [addBattleUser] = useAddBattleUserMutation()
+  const addBattleUserMutation = useMutation(addBattleUser)
   const toast = useToast()
   const router = useRouter()
 
@@ -37,80 +39,41 @@ function AddBattleUserForm() {
     initialValues: {
       username: '',
     },
-    validationSchema: Yup.object({
-      username: Yup.string()
-        .min(3, 'Must be atleaast 3 characters long')
-        .max(30, "Can't exceed 30 characters")
-        .required('Required'),
-    }),
+    validationSchema: addBattleUserSchema,
 
     onSubmit: async (_, { setFieldError }) => {
-      try {
-        if (!optionChoosed) {
-          toast.closeAll()
-          toast({
-            status: 'warning',
-            title:
-              'You need to search and then choose the username from the dropdown menu to select a user , just typing the username will not work',
-            duration: null,
-            isClosable: true,
-          })
-          return
-        }
-        await addBattleUser({
+      if (!optionChoosed) {
+        toast.closeAll()
+        toast({
+          status: 'warning',
+          title:
+            'You need to search and then choose the username from the dropdown menu to select a user , just typing the username will not work',
+          duration: null,
+          isClosable: true,
+        })
+        return
+      }
+      await addBattleUserMutation(
+        {
           variables: {
             userId: +optionChoosed,
             battleId: +router?.query?.id! as number,
           },
-        })
-
-        toast.closeAll()
-        toast({
-          description: 'Battle Request send to the user',
-          status: 'success',
-          duration: 2000,
-        })
-        router.replace(`/battles/${router.query.id}/manage`)
-      } catch (err) {
-        toast.closeAll()
-        //@ts-ignore
-        if (err?.graphQLErrors[0]?.extensions?.errors) {
-          //@ts-ignore
-          let errors = err?.graphQLErrors[0].extensions.errors as {
-            path: string
-            message: string
-          }[]
-          if (errors) {
-            if (errors[0]?.path) {
-              errors.forEach((error: { path: string; message: string }) => {
-                //@ts-ignore
-                setFieldError(error.path, error.message)
-              })
-            }
-          } else {
-            if (!toast.isActive('errorToast')) {
-              toast({
-                id: 'errorToast',
-                description: 'Error',
-                status: 'error',
-                duration: 2000,
-              })
-            }
-          }
-        }
-      }
+        },
+        () => {
+          router.replace(`/battles/${router.query.id}/manage`)
+        },
+        setFieldError
+      )
     },
   })
-
-  const [getUsersQuery] = useGetUsersLazyQuery({})
 
   useEffect(() => {
     if (!optionWasChoosed && formik.values.username.length > 0) {
       getUsersQuery({
         variables: { search: formik.values.username },
       }).then(({ data }) => {
-        //@ts-ignore
-        setOptions(data?.getUsers)
+        setOptions(data?.getUsers as User[])
       })
     } else if (optionWasChoosed) {
       setOptionWasChoosed(false)
@@ -208,4 +171,4 @@ function AddBattleUserForm() {
   )
 }
 
-export default AddBattleUserForm
+export default AddBattleUser
