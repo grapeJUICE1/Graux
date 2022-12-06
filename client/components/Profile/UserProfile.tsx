@@ -39,7 +39,6 @@ function UserProfile() {
           if (data?.me?.id === router?.query?.id) {
             setUser(data?.me!)
           } else {
-            console.log('i came here')
             getUser({ variables: { userId: +router?.query?.id! } }).then(
               (response) => {
                 if (response?.data?.getUser) setUser(response?.data?.getUser)
@@ -48,7 +47,6 @@ function UserProfile() {
           }
         })
         .catch((_) => {
-          console.log('i came here')
           getUser({ variables: { userId: +router?.query?.id! } })
             .then((response) => {
               if (response?.data?.getUser) setUser(response?.data?.getUser)
