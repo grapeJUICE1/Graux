@@ -1,7 +1,7 @@
-import Choose from '../../../components/Choose/Choose'
+import { ChooseSong } from '../../../features/battleUsers'
 
 function ChooseSongPage() {
-  return <Choose />
+  return <ChooseSong />
 }
 
 export default ChooseSongPage

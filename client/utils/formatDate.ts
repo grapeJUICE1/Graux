@@ -8,5 +8,5 @@ export default function formatDate(date: number) {
     minute: 'numeric',
   }
 
-  return new Date(date).toLocaleString(undefined, options) || undefined
+  return new Date(date).toLocaleString(undefined, options) || ''
 }

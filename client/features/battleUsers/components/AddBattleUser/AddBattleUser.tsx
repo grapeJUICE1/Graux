@@ -15,7 +15,6 @@ import {
 } from '@chakra-ui/react'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
 import { addBattleUserSchema } from '../../../../data/validationSchemas'
 import {
   useAddBattleUserMutation,
@@ -23,6 +22,7 @@ import {
   User,
 } from '../../../../gql/graphql'
 import useMutation from '../../../../hooks/useMutation'
+import useAutocomplete from '../../hooks/useAutocomplete'
 
 function AddBattleUser() {
   const [getUsersQuery] = useGetUsersLazyQuery({})
@@ -31,10 +31,6 @@ function AddBattleUser() {
   const toast = useToast()
   const router = useRouter()
 
-  const [options, setOptions] = useState<User[]>([])
-  const [optionChoosed, setOptionChoosed] = useState<String | null>(null)
-  const [optionWasChoosed, setOptionWasChoosed] = useState<boolean>(false)
-
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -42,7 +38,7 @@ function AddBattleUser() {
     validationSchema: addBattleUserSchema,
 
     onSubmit: async (_, { setFieldError }) => {
-      if (!optionChoosed) {
+      if (!option) {
         toast.closeAll()
         toast({
           status: 'warning',
@@ -56,7 +52,7 @@ function AddBattleUser() {
       await addBattleUserMutation(
         {
           variables: {
-            userId: +optionChoosed,
+            userId: +option,
             battleId: +router?.query?.id! as number,
           },
         },
@@ -68,17 +64,16 @@ function AddBattleUser() {
     },
   })
 
-  useEffect(() => {
-    if (!optionWasChoosed && formik.values.username.length > 0) {
+  const { options, option, chooseOption } = useAutocomplete<User, string>(
+    (setOptions) => {
       getUsersQuery({
         variables: { search: formik.values.username },
       }).then(({ data }) => {
         setOptions(data?.getUsers as User[])
       })
-    } else if (optionWasChoosed) {
-      setOptionWasChoosed(false)
-    }
-  }, [formik.values.username])
+    },
+    formik.values.username
+  )
 
   return (
     <Flex
@@ -117,9 +112,6 @@ function AddBattleUser() {
                   autoFocus
                   onChange={async (evt) => {
                     formik.handleChange(evt)
-                    if (optionChoosed) {
-                      setOptionChoosed(null)
-                    }
                   }}
                 />
                 {formik.touched.username && formik.errors.username ? (
@@ -127,7 +119,7 @@ function AddBattleUser() {
                 ) : null}
                 <UnorderedList styleType='none'>
                   {formik.values.username.length > 0 &&
-                    options.map((option) => {
+                    options?.map((option) => {
                       return (
                         <ListItem key={option.id}>
                           <Button
@@ -135,9 +127,7 @@ function AddBattleUser() {
                             width='100%'
                             onClick={() => {
                               formik.setFieldValue('username', option.username)
-                              setOptions([])
-                              setOptionChoosed(option.id)
-                              setOptionWasChoosed(true)
+                              chooseOption(option.id)
                             }}
                           >
                             {option.username}
@@ -149,7 +139,7 @@ function AddBattleUser() {
               </FormControl>
               <Stack spacing={10}>
                 <Button
-                  isDisabled={!optionChoosed}
+                  isDisabled={!option}
                   type='submit'
                   bg={'cyan.400'}
                   color={'white'}
