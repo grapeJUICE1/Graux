@@ -15,34 +15,30 @@ import {
 } from '@chakra-ui/react'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
-import { Fragment, useEffect, useState } from 'react'
-import { useChooseSongMutation } from '../../gql/graphql'
-function Choose() {
-  const [options, setOptions] = useState<any>(null)
-  const [optionChoosed, setOptionChoosed] = useState<any>(null)
-  const [optionWasChoosed, setOptionWasChoosed] = useState<boolean>(false)
+import { Fragment } from 'react'
+import { useChooseSongMutation } from '../../../../gql/graphql'
+import useAutocomplete from '../../hooks/useAutocomplete'
+
+function ChooseSong() {
   const router = useRouter()
   const toast = useToast()
-
   const [chooseSong] = useChooseSongMutation()
   const formik = useFormik({
     initialValues: {
       songName: '',
     },
     onSubmit: async () => {
-      if (optionChoosed?.name && router?.query?.id) {
+      if (option?.name && router?.query?.id) {
         try {
           await chooseSong({
             variables: {
               battleId: +router?.query?.id as unknown as number,
-              songName: optionChoosed?.name as string,
-              songAlbum:
-                (optionChoosed?.album?.title as string) || 'No album found',
-              songLink: (optionChoosed?.url as string) || 'No Song Link found',
-              songArtist:
-                (optionChoosed?.artist?.name as string) || 'No artist found',
+              songName: option?.name as string,
+              songAlbum: (option?.album?.title as string) || 'No album found',
+              songLink: (option?.url as string) || 'No Song Link found',
+              songArtist: (option?.artist?.name as string) || 'No artist found',
               songImage:
-                (optionChoosed?.album?.image[2]['#text'] as string) ||
+                (option?.album?.image[2]['#text'] as string) ||
                 '/images/404.png',
             },
           })
@@ -70,21 +66,52 @@ function Choose() {
     },
   })
 
-  useEffect(() => {
-    if (formik.values.songName && !optionWasChoosed) {
+  const { options, option, chooseOption } = useAutocomplete<any, any>(
+    (setOptions) => {
       let songNameInUrl = formik.values.songName.replace(/ /g, '%20')
 
       fetch(
         `https://ws.audioscrobbler.com/2.0/?limit=15&method=track.search&track=${songNameInUrl}&api_key=095ee494d48c0071adda4e2816787daa&format=json`
       ).then(async (response) => {
         const data = await response.json()
-        let songs = data?.results?.trackmatches.track
+        let songs = data?.results?.trackmatches?.track
         if (songs) setOptions(songs)
       })
-    } else if (optionWasChoosed) {
-      setOptionWasChoosed(false)
+    },
+    formik.values.songName
+  )
+
+  async function songChooseButtonOnClick(song: any) {
+    try {
+      toast.closeAll()
+      toast({
+        description: 'Please wait for a few seconds',
+        duration: null,
+        isClosable: true,
+      })
+      const trackResponse = await fetch(
+        `https://ws.audioscrobbler.com/2.0/?limit=15&method=track.getInfo&track=${song.name}&artist=${song.artist}&api_key=095ee494d48c0071adda4e2816787daa&format=json`
+      )
+      const data = await trackResponse.json()
+      const track = data?.track
+      formik.setFieldValue('songName', song.name)
+
+      chooseOption(track)
+      toast.closeAll()
+      toast({
+        description: 'Track loaded',
+        duration: 2000,
+        status: 'success',
+      })
+    } catch (err) {
+      console.log(err)
+      toast.closeAll()
+      toast({
+        description: 'Something went wrong , please try again',
+        status: 'error',
+      })
     }
-  }, [formik.values.songName])
+  }
   return (
     <Flex
       minH={'80vh'}
@@ -107,13 +134,13 @@ function Choose() {
             <Heading fontSize={'4xl'}>Choose Song</Heading>
           </Stack>
           <Box>
-            {optionChoosed ? (
+            {option ? (
               <>
-                {optionChoosed?.album?.image ? (
+                {option?.album?.image ? (
                   <img
                     style={{ width: '12rem' }}
                     alt='song image'
-                    src={`${optionChoosed?.album?.image[2]['#text']}`}
+                    src={`${option?.album?.image[2]['#text']}`}
                   />
                 ) : (
                   <img
@@ -123,22 +150,18 @@ function Choose() {
                   />
                 )}
                 <div>
-                  song name :{' '}
-                  {optionChoosed?.name || 'No name found for this song'}
+                  song name : {option?.name || 'No name found for this song'}
                 </div>
                 <div>
                   song album :{' '}
-                  {optionChoosed?.album?.title ||
-                    'No album found for this song'}
+                  {option?.album?.title || 'No album found for this song'}
                 </div>
                 <div>
                   song artist :{' '}
-                  {optionChoosed?.artist?.name ||
-                    'No Artist found for this song'}
+                  {option?.artist?.name || 'No Artist found for this song'}
                 </div>
                 <div>
-                  song link :{' '}
-                  {optionChoosed?.url || 'No link found for this song'}
+                  song link : {option?.url || 'No link found for this song'}
                 </div>
               </>
             ) : (
@@ -161,9 +184,6 @@ function Choose() {
                   autoFocus
                   onChange={async (evt) => {
                     formik.handleChange(evt)
-                    if (optionChoosed) {
-                      setOptionChoosed(null)
-                    }
                   }}
                 />
                 <UnorderedList styleType='none' margin='0'>
@@ -178,21 +198,7 @@ function Choose() {
                               bgColor='gray.600'
                               _hover={{ bgColor: 'gray.500' }}
                               cursor='pointer'
-                              onClick={async () => {
-                                try {
-                                  const trackResponse = await fetch(
-                                    `https://ws.audioscrobbler.com/2.0/?limit=15&method=track.getInfo&track=${song.name}&artist=${song.artist}&api_key=095ee494d48c0071adda4e2816787daa&format=json`
-                                  )
-                                  const data = await trackResponse.json()
-
-                                  const track = data?.track
-                                  console.log(track)
-                                  formik.setFieldValue('songName', song.name)
-                                  setOptions(null)
-                                  setOptionChoosed(track)
-                                  setOptionWasChoosed(true)
-                                } catch (err) {}
-                              }}
+                              onClick={() => songChooseButtonOnClick(song)}
                               style={{ wordWrap: 'break-word' }}
                               fontSize='1.3rem'
                             >
@@ -207,7 +213,7 @@ function Choose() {
               </FormControl>
               <Stack spacing={10}>
                 <Button
-                  isDisabled={!optionChoosed}
+                  isDisabled={!option}
                   type='submit'
                   bg={'cyan.400'}
                   color={'white'}
@@ -228,4 +234,4 @@ function Choose() {
     </Flex>
   )
 }
-export default Choose
+export default ChooseSong
