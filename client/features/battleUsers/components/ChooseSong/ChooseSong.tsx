@@ -17,20 +17,22 @@ import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
 import { Fragment } from 'react'
 import { useChooseSongMutation } from '../../../../gql/graphql'
+import useMutation from '../../../../hooks/useMutation'
 import useAutocomplete from '../../hooks/useAutocomplete'
 
 function ChooseSong() {
   const router = useRouter()
   const toast = useToast()
   const [chooseSong] = useChooseSongMutation()
+  const chooseSongMutation = useMutation(chooseSong)
   const formik = useFormik({
     initialValues: {
       songName: '',
     },
     onSubmit: async () => {
       if (option?.name && router?.query?.id) {
-        try {
-          await chooseSong({
+        await chooseSongMutation(
+          {
             variables: {
               battleId: +router?.query?.id as unknown as number,
               songName: option?.name as string,
@@ -41,27 +43,11 @@ function ChooseSong() {
                 (option?.album?.image[2]['#text'] as string) ||
                 '/images/404.png',
             },
-          })
-          toast({
-            description: 'Chose song successfully',
-            duration: 2000,
-            status: 'success',
-          })
-          router.replace(`/battles/${router.query.id}/manage`)
-        } catch (err) {
-          //@ts-ignore
-          let error = err?.graphQLErrors[0].extensions.errors[0] as {
-            path: string
-            message: string
+          },
+          () => {
+            router.replace(`/battles/${router.query.id}/manage`)
           }
-          if (error) {
-            toast({
-              description: error.message,
-              status: 'error',
-              duration: 3000,
-            })
-          }
-        }
+        )
       }
     },
   })
@@ -69,14 +55,17 @@ function ChooseSong() {
   const { options, option, chooseOption } = useAutocomplete<any, any>(
     (setOptions) => {
       let songNameInUrl = formik.values.songName.replace(/ /g, '%20')
-
       fetch(
         `https://ws.audioscrobbler.com/2.0/?limit=15&method=track.search&track=${songNameInUrl}&api_key=095ee494d48c0071adda4e2816787daa&format=json`
-      ).then(async (response) => {
-        const data = await response.json()
-        let songs = data?.results?.trackmatches?.track
-        if (songs) setOptions(songs)
-      })
+      )
+        .then(async (response) => {
+          const data = await response.json()
+          let songs = data?.results?.trackmatches?.track
+          if (songs) setOptions(songs)
+        })
+        .catch((_err) =>
+          toast({ status: 'error', title: 'Something went wrong' })
+        )
     },
     formik.values.songName
   )
