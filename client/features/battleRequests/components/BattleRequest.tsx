@@ -1,7 +1,7 @@
 import { Box, Button, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
-import { BattleRequest } from '../../gql/graphql'
+import { BattleRequest } from '../../../gql/graphql'
 
 function BattleRequest({ battleRequest }: { battleRequest: BattleRequest }) {
   const router = useRouter()

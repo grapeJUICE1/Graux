@@ -1,4 +1,4 @@
-import UserProfile from '../../components/Profile/UserProfile'
+import { UserProfile } from '../../features/users'
 
 function User() {
   return <UserProfile />

@@ -1,23 +1,19 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Text,
-  useColorModeValue,
-  useToast,
-} from '@chakra-ui/react'
+import { Box, Button, Flex, Text, useColorModeValue } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo, useState } from 'react'
 import {
   BattleRequest,
   useApproveBattleRequestMutation,
   useGetBattleRequestLazyQuery,
-} from '../../gql/graphql'
-import formatDate from '../../utils/formatDate'
+} from '../../../gql/graphql'
+import useMutation from '../../../hooks/useMutation'
+import formatDate from '../../../utils/formatDate'
 
 function ApproveBattleRequest() {
   const [getBattleRequest] = useGetBattleRequestLazyQuery()
+
   const [approveBattleRequest] = useApproveBattleRequestMutation()
+  const approveBattleRequestMutation = useMutation(approveBattleRequest)
 
   const [battleRequest, setBattleRequest] = useState<BattleRequest | null>(null)
 
@@ -28,33 +24,17 @@ function ApproveBattleRequest() {
   }, [battleRequest])
 
   const router = useRouter()
-  const toast = useToast()
 
   async function handleApproveBattleRequestOnClick() {
     if (battleRequest?.id) {
-      try {
-        toast({ description: 'Please wait for a few seconds', duration: null })
-        await approveBattleRequest({
+      await approveBattleRequestMutation(
+        {
           variables: { battleRequestId: +battleRequest?.id },
-        })
-        toast.closeAll()
-        toast({
-          description: 'Battle Request Approved',
-          status: 'success',
-          duration: 2000,
-        })
-        router.replace('/users/battleRequests')
-      } catch (err) {
-        toast.closeAll()
-        //@ts-ignore
-        let error = err?.graphQLErrors[0].extensions.errors[0] as {
-          path: string
-          message: string
+        },
+        () => {
+          router.replace('/users/battleRequests')
         }
-        if (error) {
-          toast({ description: error.message, status: 'error', duration: 3000 })
-        }
-      }
+      )
     }
   }
 
@@ -68,6 +48,7 @@ function ApproveBattleRequest() {
       })
     }
   }, [router.query.battleRequestId])
+
   return (
     <Flex
       minH={'80vh'}

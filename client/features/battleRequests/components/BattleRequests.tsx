@@ -6,7 +6,7 @@ import {
   useGetUserBattleRequestsLazyQuery,
   useMeLazyQuery,
   User,
-} from '../../gql/graphql'
+} from '../../../gql/graphql'
 import BattleRequest from './BattleRequest'
 
 function BattleRequests() {

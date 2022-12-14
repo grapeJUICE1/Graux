@@ -1,4 +1,4 @@
-import ApproveBattleRequest from '../../../components/BattleRequests/ApproveBattleRequest'
+import { ApproveBattleRequest } from '../../../features/battleRequests'
 
 function ApproveBattleRequestPage() {
   return <ApproveBattleRequest />
