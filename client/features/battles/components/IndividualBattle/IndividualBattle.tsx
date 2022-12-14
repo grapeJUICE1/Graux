@@ -1,7 +1,7 @@
 import { Box, Stack } from '@chakra-ui/react'
 import { useMemo, useState } from 'react'
 import { Battle, BattleUser } from '../../../../gql/graphql'
-import Comments from '../../../../components/Comments/Comments'
+import { Comments } from '../../../comments'
 import BattleInfo from './BattleInfo'
 import BattleUserInfo from './BattleUserInfo'
 

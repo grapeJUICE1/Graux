@@ -24,6 +24,11 @@ const titleValidation = Yup.string()
   .max(255, "Title can't exceed 255 characters")
   .required()
 
+const commentBodyValidation = Yup.string()
+  .min(1, 'Comment has to be atleast 1 character long')
+  .max(255, 'Comment cannot be greater than 255 characters')
+  .required()
+
 export const registerSchema = Yup.object({
   email: emailValidation,
   username: usernameValidation,
@@ -40,3 +45,5 @@ export const createBattleSchema = Yup.object({ title: titleValidation })
 export const addBattleUserSchema = Yup.object({ username: usernameValidation })
 
 export const startBattleSchema = Yup.object({ hours: hoursValidation })
+
+export const createCommentSchema = Yup.object({ body: commentBodyValidation })

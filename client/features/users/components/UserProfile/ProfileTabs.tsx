@@ -1,9 +1,9 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import Comments from '../../../../components/Comments/Comments'
 import { User } from '../../../../gql/graphql'
 import { BattleRequests } from '../../../battleRequests'
 import { UserBattles } from '../../../battles'
+import { Comments } from '../../../comments'
 
 interface ProfileTabsProps {
   user: User

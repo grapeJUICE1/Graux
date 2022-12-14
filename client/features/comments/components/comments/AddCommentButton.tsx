@@ -14,11 +14,11 @@ import {
   Text,
   Textarea,
   useDisclosure,
-  useToast,
 } from '@chakra-ui/react'
 import { useFormik } from 'formik'
-import { Comment, useAddCommentMutation } from '../../gql/graphql'
-import * as Yup from 'yup'
+import { Comment, useAddCommentMutation } from '../../../../gql/graphql'
+import { createCommentSchema } from '../../../../data/validationSchemas'
+import useMutation from '../../../../hooks/useMutation'
 
 function AddCommentButton({
   battleId,
@@ -30,60 +30,28 @@ function AddCommentButton({
   setComments: any
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [addComment] = useAddCommentMutation()
 
-  const toast = useToast()
+  const [addComment] = useAddCommentMutation()
+  const addCommentMutation = useMutation(addComment)
 
   const formik = useFormik({
     initialValues: { body: '' },
-    validationSchema: Yup.object({
-      body: Yup.string()
-        .min(1, 'Comment has to be atleast 1 character long')
-        .max(255, 'Comment cannot be greater than 255 characters')
-        .required(),
-    }),
+    validationSchema: createCommentSchema,
 
     onSubmit: async (values) => {
-      try {
-        toast.closeAll()
-        toast({
-          description: 'Please wait for a few seconds',
-          duration: null,
-          isClosable: true,
-        })
-
-        const { data } = await addComment({
+      await addCommentMutation(
+        {
           variables: { battleId, body: values.body },
-        })
-        const comment = data?.addComment
-        if (comment) {
-          if (comments) setComments([comment, ...comments])
-          else setComments([comment])
+        },
+        (data) => {
+          const comment = data?.addComment
+          if (comment) {
+            if (comments) setComments([comment, ...comments])
+            else setComments([comment])
+          }
+          onClose()
         }
-        onClose()
-        toast.closeAll()
-        toast({
-          description: 'voting successfull',
-          duration: 1000,
-          status: 'success',
-        })
-      } catch (err) {
-        console.log(err)
-        onClose()
-        toast.closeAll()
-        //@ts-ignore
-        let error = err?.graphQLErrors[0].extensions.errors[0] as {
-          path: string
-          message: string
-        }
-        if (error) {
-          toast({
-            description: error.message,
-            status: 'error',
-            duration: 3000,
-          })
-        }
-      }
+      )
     },
   })
 
