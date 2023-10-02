@@ -5,10 +5,16 @@ import addMiddleware from '../../../utils/addMiddleware'
 import isAuthMiddleware from '../../middlewares/isAuth'
 
 export default {
-  async getBattles() {
+  async getBattles(_: any, { take, skip, orderBy }) {
+    const orderByOptions = ['title', 'expires', 'createdAt', 'likeDislikeCount']
     try {
       const battles = await Battle.find({
         relations: { battleUsers: { user: true } },
+        take: take || undefined,
+        skip: skip || undefined,
+        order: orderByOptions.includes(orderBy)
+          ? { [orderBy]: 'DESC' }
+          : { createdAt: 'DESC' },
       })
       return battles
     } catch (err) {

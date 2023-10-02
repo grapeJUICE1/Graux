@@ -6,14 +6,20 @@ import isAuthMiddleware from '../../middlewares/isAuth'
 export default {
   getComments: addMiddleware(
     isAuthMiddleware,
-    async (_: any, { battleId, userId }, { payload }) => {
+    async (_: any, { battleId, userId, take, skip, orderBy }, { payload }) => {
       try {
+        const orderByOptions = ['createdAt', 'likeDislikeCount']
         const comments = await Comment.find({
           relations: { user: true },
           where: {
             battleId: battleId || undefined,
             userId: userId || undefined,
           },
+          take: take || undefined,
+          skip: skip || undefined,
+          order: orderByOptions.includes(orderBy)
+            ? { [orderBy]: 'DESC' }
+            : { createdAt: 'DESC' },
         })
 
         if (payload?.userId) {

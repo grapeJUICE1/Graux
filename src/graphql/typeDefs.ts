@@ -62,7 +62,7 @@ const typeDefs = `#graphql
   type Query {
     
     # Battle Queries
-    getBattles: [Battle]
+    getBattles(take:Int skip:Int orderBy:String): [Battle]
     getBattle(battleId:Int! manage:Boolean!): Battle
 
     # User Queries
@@ -80,7 +80,7 @@ const typeDefs = `#graphql
     getBattleRequest(battleRequestId:Int!): BattleRequest
 
     # Comment Queries
-    getComments(battleId:Int , userId:Int):[Comment]
+    getComments(battleId:Int , userId:Int,take:Int skip:Int orderBy:String):[Comment]
     getComment(commentId:Int!):Comment
 
     test:String
@@ -143,5 +143,9 @@ export default typeDefs
 // DONE: comments
 // DONE: liking comments and battle
 // TODO: sort , filter/search , pagination
+// TODO: fix ui shit and complete website
+// TODO: deploy website
+
+// version 2
 // TODO: try graphql code generator
 // TODO: strict mode on typescript

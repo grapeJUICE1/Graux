@@ -12,11 +12,17 @@ export default {
   test: addMiddleware(isAuthMiddleware, async () => {
     return 'testo desu ne'
   }),
-  getUsers: async (_: any, { search }) => {
+  getUsers: async (_: any, { search , take , skip , orderBy }) => {
     try {
+    const orderByOptions = ['createdAt']
       const users = await User.find({
         where: { username: search ? ILike(`%${search}%`) : undefined },
-        take: search ? 10 : undefined,
+        //take: search ? 10 : undefined,
+        take: take || undefined,
+        skip: skip || undefined,
+        order: orderByOptions.includes(orderBy)
+          ? { [orderBy]: 'DESC' }
+          : { createdAt: 'DESC' },
       })
 
       return users
