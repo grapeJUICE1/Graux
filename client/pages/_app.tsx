@@ -2,6 +2,7 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import { Center, ChakraProvider, Spinner, Text } from '@chakra-ui/react'
 import { ApolloProvider } from '@apollo/client'
+import NextNProgress from 'nextjs-progressbar';
 import client from '../apollo-client'
 import Layout from '../components/Layout/Layout'
 import { useEffect, useState } from 'react'
@@ -33,6 +34,7 @@ export default function App({ Component, pageProps }: AppProps) {
           </Center>
         ) : (
           <Layout>
+            <NextNProgress />
             <Component {...pageProps} />
           </Layout>
         )}
