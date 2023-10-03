@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 import client from '../../apollo-client'
 import { Battle as BattleType, useGetBattlesLazyQuery } from '../../gql/graphql'
 import { Heading } from '@chakra-ui/react'
-import { BattleCard } from '../../features/battles'
+import { BattleCard, Battles } from '../../features/battles'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import Pagination from '../../components/Pagination'
@@ -13,52 +13,15 @@ const pageSize = 5;
 export default function BattlesPage(
   { initialBattles, total }: { initialBattles: BattleType[], total: number }
 ) {
-
-  const [battles, setBattles] = useState(initialBattles)
-  const router = useRouter();
-  const [getBattles] = useGetBattlesLazyQuery();
-
-  const handlePageClick = (data: any) => {
-    let selected = data.selected + 1;
-
-    router.push({ pathname: `/battles`, query: { page: selected } });
-  };
-  const pageCount = Math.ceil(total / pageSize);
-
-  useEffect(() => {
-    if (
-      Number(router.query?.page)
-    ) {
-      console.log("akhane esechi ami", router.query?.page)
-      getBattles({
-        variables:
-          //@ts-ignore
-          { take: pageSize, skip: (router.query?.page - 1) * pageSize, orderBy: null }
-      })
-        .then((response) => {
-          const battles = response?.data?.getBattles?.battles
-          if (battles) {
-            setBattles(battles as BattleType[])
-          }
-        })
-        .catch()
-    }
-  }, [router.query?.page])
-
+  const router = useRouter()
   return (
     <>
-      <Heading textAlign='center' mt='5'>
-        All Battles
-      </Heading>
-      {battles ? battles.map((battle: BattleType) => {
-        return <BattleCard battle={battle} key={battle.id} />
-      }) : ""}
-      <Pagination
-        pageCount={pageCount}
-        handlePageClick={handlePageClick}
-        currentPage={Number(router.query?.page) || 1}
-      />
-    </>
+      <Battles
+        allBattles={initialBattles || null}
+        pageSize={pageSize}
+        initialPage={Number(router.query?.page) || 1}
+        initialTotal={total}
+      /></>
   )
 }
 
@@ -70,7 +33,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const take = pageSize;
 
-  const { data } = await client.query({
+  const { data  } = await client.query({
     query: gql`
       query GetBattles {
         getBattles(take:${take} , skip:${skip} , orderBy:${null}) {
@@ -104,7 +67,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     `,
     fetchPolicy: 'network-only',
   })
-
+  console.log(data.getBattles.battles)
   return {
     props: {
       initialBattles: data.getBattles.battles,
@@ -112,3 +75,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   }
 }
+
+
+
