@@ -3,15 +3,14 @@ import client from '../../apollo-client'
 import { Battle as BattleType } from '../../gql/graphql'
 import { Heading } from '@chakra-ui/react'
 import { BattleCard } from '../../features/battles'
-
-export default function BattlesPage({ battles }: { battles: BattleType[] }) {
+export default function BattlesPage({battles,total}:{battles:BattleType[],total:Number}) {
   return (
     <>
       <Heading textAlign='center' mt='5'>
         All Battles
       </Heading>
       {battles.map((battle: BattleType) => {
-        return <BattleCard battle={battle} />
+        return <BattleCard battle={battle} key={battle.id} />
       })}
     </>
   )
@@ -22,7 +21,8 @@ export async function getServerSideProps() {
     query: gql`
       query GetBattles {
         getBattles {
-          id
+         battles 
+          {id
           uuid
           title
           status
@@ -44,14 +44,18 @@ export async function getServerSideProps() {
             battleCreator
             isWinner
           }
+        },
+          total
         }
       }
     `,
     fetchPolicy: 'network-only',
   })
+  console.log(data)
   return {
     props: {
-      battles: data.getBattles,
+      battles: data.getBattles.battles,
+      total: data.getBattles.total
     },
   }
 }

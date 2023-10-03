@@ -58,11 +58,14 @@ const typeDefs = `#graphql
     user:User
   }
 
-    
+  type getBattlesResponse {
+    battles:[Battle] 
+    total:Int 
+  } 
   type Query {
     
     # Battle Queries
-    getBattles(take:Int skip:Int orderBy:String): [Battle]
+    getBattles(take:Int skip:Int orderBy:String): getBattlesResponse
     getBattle(battleId:Int! manage:Boolean!): Battle
 
     # User Queries

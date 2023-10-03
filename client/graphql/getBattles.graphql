@@ -1,6 +1,7 @@
 query GetBattles($take:Int,$skip:Int,$orderBy:String) {
   getBattles(take:$take , skip:$skip , orderBy:$orderBy){
-    id
+    battles
+    {id
     uuid
     title
     status
@@ -23,4 +24,6 @@ query GetBattles($take:Int,$skip:Int,$orderBy:String) {
       isWinner
       }
     }
+      total
+  }
   }

@@ -8,7 +8,7 @@ export default {
   async getBattles(_: any, { take, skip, orderBy }) {
     const orderByOptions = ['title', 'expires', 'createdAt', 'likeDislikeCount']
     try {
-      const battles = await Battle.find({
+      const [battles,count] = await Battle.findAndCount({
         relations: { battleUsers: { user: true } },
         take: take || undefined,
         skip: skip || undefined,
@@ -16,7 +16,8 @@ export default {
           ? { [orderBy]: 'DESC' }
           : { createdAt: 'DESC' },
       })
-      return battles
+      return {battles,total:count}
+      
     } catch (err) {
       throw new Error(err)
     }

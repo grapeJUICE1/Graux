@@ -202,7 +202,7 @@ export type Query = {
   getBattleRequest?: Maybe<BattleRequest>;
   getBattleRequests?: Maybe<Array<Maybe<BattleRequest>>>;
   getBattleUsers?: Maybe<Array<Maybe<GetBattleUsersResponse>>>;
-  getBattles?: Maybe<Array<Maybe<Battle>>>;
+  getBattles?: Maybe<GetBattlesResponse>;
   getComment?: Maybe<Comment>;
   getComments?: Maybe<Array<Maybe<Comment>>>;
   getUser?: Maybe<User>;
@@ -235,6 +235,13 @@ export type QueryGetBattleUsersArgs = {
 };
 
 
+export type QueryGetBattlesArgs = {
+  orderBy?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryGetCommentArgs = {
   commentId: Scalars['Int'];
 };
@@ -242,6 +249,9 @@ export type QueryGetCommentArgs = {
 
 export type QueryGetCommentsArgs = {
   battleId?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
   userId?: InputMaybe<Scalars['Int']>;
 };
 
@@ -279,6 +289,12 @@ export type User = {
 export type GetBattleUsersResponse = {
   __typename?: 'getBattleUsersResponse';
   user?: Maybe<User>;
+};
+
+export type GetBattlesResponse = {
+  __typename?: 'getBattlesResponse';
+  battles?: Maybe<Array<Maybe<Battle>>>;
+  total?: Maybe<Scalars['Int']>;
 };
 
 export type GetUserBattlesResponse = {
@@ -361,6 +377,15 @@ export type GetBattleRequestsQueryVariables = Exact<{
 
 
 export type GetBattleRequestsQuery = { __typename?: 'Query', getBattleRequests?: Array<{ __typename?: 'BattleRequest', id: string, validated?: boolean | null, user?: { __typename?: 'User', id: string, username: string, email: string, createdAt?: string | null } | null } | null> | null };
+
+export type GetBattlesQueryVariables = Exact<{
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type GetBattlesQuery = { __typename?: 'Query', getBattles?: { __typename?: 'getBattlesResponse', total?: number | null, battles?: Array<{ __typename?: 'Battle', id: string, uuid: string, title: string, status: string, likeDislikeCount?: number | null, expires?: string | null, createdAt?: string | null, battleUsers?: Array<{ __typename?: 'BattleUser', songName?: string | null, songArtist?: string | null, songAlbum?: string | null, songImage?: string | null, songLink?: string | null, battleCreator?: boolean | null, isWinner?: boolean | null, user?: { __typename?: 'User', id: string, email: string, createdAt?: string | null, username: string } | null } | null> | null } | null> | null } | null };
 
 export type GetCommentsQueryVariables = Exact<{
   battleId?: InputMaybe<Scalars['Int']>;
@@ -890,6 +915,67 @@ export function useGetBattleRequestsLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetBattleRequestsQueryHookResult = ReturnType<typeof useGetBattleRequestsQuery>;
 export type GetBattleRequestsLazyQueryHookResult = ReturnType<typeof useGetBattleRequestsLazyQuery>;
 export type GetBattleRequestsQueryResult = Apollo.QueryResult<GetBattleRequestsQuery, GetBattleRequestsQueryVariables>;
+export const GetBattlesDocument = gql`
+    query GetBattles($take: Int, $skip: Int, $orderBy: String) {
+  getBattles(take: $take, skip: $skip, orderBy: $orderBy) {
+    battles {
+      id
+      uuid
+      title
+      status
+      likeDislikeCount
+      expires
+      createdAt
+      battleUsers {
+        user {
+          id
+          email
+          createdAt
+          username
+        }
+        songName
+        songArtist
+        songAlbum
+        songImage
+        songLink
+        battleCreator
+        isWinner
+      }
+    }
+    total
+  }
+}
+    `;
+
+/**
+ * __useGetBattlesQuery__
+ *
+ * To run a query within a React component, call `useGetBattlesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBattlesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBattlesQuery({
+ *   variables: {
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useGetBattlesQuery(baseOptions?: Apollo.QueryHookOptions<GetBattlesQuery, GetBattlesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBattlesQuery, GetBattlesQueryVariables>(GetBattlesDocument, options);
+      }
+export function useGetBattlesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBattlesQuery, GetBattlesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBattlesQuery, GetBattlesQueryVariables>(GetBattlesDocument, options);
+        }
+export type GetBattlesQueryHookResult = ReturnType<typeof useGetBattlesQuery>;
+export type GetBattlesLazyQueryHookResult = ReturnType<typeof useGetBattlesLazyQuery>;
+export type GetBattlesQueryResult = Apollo.QueryResult<GetBattlesQuery, GetBattlesQueryVariables>;
 export const GetCommentsDocument = gql`
     query GetComments($battleId: Int, $userId: Int) {
   getComments(battleId: $battleId, userId: $userId) {
