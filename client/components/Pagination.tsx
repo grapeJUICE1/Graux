@@ -13,12 +13,12 @@ export default function Pagination({
 }:PaginationProps) {
   return (
     <div>
-      <button
+      {/*<button
         onClick={() => handlePageClick({selected:0})}
         disabled={currentPage === 1}
       >
         first
-      </button>
+      </button>*/}
       <ReactPaginate
         previousLabel={"previous"}
         nextLabel={"next"}
@@ -40,12 +40,12 @@ export default function Pagination({
         disabledClassName={"disabled"}
         forcePage={currentPage - 1}
       />
-      <button
+      {/*<button
         onClick={() => handlePageClick({ selected: pageCount - 1 })}
         disabled={currentPage === pageCount}
       >
         last
-      </button>
+      </button>*/}
     </div>
   );
 }

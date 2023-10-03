@@ -9,6 +9,38 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 20px 0;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  color: #000;
+  text-decoration: none;
+}
+
+.page-link:hover {
+  background-color: #ddd;
+}
+
+.active .page-link {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.disabled .page-link {
+  color: #ddd;
+  cursor: not-allowed;
+}
 @media only screen and (max-width: 580px) {
   html {
     font-size: 10px;
