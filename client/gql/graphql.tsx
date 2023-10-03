@@ -207,7 +207,7 @@ export type Query = {
   getComments?: Maybe<Array<Maybe<Comment>>>;
   getUser?: Maybe<User>;
   getUserBattleRequests?: Maybe<Array<Maybe<BattleRequest>>>;
-  getUserBattles?: Maybe<Array<Maybe<GetUserBattlesResponse>>>;
+  getUserBattles?: Maybe<GetUserBattlesResponse>;
   getUsers?: Maybe<Array<Maybe<User>>>;
   me?: Maybe<User>;
   test?: Maybe<Scalars['String']>;
@@ -269,6 +269,9 @@ export type QueryGetUserBattleRequestsArgs = {
 export type QueryGetUserBattlesArgs = {
   battlesCreated?: InputMaybe<Scalars['Boolean']>;
   battlesWon?: InputMaybe<Scalars['Boolean']>;
+  orderBy?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
   userId: Scalars['Int'];
 };
 
@@ -299,7 +302,8 @@ export type GetBattlesResponse = {
 
 export type GetUserBattlesResponse = {
   __typename?: 'getUserBattlesResponse';
-  battle?: Maybe<Battle>;
+  battles?: Maybe<Array<Maybe<Battle>>>;
+  total?: Maybe<Scalars['Int']>;
 };
 
 export type AddBattleUserMutationVariables = Exact<{
@@ -413,10 +417,13 @@ export type GetUserBattlesQueryVariables = Exact<{
   userId: Scalars['Int'];
   battlesWon?: InputMaybe<Scalars['Boolean']>;
   battlesCreated?: InputMaybe<Scalars['Boolean']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type GetUserBattlesQuery = { __typename?: 'Query', getUserBattles?: Array<{ __typename?: 'getUserBattlesResponse', battle?: { __typename?: 'Battle', id: string, title: string, uuid: string, status: string, likeDislikeCount?: number | null, expires?: string | null, createdAt?: string | null, battleUsers?: Array<{ __typename?: 'BattleUser', id: string, isWinner?: boolean | null, songAlbum?: string | null, songImage?: string | null, songArtist?: string | null, songLink?: string | null, songName?: string | null, voteCount?: number | null, createdAt?: string | null, battleCreator?: boolean | null, user?: { __typename?: 'User', id: string, username: string, email: string, createdAt?: string | null } | null } | null> | null } | null } | null> | null };
+export type GetUserBattlesQuery = { __typename?: 'Query', getUserBattles?: { __typename?: 'getUserBattlesResponse', total?: number | null, battles?: Array<{ __typename?: 'Battle', id: string, title: string, uuid: string, status: string, likeDislikeCount?: number | null, expires?: string | null, createdAt?: string | null, battleUsers?: Array<{ __typename?: 'BattleUser', id: string, isWinner?: boolean | null, songAlbum?: string | null, songImage?: string | null, songArtist?: string | null, songLink?: string | null, songName?: string | null, voteCount?: number | null, createdAt?: string | null, battleCreator?: boolean | null, user?: { __typename?: 'User', id: string, username: string, email: string, createdAt?: string | null } | null } | null> | null } | null> | null } | null };
 
 export type GetUsersQueryVariables = Exact<{
   search?: InputMaybe<Scalars['String']>;
@@ -1110,13 +1117,16 @@ export type GetUserBattleRequestsQueryHookResult = ReturnType<typeof useGetUserB
 export type GetUserBattleRequestsLazyQueryHookResult = ReturnType<typeof useGetUserBattleRequestsLazyQuery>;
 export type GetUserBattleRequestsQueryResult = Apollo.QueryResult<GetUserBattleRequestsQuery, GetUserBattleRequestsQueryVariables>;
 export const GetUserBattlesDocument = gql`
-    query GetUserBattles($userId: Int!, $battlesWon: Boolean, $battlesCreated: Boolean) {
+    query GetUserBattles($userId: Int!, $battlesWon: Boolean, $battlesCreated: Boolean, $take: Int, $skip: Int, $orderBy: String) {
   getUserBattles(
     userId: $userId
     battlesWon: $battlesWon
     battlesCreated: $battlesCreated
+    take: $take
+    skip: $skip
+    orderBy: $orderBy
   ) {
-    battle {
+    battles {
       id
       title
       uuid
@@ -1143,6 +1153,7 @@ export const GetUserBattlesDocument = gql`
         }
       }
     }
+    total
   }
 }
     `;
@@ -1162,6 +1173,9 @@ export const GetUserBattlesDocument = gql`
  *      userId: // value for 'userId'
  *      battlesWon: // value for 'battlesWon'
  *      battlesCreated: // value for 'battlesCreated'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */

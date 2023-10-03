@@ -1,4 +1,4 @@
-import { Heading, Spinner } from '@chakra-ui/react'
+import { Heading } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import Pagination from '../../../../components/Pagination'
@@ -15,13 +15,14 @@ type BattlesProps = {
   battlesPartOf?: boolean
   userId: number
 } ,
-allBattles: BattleType[] | null,
+allBattles?: BattleType[],
 pageSize:number,
 initialPage: number
 initialTotal:number
 }
 function Battles({userBattles , allBattles, pageSize , initialTotal}: BattlesProps) {
-  const [battles, setBattles] = useState<{ battle: BattleType }[] |BattleType[] |null>(allBattles)
+  const [battles, setBattles] = 
+	useState<{ battle: BattleType }[] |BattleType[] |undefined>(allBattles)
   const [total , setTotal] = useState(initialTotal||0)
   const [getUserBattles] = useGetUserBattlesLazyQuery()
 
@@ -29,28 +30,36 @@ function Battles({userBattles , allBattles, pageSize , initialTotal}: BattlesPro
 
   const handlePageClick = (data: any) => {
     let selected = data.selected + 1;
-
-    router.push({query: { page: selected  } });
+    router.push({query: { ...router.query ,page: selected  } });
   };
 
   const pageCount = Math.ceil(total / pageSize);
-
+  console.log(pageCount)
 useEffect(()=>{
-    console.log(allBattles)
     if(!Number(router.query?.page))
-	router.push({query: { page: 1} });
+	router.push({query: {...router.query, page: 1} });
 },[])
 
   useEffect(() => {
 if(userBattles?.userId){
+  const skip = (router.query.page ?
+    Number(router.query.page) ? Number(router.query.page) - 1 : 0 : 0 || 0) * pageSize;
+
+  const take = pageSize;
     getUserBattles({
       variables: {
         userId: userBattles?.userId,
         battlesCreated: userBattles?.battlesCreated ? true : false,
-        battlesWon: userBattles?.battlesWon ? true : false
+        battlesWon: userBattles?.battlesWon ? true : false,
+	//@ts-ignore
+	take,
+	skip
       },
     }).then(({ data }) => {
-      setBattles((data?.getUserBattles as { battle: BattleType }[]) || null)
+      //@ts-ignore
+      setBattles((data?.getUserBattles?.battles as BattleType[]))
+	//@ts-ignore
+      setTotal(data?.getUserBattles?.total)
     })
 	}
   }, [router.query?.page])
@@ -68,17 +77,17 @@ if(userBattles?.userId){
           : 'All Battles User Is Part Of'
 	  : 'All Battles'}
       </Heading>
-      {(userBattles)?(
+{battles?	
+      (userBattles?
 	//@ts-ignore
-        battles.map(({ battle }: { battle: BattleType }) => {
-          return <BattleCard key={battle?.id} battle={battle} />
-        })
-      ):''}
-
+         battles.map((battle :  BattleType ) => {
+           return <BattleCard key={battle?.id} battle={battle} />
+         }):''
+	):''}
       {allBattles?(
 	allBattles?.map((battle: BattleType) => {
         return <BattleCard battle={battle} key={battle.id} />
-	})):{}}
+	})):''}
 
       <Pagination
         pageCount={pageCount}

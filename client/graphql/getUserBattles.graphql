@@ -2,13 +2,19 @@ query GetUserBattles(
   $userId: Int!
   $battlesWon: Boolean
   $battlesCreated: Boolean
+  $take:Int
+  $skip:Int
+  $orderBy:String
 ) {
   getUserBattles(
     userId: $userId
     battlesWon: $battlesWon
     battlesCreated: $battlesCreated
+    take:$take 
+    skip:$skip
+    orderBy:$orderBy
   ) {
-    battle {
+    battles {
       id
       title
       uuid
@@ -34,6 +40,7 @@ query GetUserBattles(
           createdAt
         }
       }
-    }
+    },
+    total
   }
 }

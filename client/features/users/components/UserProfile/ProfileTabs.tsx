@@ -2,7 +2,7 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { User } from '../../../../gql/graphql'
 import { BattleRequests } from '../../../battleRequests'
-import { UserBattles } from '../../../battles'
+import { Battles } from '../../../battles'
 import { Comments } from '../../../comments'
 
 interface ProfileTabsProps {
@@ -14,17 +14,20 @@ function ProfileTabs({ user, me }: ProfileTabsProps) {
   const router = useRouter()
   return (
     <Tabs
+      onChange={(_) => {
+        router.push({query: { ...router.query ,page: 1  } });
+      }}
       defaultIndex={
         router?.query?.tab
           ? router?.query?.tab === 'battlesPartOf'
             ? 1
             : router?.query?.tab === 'battlesWon'
-            ? 2
-            : router?.query?.tab === 'comments'
-            ? 3
-            : router?.query?.tab === 'battleRequests'
-            ? 4
-            : 0
+              ? 2
+              : router?.query?.tab === 'comments'
+                ? 3
+                : router?.query?.tab === 'battleRequests'
+                  ? 4
+                  : 0
           : 0
       }
       isFitted
@@ -41,15 +44,36 @@ function ProfileTabs({ user, me }: ProfileTabsProps) {
 
       <TabPanels>
         <TabPanel>
-          <UserBattles userId={+user?.id} battlesCreated />
+          <Battles
+            userBattles={
+              { userId: +user?.id, battlesCreated: true }
+            }
+            pageSize={5}
+            initialTotal={0}
+            initialPage={1}
+          />
         </TabPanel>
         <TabPanel>
           <p>
-            <UserBattles userId={+user?.id} battlesPartOf />
+            <Battles
+              userBattles={
+                { userId: +user?.id, battlesPartOf: true }
+              }
+              pageSize={5}
+              initialTotal={0}
+              initialPage={1}
+            />
           </p>
         </TabPanel>
         <TabPanel>
-          <UserBattles userId={+user?.id} battlesWon />
+          <Battles
+            userBattles={
+              { userId: +user?.id, battlesWon: true }
+            }
+            pageSize={5}
+            initialTotal={0}
+            initialPage={1}
+          />
         </TabPanel>
         <TabPanel>
           <Comments userId={+user?.id} />

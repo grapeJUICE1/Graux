@@ -17,7 +17,7 @@ function BattleCardHeader({ battle }: BattleCardHeader) {
             color: 'gray.400',
           }}
         >
-          {battle.createdAt ? formatDate(+battle.createdAt) : ''}
+          {battle?.createdAt ? formatDate(+battle.createdAt) : ''}
         </Text>
         <Link
           px={3}
@@ -31,14 +31,14 @@ function BattleCardHeader({ battle }: BattleCardHeader) {
             bg: 'gray.500',
           }}
         >
-          {battle.status}
+          {battle?.status}
         </Link>
       </Flex>
 
       <Box mt={2}>
         <Link
           as={NextLink}
-          href={`/battles/${battle.id}`}
+          href={`/battles/${battle?.id}`}
           fontSize='2xl'
           color='gray.700'
           _dark={{
@@ -53,7 +53,7 @@ function BattleCardHeader({ battle }: BattleCardHeader) {
             textDecor: 'underline',
           }}
         >
-          {battle.title}
+          {battle?.title}
         </Link>
       </Box>
     </Box>
