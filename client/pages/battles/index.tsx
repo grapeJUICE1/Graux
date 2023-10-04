@@ -1,12 +1,10 @@
 import { gql } from "@apollo/client"
 import client from "../../apollo-client"
 import { Battle as BattleType, useGetBattlesLazyQuery } from "../../gql/graphql"
-import { Heading } from "@chakra-ui/react"
-import { BattleCard, Battles } from "../../features/battles"
+import { Battles } from "../../features/battles"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import Pagination from "../../components/Pagination"
 import { GetServerSidePropsContext } from "next"
+import { useEffect } from "react"
 
 const pageSize = 5
 
@@ -18,6 +16,13 @@ export default function BattlesPage({
   total: number
 }) {
   const router = useRouter()
+  const [getBattles] = useGetBattlesLazyQuery()
+
+  useEffect(() => {
+    getBattles({ variables: { orderBy: "createdAt" } }).then((data) => {
+      console.log(data)
+    })
+  }, [])
   return (
     <>
       <Battles
@@ -42,7 +47,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { data } = await client.query({
     query: gql`
       query GetBattles {
-        getBattles(take:${take} , skip:${skip} , orderBy:${null}) {
+        getBattles(take:${take} , skip:${skip} , orderBy:"createdAt") {
          battles 
           {id
           uuid

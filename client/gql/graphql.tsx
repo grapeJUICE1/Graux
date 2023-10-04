@@ -236,6 +236,7 @@ export type QueryGetBattleUsersArgs = {
 
 
 export type QueryGetBattlesArgs = {
+  avoidClientSideError?: InputMaybe<Scalars['Boolean']>;
   orderBy?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
@@ -267,6 +268,7 @@ export type QueryGetUserBattleRequestsArgs = {
 
 
 export type QueryGetUserBattlesArgs = {
+  avoidClientSideError?: InputMaybe<Scalars['Boolean']>;
   battlesCreated?: InputMaybe<Scalars['Boolean']>;
   battlesWon?: InputMaybe<Scalars['Boolean']>;
   orderBy?: InputMaybe<Scalars['String']>;
@@ -277,6 +279,7 @@ export type QueryGetUserBattlesArgs = {
 
 
 export type QueryGetUsersArgs = {
+  avoidClientSideError?: InputMaybe<Scalars['Boolean']>;
   orderBy?: InputMaybe<Scalars['String']>;
   search?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;

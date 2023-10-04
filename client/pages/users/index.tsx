@@ -1,11 +1,7 @@
 import { gql } from "@apollo/client"
 import client from "../../apollo-client"
 import { User as UserType } from "../../gql/graphql"
-import { Heading } from "@chakra-ui/react"
-import { BattleCard, Battles } from "../../features/battles"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import Pagination from "../../components/Pagination"
 import { GetServerSidePropsContext } from "next"
 import { Users } from "../../features/users"
 
@@ -33,27 +29,54 @@ export default function AllUsersPage({
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { query } = context
   const skip =
-    (query.page ? (Number(query.page) ? Number(query.page) - 1 : 0) : 0 || 0) *
-    pageSize
+    (query?.page
+      ? Number(query?.page)
+        ? Number(query?.page) - 1
+        : 0
+      : 0 || 0) * pageSize
 
   const take = pageSize
+
   const search = query?.search || null
+  console.log(take, "" + "a" + search, skip)
+
   const { data } = await client.query({
     query: gql`
-      query GetUsers{
-        getUsers(take: ${take}, skip: ${skip}, orderBy: ${null}, search: ${search}) {
+      query GetUsers(
+        $take: Int
+        $skip: Int
+        $orderBy: String
+        $search: String
+        $avoidClientSideError: Boolean
+      ) {
+        getUsers(
+          take: $take
+          skip: $skip
+          orderBy: $orderBy
+          search: $search
+          avoidClientSideError: $avoidClientSideError
+        ) {
+          total
           users {
             id
             email
             username
             createdAt
           }
-          total
         }
       }
     `,
     fetchPolicy: "network-only",
+    variables: {
+      take: take,
+      skip: skip,
+      orderBy: "createdAt",
+      search: search ? "a" + search : null,
+      avoidClientSideError: true,
+    },
   })
+
+  console.log(data)
   return {
     props: {
       initialUsers: data?.getUsers?.users || null,

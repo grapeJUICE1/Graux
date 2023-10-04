@@ -3,26 +3,27 @@ import {
   createHttpLink,
   from,
   InMemoryCache,
-} from '@apollo/client'
-import { onError } from '@apollo/client/link/error'
-import { setContext } from '@apollo/client/link/context'
-import jwtDecode from 'jwt-decode'
-import { getAccessToken, setAccessToken } from './accessToken'
-import { TokenRefreshLink } from 'apollo-link-token-refresh'
+} from "@apollo/client"
+import { onError } from "@apollo/client/link/error"
+import { setContext } from "@apollo/client/link/context"
+import jwtDecode from "jwt-decode"
+import { getAccessToken, setAccessToken } from "./accessToken"
+import { TokenRefreshLink } from "apollo-link-token-refresh"
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3000/graphql',
-  credentials: 'include',
+  uri: "http://localhost:3000/graphql",
+  credentials: "include",
 })
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
-    graphQLErrors.forEach(({ message, locations, path }) =>
+    graphQLErrors?.forEach(({ message, locations, path }) => {
       console.log(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
       )
-    )
-
+      console.log(locations)
+    })
+  console.log(graphQLErrors)
   if (networkError) console.log(`[Network error]: ${networkError}`)
 })
 
@@ -34,7 +35,7 @@ const authLink = setContext((_, { headers }) => {
   if (token) authorizationHeader = `Bearer ${token}`
   else if (headers?.authorization)
     authorizationHeader = `Bearer ${headers.authorization}`
-  else authorizationHeader = ''
+  else authorizationHeader = ""
 
   return {
     headers: {
@@ -45,7 +46,7 @@ const authLink = setContext((_, { headers }) => {
 })
 
 const refreshLink = new TokenRefreshLink({
-  accessTokenField: 'accessToken',
+  accessTokenField: "accessToken",
   isTokenValidOrUndefined: () => {
     const token = getAccessToken()
     if (!token) return true
@@ -63,9 +64,9 @@ const refreshLink = new TokenRefreshLink({
     }
   },
   fetchAccessToken: () => {
-    return fetch('http://localhost:3000/refresh_token', {
-      method: 'POST',
-      credentials: 'include',
+    return fetch("http://localhost:3000/refresh_token", {
+      method: "POST",
+      credentials: "include",
     })
   },
   handleFetch: (accessToken) => {
@@ -73,7 +74,7 @@ const refreshLink = new TokenRefreshLink({
   },
   handleError: (err) => {
     // full control over handling token fetch Error
-    console.warn('Your refresh token is invalid. Try to relogin')
+    console.warn("Your refresh token is invalid. Try to relogin")
     console.error(err)
 
     // When the browser is offline and an error occurs we don’t want the user to be logged out of course.
