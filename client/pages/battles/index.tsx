@@ -1,18 +1,22 @@
-import { gql } from '@apollo/client'
-import client from '../../apollo-client'
-import { Battle as BattleType, useGetBattlesLazyQuery } from '../../gql/graphql'
-import { Heading } from '@chakra-ui/react'
-import { BattleCard, Battles } from '../../features/battles'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import Pagination from '../../components/Pagination'
-import { GetServerSidePropsContext } from 'next'
+import { gql } from "@apollo/client"
+import client from "../../apollo-client"
+import { Battle as BattleType, useGetBattlesLazyQuery } from "../../gql/graphql"
+import { Heading } from "@chakra-ui/react"
+import { BattleCard, Battles } from "../../features/battles"
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
+import Pagination from "../../components/Pagination"
+import { GetServerSidePropsContext } from "next"
 
-const pageSize = 5;
+const pageSize = 5
 
-export default function BattlesPage(
-  { initialBattles, total }: { initialBattles: BattleType[], total: number }
-) {
+export default function BattlesPage({
+  initialBattles,
+  total,
+}: {
+  initialBattles: BattleType[]
+  total: number
+}) {
   const router = useRouter()
   return (
     <>
@@ -21,19 +25,21 @@ export default function BattlesPage(
         pageSize={pageSize}
         initialPage={Number(router.query?.page) || 1}
         initialTotal={total}
-      /></>
+      />
+    </>
   )
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { query } = context;
+  const { query } = context
 
-  const skip = (query.page ?
-    Number(query.page) ? Number(query.page) - 1 : 0 : 0 || 0) * pageSize;
+  const skip =
+    (query.page ? (Number(query.page) ? Number(query.page) - 1 : 0) : 0 || 0) *
+    pageSize
 
-  const take = pageSize;
+  const take = pageSize
 
-  const { data  } = await client.query({
+  const { data } = await client.query({
     query: gql`
       query GetBattles {
         getBattles(take:${take} , skip:${skip} , orderBy:${null}) {
@@ -65,16 +71,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         }
       }
     `,
-    fetchPolicy: 'network-only',
+    fetchPolicy: "network-only",
   })
   console.log(data.getBattles.battles)
   return {
     props: {
       initialBattles: data.getBattles.battles,
-      total: data.getBattles.total
+      total: data.getBattles.total,
     },
   }
 }
-
-
-

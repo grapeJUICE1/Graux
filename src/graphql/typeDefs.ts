@@ -52,7 +52,8 @@ const typeDefs = `#graphql
   }
 
   type getUserBattlesResponse {
-    battle:Battle
+    battles:[Battle]
+    total:Int
   }
   type getBattleUsersResponse {
     user:User
@@ -75,7 +76,8 @@ const typeDefs = `#graphql
     # BattleUser Queries
     getAllBattleUsers: [BattleUser]
     getBattleUsers(battleId:Int!): [getBattleUsersResponse]
-    getUserBattles(userId: Int! ,battlesWon:Boolean,battlesCreated:Boolean ): [getUserBattlesResponse]
+    getUserBattles(userId: Int! ,battlesWon:Boolean,
+    battlesCreated:Boolean,take:Int,skip:Int,orderBy:String ): getUserBattlesResponse
 
     getAllBattleRequests: [BattleRequest]
     getBattleRequests(battleId:Int!): [BattleRequest]

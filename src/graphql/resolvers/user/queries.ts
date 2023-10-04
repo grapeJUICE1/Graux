@@ -12,9 +12,9 @@ export default {
   test: addMiddleware(isAuthMiddleware, async () => {
     return 'testo desu ne'
   }),
-  getUsers: async (_: any, { search , take , skip , orderBy }) => {
+  getUsers: async (_: any, { search, take, skip, orderBy }) => {
     try {
-    const orderByOptions = ['createdAt']
+      const orderByOptions = ['createdAt']
       const users = await User.find({
         where: { username: search ? ILike(`%${search}%`) : undefined },
         //take: search ? 10 : undefined,
@@ -49,25 +49,39 @@ export default {
       throw new Error(err)
     }
   },
-  getUserBattles: async (_: any, { userId, battlesWon, battlesCreated }) => {
-    try {
-      const battles = await BattleUser.find({
-        relations: { battle: { battleUsers: { user: true } } },
-        where: {
-          userId: userId,
-          isWinner: battlesWon ? true : undefined,
-          battleCreator: battlesCreated ? true : undefined,
-        },
-      })
+  getUserBattles:
+    async (_: any, { userId, battlesWon, battlesCreated, take, skip, orderBy }) => {
+      const orderByOptions = ['title', 'expires', 'createdAt', 'likeDislikeCount']
+      try {
+        const [battleUsers,total] = await BattleUser.findAndCount({
+          relations: { battle: { battleUsers: { user: true } } },
+          where: {
+            userId: userId,
+            isWinner: battlesWon ? true : undefined,
+            battleCreator: battlesCreated ? true : undefined,
+          },
+          take: take || undefined,
+          skip: skip || undefined,
+          order: orderByOptions.includes(orderBy)
+            ? { [orderBy]: 'DESC' }
+            : { createdAt: 'DESC' },
+        })
 
-      if (!battles) return new Error('Given user has no battles')
-
-      return battles
-    } catch (err) {
-      throw new Error(err)
-    }
-  },
-  me: async (_: any, {}, context: MyContext) => {
+        if (!battleUsers) return new Error('Given user has no battles')
+        // console.log({battles,lel:battles[0].battle,total})
+        const battles = [];
+        battleUsers.forEach(battleUser=>{
+          battles.push(battleUser.battle)
+        })
+        console.log(battles)
+        return {
+          battles , total
+      }
+      } catch (err) {
+        throw new Error(err)
+      }
+    },
+  me: async (_: any, { }, context: MyContext) => {
     const authorization = context.req.headers['authorization'] // bearer token
     if (!authorization) {
       return null
