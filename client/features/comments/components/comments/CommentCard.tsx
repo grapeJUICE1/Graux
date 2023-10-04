@@ -1,11 +1,11 @@
-import { Box, Center, Text } from '@chakra-ui/react'
-import DeleteButton from '../../../../components/DeleteButton/DeleteButton'
-import LikeDislike from '../../../../components/LikeDislike/LikeDislike'
+import { Box, Center, Text } from "@chakra-ui/react"
+import DeleteButton from "../../../../components/DeleteButton/DeleteButton"
+import LikeDislike from "../../../../components/LikeDislike/LikeDislike"
 import {
   Comment,
   User,
   useRemoveCommentMutation,
-} from '../../../../gql/graphql'
+} from "../../../../gql/graphql"
 
 interface CommentCardProps {
   comment: Comment
@@ -17,21 +17,21 @@ function CommentCard({ comment, setComment, me }: CommentCardProps) {
   const [removeComment] = useRemoveCommentMutation()
 
   return (
-    <Box key={comment?.id} border='1px' borderColor='cyan.500' my='3' p='3'>
-      <Text fontSize='1.1rem' textAlign='center'>
+    <Box key={comment?.id} border="1px" borderColor="cyan.500" my="3" p="3">
+      <Text fontSize="1.2rem" textAlign="center">
         {comment?.body}
       </Text>
-      <Text textAlign='center'>-{comment?.user?.username}</Text>
+      <Text textAlign="center">-{comment?.user?.username}</Text>
       <LikeDislike
-        entityType='Comment'
+        entityType="Comment"
         setEntity={setComment}
         entity={comment}
       />
       {me && me?.id === comment?.user?.id && (
-        <Center mt='7'>
+        <Center mt="7">
           <DeleteButton
-            modalHeader='Delete Comment'
-            modalBody='Are you sure you want to remove this comment?'
+            modalHeader="Delete Comment"
+            modalBody="Are you sure you want to remove this comment?"
             mutationFunc={() =>
               removeComment({
                 variables: { commentId: +comment?.id },

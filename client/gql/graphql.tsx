@@ -204,7 +204,7 @@ export type Query = {
   getBattleUsers?: Maybe<Array<Maybe<GetBattleUsersResponse>>>;
   getBattles?: Maybe<GetBattlesResponse>;
   getComment?: Maybe<Comment>;
-  getComments?: Maybe<Array<Maybe<Comment>>>;
+  getComments?: Maybe<GetCommentsResponse>;
   getUser?: Maybe<User>;
   getUserBattleRequests?: Maybe<Array<Maybe<BattleRequest>>>;
   getUserBattles?: Maybe<GetUserBattlesResponse>;
@@ -303,6 +303,12 @@ export type GetBattleUsersResponse = {
 export type GetBattlesResponse = {
   __typename?: 'getBattlesResponse';
   battles?: Maybe<Array<Maybe<Battle>>>;
+  total?: Maybe<Scalars['Int']>;
+};
+
+export type GetCommentsResponse = {
+  __typename?: 'getCommentsResponse';
+  comments?: Maybe<Array<Maybe<Comment>>>;
   total?: Maybe<Scalars['Int']>;
 };
 
@@ -406,10 +412,13 @@ export type GetBattlesQuery = { __typename?: 'Query', getBattles?: { __typename?
 export type GetCommentsQueryVariables = Exact<{
   battleId?: InputMaybe<Scalars['Int']>;
   userId?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type GetCommentsQuery = { __typename?: 'Query', getComments?: Array<{ __typename?: 'Comment', id: string, body: string, likeDislikeCount?: number | null, userLikeDislike?: number | null, user?: { __typename?: 'User', id: string, email: string, username: string } | null } | null> | null };
+export type GetCommentsQuery = { __typename?: 'Query', getComments?: { __typename?: 'getCommentsResponse', total?: number | null, comments?: Array<{ __typename?: 'Comment', id: string, body: string, likeDislikeCount?: number | null, userLikeDislike?: number | null, user?: { __typename?: 'User', id: string, email: string, username: string } | null } | null> | null } | null };
 
 export type GetUserQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -999,17 +1008,26 @@ export type GetBattlesQueryHookResult = ReturnType<typeof useGetBattlesQuery>;
 export type GetBattlesLazyQueryHookResult = ReturnType<typeof useGetBattlesLazyQuery>;
 export type GetBattlesQueryResult = Apollo.QueryResult<GetBattlesQuery, GetBattlesQueryVariables>;
 export const GetCommentsDocument = gql`
-    query GetComments($battleId: Int, $userId: Int) {
-  getComments(battleId: $battleId, userId: $userId) {
-    id
-    body
-    likeDislikeCount
-    userLikeDislike
-    user {
+    query GetComments($battleId: Int, $userId: Int, $take: Int, $skip: Int, $orderBy: String) {
+  getComments(
+    battleId: $battleId
+    userId: $userId
+    take: $take
+    skip: $skip
+    orderBy: $orderBy
+  ) {
+    comments {
       id
-      email
-      username
+      body
+      likeDislikeCount
+      userLikeDislike
+      user {
+        id
+        email
+        username
+      }
     }
+    total
   }
 }
     `;
@@ -1028,6 +1046,9 @@ export const GetCommentsDocument = gql`
  *   variables: {
  *      battleId: // value for 'battleId'
  *      userId: // value for 'userId'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      orderBy: // value for 'orderBy'
  *   },
  * });
  */

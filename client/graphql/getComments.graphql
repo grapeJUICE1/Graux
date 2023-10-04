@@ -1,13 +1,28 @@
-query GetComments($battleId: Int, $userId: Int) {
-  getComments(battleId: $battleId, userId: $userId) {
-    id
-    body
-    likeDislikeCount
-    userLikeDislike
-    user {
+query GetComments(
+  $battleId: Int
+  $userId: Int
+  $take: Int
+  $skip: Int
+  $orderBy: String
+) {
+  getComments(
+    battleId: $battleId
+    userId: $userId
+    take: $take
+    skip: $skip
+    orderBy: $orderBy
+  ) {
+    comments {
       id
-      email
-      username
+      body
+      likeDislikeCount
+      userLikeDislike
+      user {
+        id
+        email
+        username
+      }
     }
+    total
   }
 }

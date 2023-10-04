@@ -1,4 +1,4 @@
-import { useToast } from '@chakra-ui/react'
+import { useToast } from "@chakra-ui/react"
 
 function useMutation(mutationFn: any) {
   const toast = useToast()
@@ -11,15 +11,15 @@ function useMutation(mutationFn: any) {
     try {
       toast.closeAll()
       toast({
-        description: 'Please wait for a few seconds',
+        description: "Please wait for a few seconds",
         duration: null,
       })
       const { data } = await mutationFn(mutationOptions)
       toast.closeAll()
       toast({
-        description: 'Successful',
+        description: "Successful",
         duration: 2000,
-        status: 'success',
+        status: "success",
       })
       onSuccess(data)
     } catch (err) {
@@ -45,19 +45,25 @@ function useMutation(mutationFn: any) {
                   errors?.at(0)?.message ||
                   //@ts-ignore
                   errors?.message ||
-                  'Something went wrong',
-                status: 'error',
+                  "Something went wrong",
+                status: "error",
                 duration: 2000,
               })
             }
           }
         } else {
           toast({
-            description: 'Something Went Wrong',
-            status: 'error',
+            description: "Something Went Wrong",
+            status: "error",
             duration: 2000,
           })
         }
+      } else {
+        toast({
+          description: "Something Went Wrong",
+          status: "error",
+          duration: 2000,
+        })
       }
     }
   }
