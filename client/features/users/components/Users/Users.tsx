@@ -1,8 +1,9 @@
-import { Heading } from "@chakra-ui/react"
+import { Center, Heading, SimpleGrid } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import Pagination from "../../../../components/Pagination"
 import { User as UserType } from "../../../../gql/graphql"
+import UserCard from "../UserProfile/UserCard"
 
 type UsersProps = {
   initialTotal: number
@@ -29,9 +30,18 @@ function Users({ initialTotal, initialUsers, pageSize }: UsersProps) {
 
   return (
     <>
-      <Heading textAlign="center" mt="5"></Heading>
-
-      {initialUsers?.map((user) => <p key={user?.id}>{user?.username}</p>)}
+      <Heading textAlign="center" mt="5" pb="10">
+        All Users
+      </Heading>
+      <Center>
+        <SimpleGrid columns={{ base: 2, sm: 2, md: 3, xl: 4 }} spacing={10}>
+          {initialUsers?.map((user) => (
+            <>
+              <UserCard user={user} />
+            </>
+          ))}
+        </SimpleGrid>
+      </Center>
       <Pagination
         pageCount={pageCount}
         handlePageClick={handlePageClick}

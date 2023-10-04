@@ -5,7 +5,7 @@ import { useRouter } from "next/router"
 import { GetServerSidePropsContext } from "next"
 import { Users } from "../../features/users"
 
-const pageSize = 5
+const pageSize = 10
 
 export default function AllUsersPage({
   initialUsers,
