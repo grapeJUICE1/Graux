@@ -1,46 +1,53 @@
-import { verify } from 'jsonwebtoken'
-import { GraphQLError } from 'graphql'
-import config from '../../../config/config'
-import BattleUser from '../../../entities/BattleUser'
-import User from '../../../entities/User'
-import MyContext from '../../../MyContext'
-import addMiddleware from '../../../utils/addMiddleware'
-import isAuthMiddleware from '../../middlewares/isAuth'
-import { ILike } from 'typeorm'
+import { verify } from "jsonwebtoken"
+import { GraphQLError } from "graphql"
+import config from "../../../config/config"
+import BattleUser from "../../../entities/BattleUser"
+import User from "../../../entities/User"
+import MyContext from "../../../MyContext"
+import addMiddleware from "../../../utils/addMiddleware"
+import isAuthMiddleware from "../../middlewares/isAuth"
+import { ILike } from "typeorm"
 
 export default {
   test: addMiddleware(isAuthMiddleware, async () => {
-    return 'testo desu ne'
+    return "testo desu ne"
   }),
-  getUsers: async (_: any, { search, take, skip, orderBy }) => {
+  getUsers: async (
+    _: any,
+    { search, take, skip, orderBy, avoidClientSideError }
+  ) => {
     try {
-      const orderByOptions = ['createdAt']
-      const users = await User.find({
-        where: { username: search ? ILike(`%${search}%`) : undefined },
+      const orderByOptions = ["createdAt"]
+      let mutableSearch = search
+      if (search && avoidClientSideError) {
+        mutableSearch = search?.substring(1)
+      }
+      const [users, total] = await User.findAndCount({
+        where: { username: search ? ILike(`%${mutableSearch}%`) : undefined },
         //take: search ? 10 : undefined,
         take: take || undefined,
         skip: skip || undefined,
         order: orderByOptions.includes(orderBy)
-          ? { [orderBy]: 'DESC' }
-          : { createdAt: 'DESC' },
+          ? { [orderBy]: "DESC" }
+          : { createdAt: "DESC" },
       })
 
-      return users
+      return { users, total }
     } catch (err) {
       throw new Error(err)
     }
   },
   getUser: async (_: any, { userId }) => {
     try {
-      console.log('Am i coming here')
+      console.log("Am i coming here")
       const user = await User.findOne({ where: { id: userId } })
       if (!user) {
-        return new GraphQLError('Validation Error', {
+        return new GraphQLError("Validation Error", {
           extensions: {
             errors: [
-              { path: 'user', message: 'User with that id was not found' },
+              { path: "user", message: "User with that id was not found" },
             ],
-            code: 'BAD_USER_INPUT',
+            code: "BAD_USER_INPUT",
           },
         })
       }
@@ -49,45 +56,48 @@ export default {
       throw new Error(err)
     }
   },
-  getUserBattles:
-    async (_: any, { userId, battlesWon, battlesCreated, take, skip, orderBy }) => {
-      const orderByOptions = ['title', 'expires', 'createdAt', 'likeDislikeCount']
-      try {
-        const [battleUsers,total] = await BattleUser.findAndCount({
-          relations: { battle: { battleUsers: { user: true } } },
-          where: {
-            userId: userId,
-            isWinner: battlesWon ? true : undefined,
-            battleCreator: battlesCreated ? true : undefined,
-          },
-          take: take || undefined,
-          skip: skip || undefined,
-          order: orderByOptions.includes(orderBy)
-            ? { [orderBy]: 'DESC' }
-            : { createdAt: 'DESC' },
-        })
+  getUserBattles: async (
+    _: any,
+    { userId, battlesWon, battlesCreated, take, skip, orderBy }
+  ) => {
+    const orderByOptions = ["title", "expires", "createdAt", "likeDislikeCount"]
+    try {
+      const [battleUsers, total] = await BattleUser.findAndCount({
+        relations: { battle: { battleUsers: { user: true } } },
+        where: {
+          userId: userId,
+          isWinner: battlesWon ? true : undefined,
+          battleCreator: battlesCreated ? true : undefined,
+        },
+        take: take || undefined,
+        skip: skip || undefined,
+        order: orderByOptions.includes(orderBy)
+          ? { [orderBy]: "DESC" }
+          : { createdAt: "DESC" },
+      })
 
-        if (!battleUsers) return new Error('Given user has no battles')
-        // console.log({battles,lel:battles[0].battle,total})
-        const battles = [];
-        battleUsers.forEach(battleUser=>{
-          battles.push(battleUser.battle)
-        })
-        console.log(battles)
-        return {
-          battles , total
+      if (!battleUsers) return new Error("Given user has no battles")
+      // console.log({battles,lel:battles[0].battle,total})
+      const battles = []
+      battleUsers.forEach((battleUser) => {
+        battles.push(battleUser.battle)
+      })
+      console.log(battles)
+      return {
+        battles,
+        total,
       }
-      } catch (err) {
-        throw new Error(err)
-      }
-    },
-  me: async (_: any, { }, context: MyContext) => {
-    const authorization = context.req.headers['authorization'] // bearer token
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+  me: async (_: any, {}, context: MyContext) => {
+    const authorization = context.req.headers["authorization"] // bearer token
     if (!authorization) {
       return null
     }
     try {
-      const token = authorization.split(' ')[1]
+      const token = authorization.split(" ")[1]
       const payload: any = verify(token, config.ACCESS_TOKEN_SECRET)
       if (!payload) {
         return null

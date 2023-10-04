@@ -1,15 +1,15 @@
-import { GraphQLError } from 'graphql'
-import Comment from '../../../entities/Comment'
-import addMiddleware from '../../../utils/addMiddleware'
-import isAuthMiddleware from '../../middlewares/isAuth'
+import { GraphQLError } from "graphql"
+import Comment from "../../../entities/Comment"
+import addMiddleware from "../../../utils/addMiddleware"
+import isAuthMiddleware from "../../middlewares/isAuth"
 
 export default {
   getComments: addMiddleware(
     isAuthMiddleware,
     async (_: any, { battleId, userId, take, skip, orderBy }, { payload }) => {
       try {
-        const orderByOptions = ['createdAt', 'likeDislikeCount']
-        const comments = await Comment.find({
+        const orderByOptions = ["createdAt", "likeDislikeCount"]
+        const [comments, total] = await Comment.findAndCount({
           relations: { user: true },
           where: {
             battleId: battleId || undefined,
@@ -18,17 +18,17 @@ export default {
           take: take || undefined,
           skip: skip || undefined,
           order: orderByOptions.includes(orderBy)
-            ? { [orderBy]: 'DESC' }
-            : { createdAt: 'DESC' },
+            ? { [orderBy]: "DESC" }
+            : { createdAt: "DESC" },
         })
 
         if (payload?.userId) {
           for (const comment of comments) {
             await comment.setUserLikeDislike(+payload?.userId)
           }
-          return comments
+          return { comments, total }
         }
-        return comments
+        return { comments, total }
       } catch (err) {
         throw new Error(err)
       }
@@ -44,11 +44,11 @@ export default {
       })
       if (!comment) {
         errors.push({
-          path: 'comment',
-          message: 'Comment with that id does not exist',
+          path: "comment",
+          message: "Comment with that id does not exist",
         })
-        return new GraphQLError('Validation Error', {
-          extensions: { errors, code: 'BAD_USER_INPUT' },
+        return new GraphQLError("Validation Error", {
+          extensions: { errors, code: "BAD_USER_INPUT" },
         })
       }
       return comment

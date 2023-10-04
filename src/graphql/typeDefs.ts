@@ -63,21 +63,31 @@ const typeDefs = `#graphql
     battles:[Battle] 
     total:Int 
   } 
+
+  type getUsersResponse {
+    users: [User] 
+    total: Int
+  }
+
+  type getCommentsResponse {
+    comments: [Comment] 
+    total: Int
+  }
   type Query {
     
     # Battle Queries
-    getBattles(take:Int skip:Int orderBy:String): getBattlesResponse
+    getBattles(take:Int skip:Int orderBy:String avoidClientSideError:Boolean): getBattlesResponse
     getBattle(battleId:Int! manage:Boolean!): Battle
 
     # User Queries
-    getUsers(search:String):[User]
+    getUsers(search:String take:Int skip:Int orderBy:String avoidClientSideError:Boolean):getUsersResponse
     getUser(userId:Int!): User
   
     # BattleUser Queries
     getAllBattleUsers: [BattleUser]
     getBattleUsers(battleId:Int!): [getBattleUsersResponse]
     getUserBattles(userId: Int! ,battlesWon:Boolean,
-    battlesCreated:Boolean,take:Int,skip:Int,orderBy:String ): getUserBattlesResponse
+    battlesCreated:Boolean,take:Int,skip:Int,orderBy:String ,avoidClientSideError:Boolean ): getUserBattlesResponse
 
     getAllBattleRequests: [BattleRequest]
     getBattleRequests(battleId:Int!): [BattleRequest]
@@ -85,7 +95,7 @@ const typeDefs = `#graphql
     getBattleRequest(battleRequestId:Int!): BattleRequest
 
     # Comment Queries
-    getComments(battleId:Int , userId:Int,take:Int skip:Int orderBy:String):[Comment]
+    getComments(battleId:Int , userId:Int,take:Int skip:Int orderBy:String):getCommentsResponse
     getComment(commentId:Int!):Comment
 
     test:String
