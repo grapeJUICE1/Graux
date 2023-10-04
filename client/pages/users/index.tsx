@@ -7,26 +7,25 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import Pagination from "../../components/Pagination"
 import { GetServerSidePropsContext } from "next"
+import { Users } from "../../features/users"
 
 const pageSize = 5
 
 export default function AllUsersPage({
-  initialUsers, //total,
+  initialUsers,
+  total,
 }: {
   initialUsers: UserType[]
-  //total: number
+  total: number
 }) {
   const router = useRouter()
   return (
     <>
-      {/*<Battles
-        allBattles={initialBattles || null}
-        pageSize={pageSize}
-        initialPage={Number(router.query?.page) || 1}
+      <Users
+        initialUsers={initialUsers}
         initialTotal={total}
-      /></>*/}
-
-      {initialUsers?.map((user) => <p>{user?.username}</p>)}
+        pageSize={pageSize}
+      />
     </>
   )
 }
@@ -38,25 +37,27 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     pageSize
 
   const take = pageSize
-
+  const search = query?.search || null
   const { data } = await client.query({
     query: gql`
-      query GetUsers {
-        getUsers {
-          id
-          email
-          username
-          createdAt
+      query GetUsers{
+        getUsers(take: ${take}, skip: ${skip}, orderBy: ${null}, search: ${search}) {
+          users {
+            id
+            email
+            username
+            createdAt
+          }
+          total
         }
       }
     `,
     fetchPolicy: "network-only",
   })
-  console.log(data.getUsers)
   return {
     props: {
-      initialUsers: data.getUsers || null,
-      //total: data.getBattles.total,
+      initialUsers: data?.getUsers?.users || null,
+      total: data?.getUsers?.total,
     },
   }
 }

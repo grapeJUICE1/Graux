@@ -1,8 +1,11 @@
-query GetUsers($search: String) {
-  getUsers(search: $search) {
-    id
-    username
-    email
-    createdAt
+query GetUsers($take: Int, $skip: Int, $orderBy: String, $search: String) {
+  getUsers(take: $take, skip: $skip, orderBy: $orderBy, search: $search) {
+    users {
+      id
+      username
+      email
+      createdAt
+    }
+    total
   }
 }

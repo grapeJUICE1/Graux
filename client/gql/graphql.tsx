@@ -208,7 +208,7 @@ export type Query = {
   getUser?: Maybe<User>;
   getUserBattleRequests?: Maybe<Array<Maybe<BattleRequest>>>;
   getUserBattles?: Maybe<GetUserBattlesResponse>;
-  getUsers?: Maybe<Array<Maybe<User>>>;
+  getUsers?: Maybe<GetUsersResponse>;
   me?: Maybe<User>;
   test?: Maybe<Scalars['String']>;
 };
@@ -277,7 +277,10 @@ export type QueryGetUserBattlesArgs = {
 
 
 export type QueryGetUsersArgs = {
+  orderBy?: InputMaybe<Scalars['String']>;
   search?: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 export type User = {
@@ -304,6 +307,12 @@ export type GetUserBattlesResponse = {
   __typename?: 'getUserBattlesResponse';
   battles?: Maybe<Array<Maybe<Battle>>>;
   total?: Maybe<Scalars['Int']>;
+};
+
+export type GetUsersResponse = {
+  __typename?: 'getUsersResponse';
+  total?: Maybe<Scalars['Int']>;
+  users?: Maybe<Array<Maybe<User>>>;
 };
 
 export type AddBattleUserMutationVariables = Exact<{
@@ -426,11 +435,14 @@ export type GetUserBattlesQueryVariables = Exact<{
 export type GetUserBattlesQuery = { __typename?: 'Query', getUserBattles?: { __typename?: 'getUserBattlesResponse', total?: number | null, battles?: Array<{ __typename?: 'Battle', id: string, title: string, uuid: string, status: string, likeDislikeCount?: number | null, expires?: string | null, createdAt?: string | null, battleUsers?: Array<{ __typename?: 'BattleUser', id: string, isWinner?: boolean | null, songAlbum?: string | null, songImage?: string | null, songArtist?: string | null, songLink?: string | null, songName?: string | null, voteCount?: number | null, createdAt?: string | null, battleCreator?: boolean | null, user?: { __typename?: 'User', id: string, username: string, email: string, createdAt?: string | null } | null } | null> | null } | null> | null } | null };
 
 export type GetUsersQueryVariables = Exact<{
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Scalars['String']>;
   search?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type GetUsersQuery = { __typename?: 'Query', getUsers?: Array<{ __typename?: 'User', id: string, username: string, email: string, createdAt?: string | null } | null> | null };
+export type GetUsersQuery = { __typename?: 'Query', getUsers?: { __typename?: 'getUsersResponse', total?: number | null, users?: Array<{ __typename?: 'User', id: string, username: string, email: string, createdAt?: string | null } | null> | null } | null };
 
 export type LikeDislikeMutationVariables = Exact<{
   value: Scalars['Int'];
@@ -1191,12 +1203,15 @@ export type GetUserBattlesQueryHookResult = ReturnType<typeof useGetUserBattlesQ
 export type GetUserBattlesLazyQueryHookResult = ReturnType<typeof useGetUserBattlesLazyQuery>;
 export type GetUserBattlesQueryResult = Apollo.QueryResult<GetUserBattlesQuery, GetUserBattlesQueryVariables>;
 export const GetUsersDocument = gql`
-    query GetUsers($search: String) {
-  getUsers(search: $search) {
-    id
-    username
-    email
-    createdAt
+    query GetUsers($take: Int, $skip: Int, $orderBy: String, $search: String) {
+  getUsers(take: $take, skip: $skip, orderBy: $orderBy, search: $search) {
+    users {
+      id
+      username
+      email
+      createdAt
+    }
+    total
   }
 }
     `;
@@ -1213,6 +1228,9 @@ export const GetUsersDocument = gql`
  * @example
  * const { data, loading, error } = useGetUsersQuery({
  *   variables: {
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      orderBy: // value for 'orderBy'
  *      search: // value for 'search'
  *   },
  * });

@@ -1,3 +1,4 @@
-import UserProfile from './components/UserProfile/UserProfile'
+import UserProfile from "./components/UserProfile/UserProfile"
+import Users from "./components/Users/Users"
 
-export { UserProfile }
+export { UserProfile, Users }
