@@ -1,4 +1,4 @@
-import { FetchResult } from '@apollo/client'
+import { FetchResult } from "@apollo/client"
 import {
   Modal,
   ModalOverlay,
@@ -11,14 +11,14 @@ import {
   useDisclosure,
   useToast,
   ButtonProps,
-} from '@chakra-ui/react'
+} from "@chakra-ui/react"
 import {
   DeleteBattleMutation,
   DeleteUserMutation,
   RemoveBattleRequestMutation,
   RemoveBattleUserMutation,
   RemoveCommentMutation,
-} from '../../gql/graphql'
+} from "../../gql/graphql"
 
 interface DeleteButtonProps {
   modalHeader: string
@@ -75,7 +75,7 @@ function DeleteButton({
     try {
       toast.closeAll()
       toast({
-        description: 'Please wait for a few seconds',
+        description: "Please wait for a few seconds",
         duration: null,
         isClosable: true,
       })
@@ -83,9 +83,9 @@ function DeleteButton({
       onClose()
       toast.closeAll()
       toast({
-        title: 'Deleted successfully , Refresh the page to see results',
+        title: "Deleted successfully , Refresh the page to see results",
         duration: 3000,
-        status: 'success',
+        status: "success",
       })
     } catch (err) {
       console.log(err)
@@ -99,7 +99,7 @@ function DeleteButton({
       if (error) {
         toast({
           description: error.message,
-          status: 'error',
+          status: "error",
           duration: 3000,
         })
       }
@@ -107,7 +107,7 @@ function DeleteButton({
   }
   return (
     <>
-      <Button {...buttonProps} colorScheme='red' onClick={onOpen}>
+      <Button {...buttonProps} colorScheme="red" onClick={onOpen}>
         Delete
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -118,10 +118,10 @@ function DeleteButton({
           <ModalBody>{modalBody}</ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button colorScheme='red' onClick={deleteButtonOnClick}>
+            <Button colorScheme="red" onClick={deleteButtonOnClick}>
               Delete
             </Button>
           </ModalFooter>

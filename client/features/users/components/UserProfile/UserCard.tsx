@@ -1,6 +1,6 @@
 import { Avatar, Box, Heading, Text, useColorModeValue } from "@chakra-ui/react"
 import { useRouter } from "next/router"
-import DeleteButton from "../../../../components/DeleteButton/DeleteButton"
+import DeleteButton from "../../../../components/Buttons/DeleteButton"
 import { useDeleteUserMutation, User } from "../../../../gql/graphql"
 
 interface UserCardProps {

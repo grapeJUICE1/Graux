@@ -1,8 +1,8 @@
-import { Box, HStack, Text } from '@chakra-ui/react'
-import { Dispatch, SetStateAction } from 'react'
-import LikeDislike from '../../../../components/LikeDislike/LikeDislike'
-import { Battle } from '../../../../gql/graphql'
-import formatDate from '../../../../utils/formatDate'
+import { Box, HStack, Text } from "@chakra-ui/react"
+import { Dispatch, SetStateAction } from "react"
+import LikeDislike from "../../../../components/Buttons/LikeDislikeButton"
+import { Battle } from "../../../../gql/graphql"
+import formatDate from "../../../../utils/formatDate"
 
 interface BattleInfoProps {
   battle: Battle
@@ -11,52 +11,52 @@ interface BattleInfoProps {
 }
 function BattleInfo({ battle, totalVotes, setBattle }: BattleInfoProps) {
   return (
-    <Box border='1px' borderColor='cyan.500' width='100%' p='10'>
-      <Box style={{ wordWrap: 'break-word' }} py={2} textAlign='center'>
-        <Text display='inline' fontSize='xl' fontWeight='medium'>
-          Title:{' '}
+    <Box border="1px" borderColor="cyan.500" width="100%" p="10">
+      <Box style={{ wordWrap: "break-word" }} py={2} textAlign="center">
+        <Text display="inline" fontSize="xl" fontWeight="medium">
+          Title:{" "}
         </Text>
-        <Text display='inline' fontSize='xl'>
+        <Text display="inline" fontSize="xl">
           {battle?.title}
         </Text>
       </Box>
-      <Box style={{ wordWrap: 'break-word' }} py={2} textAlign='center'>
-        <Text display='inline' fontSize='xl' fontWeight='medium'>
-          Battle Status :{' '}
+      <Box style={{ wordWrap: "break-word" }} py={2} textAlign="center">
+        <Text display="inline" fontSize="xl" fontWeight="medium">
+          Battle Status :{" "}
         </Text>
-        <Text display='inline' fontSize='xl'>
+        <Text display="inline" fontSize="xl">
           {battle?.status}
         </Text>
       </Box>
-      <Box style={{ wordWrap: 'break-word' }} py={2} textAlign='center'>
-        <Text display='inline' fontSize='xl' fontWeight='medium'>
-          Total Votes :{' '}
+      <Box style={{ wordWrap: "break-word" }} py={2} textAlign="center">
+        <Text display="inline" fontSize="xl" fontWeight="medium">
+          Total Votes :{" "}
         </Text>
-        <Text display='inline' fontSize='xl'>
-          {totalVotes !== null ? totalVotes : 'no votes yet'}
+        <Text display="inline" fontSize="xl">
+          {totalVotes !== null ? totalVotes : "no votes yet"}
         </Text>
       </Box>
       {battle?.id && (
         <LikeDislike
-          entityType='Battle'
+          entityType="Battle"
           setEntity={setBattle}
           entity={battle}
         />
       )}
-      <HStack width='100%' alignItems='center' justifyContent='center' gap='10'>
-        <Box py='2' fontSize='sm' textAlign='center'>
-          <Text display='inline' fontWeight='medium'>
-            created at:{' '}
+      <HStack width="100%" alignItems="center" justifyContent="center" gap="10">
+        <Box py="2" fontSize="sm" textAlign="center">
+          <Text display="inline" fontWeight="medium">
+            created at:{" "}
           </Text>
-          {battle?.createdAt ? formatDate(+battle.createdAt) : ''}
+          {battle?.createdAt ? formatDate(+battle.createdAt) : ""}
         </Box>
-        <Box py='2' fontSize='sm' textAlign='center'>
-          <Text display='inline' fontWeight='medium'>
-            ends at :{' '}
+        <Box py="2" fontSize="sm" textAlign="center">
+          <Text display="inline" fontWeight="medium">
+            ends at :{" "}
           </Text>
           {battle?.expires
             ? formatDate(+battle.expires)
-            : 'No expiry date set yet as battle is not yet active'}
+            : "No expiry date set yet as battle is not yet active"}
         </Box>
       </HStack>
     </Box>

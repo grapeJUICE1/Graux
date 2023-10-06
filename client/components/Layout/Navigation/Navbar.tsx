@@ -1,13 +1,16 @@
 import {
+  Center,
   Flex,
   IconButton,
   Input,
   InputGroup,
   InputLeftElement,
+  Stack,
   Text,
-} from '@chakra-ui/react'
-import React, { useEffect } from 'react'
-import { useMeLazyQuery } from '../../../gql/graphql'
+} from "@chakra-ui/react"
+import React, { useEffect } from "react"
+import { useMeLazyQuery } from "../../../gql/graphql"
+import CreateBattleButton from "../../Buttons/CreateBattleButton"
 
 function Navbar({ sidebarDisclosure }: any) {
   const [meQuery, { data, error, loading }] = useMeLazyQuery()
@@ -26,46 +29,57 @@ function Navbar({ sidebarDisclosure }: any) {
   }
   return (
     <Flex
-      as='header'
-      align='center'
-      justify='space-between'
-      w='full'
-      px='4'
-      bg='white'
+      as="header"
+      align="center"
+      justify="space-between"
+      w="full"
+      px="4"
+      bg="white"
       _dark={{
-        bg: 'gray.900',
+        bg: "gray.900",
       }}
-      borderBottomWidth='1px'
-      color='inherit'
-      h='14'
-      position='fixed'
+      borderBottomWidth="1px"
+      color="inherit"
+      h="14"
+      //position="fixed"
     >
       <IconButton
-        aria-label='Menu'
+        aria-label="Menu"
         display={{
-          base: 'inline-flex',
-          md: 'none',
+          base: "inline-flex",
+          md: "none",
         }}
         onClick={sidebarDisclosure.onOpen}
         //icon={<FiMenu />}
-        size='sm'
+        size="sm"
       />
       <InputGroup
-        w='96'
+        w="96"
         display={{
-          base: 'none',
-          md: 'flex',
+          base: "none",
+          md: "flex",
         }}
       >
-        <InputLeftElement color='gray.500'>
+        <InputLeftElement color="gray.500">
           {/* <FiSearch /> */}
         </InputLeftElement>
-        <Input placeholder='Search for articles...' />
+        <Input placeholder="Search for articles..." />
       </InputGroup>
-
-      <Flex align='center' position='fixed' right='1rem'>
-        {userNavItem}
-      </Flex>
+      <Stack
+        flex={{ base: 1, md: 0 }}
+        justify={"flex-end"}
+        direction={"row"}
+        spacing={6}
+      >
+        <CreateBattleButton
+          buttonProps={{ m: 2, colorScheme: "green", size: "sm" }}
+          userIsAuthenticated={data?.me ? true : false}
+        />
+        <Center>
+          {" "}
+          <Flex>{userNavItem}</Flex>
+        </Center>
+      </Stack>
     </Flex>
   )
 }

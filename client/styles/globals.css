@@ -41,7 +41,13 @@ a {
   color: #ddd;
   cursor: not-allowed;
 }
-@media only screen and (max-width: 580px) {
+
+@media only screen and (max-width: 995px) {
+  html {
+    font-size: 12px;
+  }
+}
+@media only screen and (max-width: 900px) {
   html {
     font-size: 10px;
   }

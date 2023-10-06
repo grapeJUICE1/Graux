@@ -1,10 +1,12 @@
-import { Heading } from "@chakra-ui/react"
+import { Center, Heading } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import CreateBattleButton from "../../../../components/Buttons/CreateBattleButton"
 import Pagination from "../../../../components/Pagination"
 import {
   Battle as BattleType,
   useGetUserBattlesLazyQuery,
+  useMeLazyQuery,
 } from "../../../../gql/graphql"
 import BattleCard from "../BattleCard/BattleCard"
 
@@ -40,7 +42,12 @@ function Battles({
   }
 
   const pageCount = Math.ceil(total / pageSize)
-  console.log(pageCount)
+
+  const [meQuery, { data }] = useMeLazyQuery()
+
+  useEffect(() => {
+    meQuery()
+  }, [])
   useEffect(() => {
     if (!Number(router.query?.page))
       router.push({ query: { ...router.query, page: 1 } })
@@ -85,6 +92,14 @@ function Battles({
             : "All Battles User Is Part Of"
           : "All Battles"}
       </Heading>
+      <Center>
+        {" "}
+        <CreateBattleButton
+          buttonProps={{ mt: 5, colorScheme: "green", size: "lg" }}
+          userIsAuthenticated={data?.me ? true : false}
+        />
+      </Center>
+
       {battles
         ? userBattles
           ? //@ts-ignore

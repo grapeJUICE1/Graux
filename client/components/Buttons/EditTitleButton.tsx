@@ -16,10 +16,10 @@ import {
   Text,
   useDisclosure,
   useToast,
-} from '@chakra-ui/react'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
-import { useUpdateBattleMutation } from '../gql/graphql'
+} from "@chakra-ui/react"
+import { useFormik } from "formik"
+import * as Yup from "yup"
+import { useUpdateBattleMutation } from "../../gql/graphql"
 
 function EditTitleButton({
   buttonProps,
@@ -33,11 +33,11 @@ function EditTitleButton({
   const toast = useToast()
 
   const formik = useFormik({
-    initialValues: { title: '' },
+    initialValues: { title: "" },
     validationSchema: Yup.object({
       title: Yup.string()
-        .min(10, 'Title must be atleast 10 characters long')
-        .max(255, 'Title cannot exceed 255 characters')
+        .min(10, "Title must be atleast 10 characters long")
+        .max(255, "Title cannot exceed 255 characters")
         .required(),
     }),
 
@@ -46,7 +46,7 @@ function EditTitleButton({
         try {
           toast.closeAll()
           toast({
-            description: 'Please wait for a few seconds',
+            description: "Please wait for a few seconds",
             duration: null,
             isClosable: true,
           })
@@ -54,9 +54,9 @@ function EditTitleButton({
           onClose()
           toast.closeAll()
           toast({
-            description: 'Edited Title Successfully',
+            description: "Edited Title Successfully",
             duration: 3000,
-            status: 'success',
+            status: "success",
           })
         } catch (err) {
           toast.closeAll()
@@ -66,13 +66,13 @@ function EditTitleButton({
             message: string
           }
           if (error) {
-            setFieldError('title', error.message)
+            setFieldError("title", error.message)
           } else {
             onClose()
             toast({
-              description: 'Something went wrong',
+              description: "Something went wrong",
               duration: 3000,
-              status: 'error',
+              status: "error",
             })
           }
         }
@@ -88,16 +88,16 @@ function EditTitleButton({
         <ModalOverlay />
         <ModalContent>
           <form onSubmit={formik.handleSubmit}>
-            <ModalHeader mt='5'>Edit Title</ModalHeader>
+            <ModalHeader mt="5">Edit Title</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <Box p={8}>
                 <Stack spacing={4}>
-                  <FormControl id='title'>
+                  <FormControl id="title">
                     <FormLabel>New Title</FormLabel>
-                    <Input {...formik.getFieldProps('title')} />
+                    <Input {...formik.getFieldProps("title")} />
                     {formik.touched.title && formik.errors.title ? (
-                      <Text color='red.500'>{formik.errors.title}</Text>
+                      <Text color="red.500">{formik.errors.title}</Text>
                     ) : null}
                   </FormControl>
                 </Stack>
@@ -105,7 +105,7 @@ function EditTitleButton({
             </ModalBody>
 
             <ModalFooter>
-              <Button colorScheme='green' mr={3} type='submit'>
+              <Button colorScheme="green" mr={3} type="submit">
                 Update Title
               </Button>
             </ModalFooter>

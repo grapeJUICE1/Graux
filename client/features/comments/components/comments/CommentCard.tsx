@@ -1,6 +1,6 @@
 import { Box, Center, Text } from "@chakra-ui/react"
-import DeleteButton from "../../../../components/DeleteButton/DeleteButton"
-import LikeDislike from "../../../../components/LikeDislike/LikeDislike"
+import DeleteButton from "../../../../components/Buttons/DeleteButton"
+import LikeDislike from "../../../../components/Buttons/LikeDislikeButton"
 import {
   Comment,
   User,
