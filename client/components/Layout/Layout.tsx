@@ -1,19 +1,18 @@
-import { Box, Spinner, useDisclosure } from '@chakra-ui/react'
-import { ReactNode } from 'react'
-import { useMeQuery } from '../../gql/graphql'
-import Navbar from './Navigation/Navbar'
-import Sidebar from './Navigation/Sidebar'
+import { Box, useDisclosure } from "@chakra-ui/react"
+import { ReactNode } from "react"
+import Navbar from "./Navigation/Navbar"
+import Sidebar from "./Navigation/Sidebar"
 
 function Layout({ children }: { children: ReactNode }) {
   const sidebar = useDisclosure()
   return (
     <Box
-      as='section'
-      bg='gray.50'
+      as="section"
+      bg="gray.50"
       _dark={{
-        bg: 'gray.800',
+        bg: "gray.800",
       }}
-      minH='100vh'
+      minH="100vh"
     >
       <Sidebar sidebarDisclosure={sidebar} />
       <Box
@@ -21,10 +20,10 @@ function Layout({ children }: { children: ReactNode }) {
           base: 0,
           md: 60,
         }}
-        transition='.3s ease'
+        transition=".3s ease"
       >
         <Navbar sidebarDisclosure={sidebar} />
-        <Box as='main' p='4' pt='20'>
+        <Box as="main" p="4">
           {children}
         </Box>
       </Box>

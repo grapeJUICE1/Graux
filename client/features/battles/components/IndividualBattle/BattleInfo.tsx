@@ -1,6 +1,7 @@
-import { Box, HStack, Text } from "@chakra-ui/react"
+import { Box, Center, HStack, Text } from "@chakra-ui/react"
 import { Dispatch, SetStateAction } from "react"
 import LikeDislike from "../../../../components/Buttons/LikeDislikeButton"
+import ManageBattleButton from "../../../../components/Buttons/ManageBattleButton"
 import { Battle } from "../../../../gql/graphql"
 import formatDate from "../../../../utils/formatDate"
 
@@ -59,6 +60,13 @@ function BattleInfo({ battle, totalVotes, setBattle }: BattleInfoProps) {
             : "No expiry date set yet as battle is not yet active"}
         </Box>
       </HStack>
+
+      <Center>
+        <ManageBattleButton
+          buttonProps={{ mt: 5, colorScheme: "green" }}
+          battleId={battle?.id}
+        />
+      </Center>
     </Box>
   )
 }

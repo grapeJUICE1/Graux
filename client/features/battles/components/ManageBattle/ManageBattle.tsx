@@ -8,9 +8,9 @@ import {
   Stack,
   Text,
   useToast,
-} from '@chakra-ui/react'
-import { useRouter } from 'next/router'
-import React, { useEffect, useMemo, useState } from 'react'
+} from "@chakra-ui/react"
+import { useRouter } from "next/router"
+import React, { useEffect, useMemo, useState } from "react"
 
 import {
   Battle,
@@ -18,10 +18,10 @@ import {
   BattleUser,
   useGetBattleLazyQuery,
   useMeLazyQuery,
-} from '../../../../gql/graphql'
-import BattleCard from './BattleCard'
-import BattleRequestCard from './BattleRequestCard'
-import BattleUserCard from './BattleUserCard'
+} from "../../../../gql/graphql"
+import BattleCard from "./BattleCard"
+import BattleRequestCard from "./BattleRequestCard"
+import BattleUserCard from "./BattleUserCard"
 
 function ManageBattle() {
   const router = useRouter()
@@ -44,11 +44,11 @@ function ManageBattle() {
       meQuery().then((response) => {
         if (response?.data?.me?.username !== battleCreator?.user?.username) {
           toast({
-            description: 'You did not create this battle',
+            description: "You did not create this battle",
             duration: 2000,
-            status: 'warning',
+            status: "warning",
           })
-          router.replace('/')
+          router.replace("/")
         }
       })
     }
@@ -58,7 +58,7 @@ function ManageBattle() {
     if (router?.query?.id) {
       getBattleQuery({
         variables: { battleId: +router.query.id, manage: true },
-        fetchPolicy: 'network-only',
+        fetchPolicy: "network-only",
       }).then((response) => {
         if (response?.data?.getBattle) {
           const battle = response?.data?.getBattle as Battle
@@ -74,23 +74,23 @@ function ManageBattle() {
       data?.me?.username &&
       battleCreator?.user?.username &&
       data?.me?.username === battleCreator?.user?.username ? (
-        <Box>
-          <Alert status='warning'>
+        <Box pt={0}>
+          <Alert status="warning">
             <AlertIcon />
             <AlertTitle>
               Refresh the page time to time to see if battle requests were
               approved
             </AlertTitle>
           </Alert>
-          <Box width='100%'>
-            <Text textAlign='center' fontSize='2xl' mt='10'>
+          <Box width="100%">
+            <Text textAlign="center" fontSize="2xl" mt="10">
               Battle
             </Text>
             <BattleCard battle={battle} />
           </Box>
-          <Stack direction={{ base: 'column', sm: 'column', md: 'row' }}>
-            <Box width={{ base: '100%', sm: '100%', md: '50%' }}>
-              <Text fontSize='2xl' mt='10'>
+          <Stack direction={{ base: "column", sm: "column", md: "row" }}>
+            <Box width={{ base: "100%", sm: "100%", md: "50%" }}>
+              <Text fontSize="2xl" mt="10">
                 Battle Participants
               </Text>
 
@@ -105,12 +105,12 @@ function ManageBattle() {
                   )
                 })}
             </Box>
-            <Box width={{ base: '100%', sm: '100%', md: '50%' }}>
-              <Text fontSize='2xl' mt='10'>
+            <Box width={{ base: "100%", sm: "100%", md: "50%" }}>
+              <Text fontSize="2xl" mt="10">
                 Battle Requests
               </Text>
               <Button
-                colorScheme='cyan'
+                colorScheme="cyan"
                 onClick={() =>
                   router.push(`/battles/${router?.query?.id}/users`)
                 }
@@ -126,7 +126,7 @@ function ManageBattle() {
           </Stack>
         </Box>
       ) : (
-        <Spinner size='xl' />
+        <Spinner size="xl" />
       )}
     </>
   )

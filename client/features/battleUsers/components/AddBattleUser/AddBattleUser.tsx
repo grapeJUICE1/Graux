@@ -12,17 +12,18 @@ import {
   UnorderedList,
   useColorModeValue,
   useToast,
-} from '@chakra-ui/react'
-import { useFormik } from 'formik'
-import { useRouter } from 'next/router'
-import { addBattleUserSchema } from '../../../../data/validationSchemas'
+} from "@chakra-ui/react"
+import { isArray } from "class-validator"
+import { useFormik } from "formik"
+import { useRouter } from "next/router"
+import { addBattleUserSchema } from "../../../../data/validationSchemas"
 import {
   useAddBattleUserMutation,
   useGetUsersLazyQuery,
   User,
-} from '../../../../gql/graphql'
-import useMutation from '../../../../hooks/useMutation'
-import useAutocomplete from '../../hooks/useAutocomplete'
+} from "../../../../gql/graphql"
+import useMutation from "../../../../hooks/useMutation"
+import useAutocomplete from "../../hooks/useAutocomplete"
 
 function AddBattleUser() {
   const [getUsersQuery] = useGetUsersLazyQuery({})
@@ -33,7 +34,7 @@ function AddBattleUser() {
 
   const formik = useFormik({
     initialValues: {
-      username: '',
+      username: "",
     },
     validationSchema: addBattleUserSchema,
 
@@ -41,9 +42,9 @@ function AddBattleUser() {
       if (!option) {
         toast.closeAll()
         toast({
-          status: 'warning',
+          status: "warning",
           title:
-            'You need to search and then choose the username from the dropdown menu to select a user , just typing the username will not work',
+            "You need to search and then choose the username from the dropdown menu to select a user , just typing the username will not work",
           duration: null,
           isClosable: true,
         })
@@ -69,7 +70,7 @@ function AddBattleUser() {
       getUsersQuery({
         variables: { search: formik.values.username },
       }).then(({ data }) => {
-        setOptions(data?.getUsers as User[])
+        setOptions(data?.getUsers?.users as User[])
       })
     },
     formik.values.username
@@ -77,56 +78,57 @@ function AddBattleUser() {
 
   return (
     <Flex
-      minH={'80vh'}
-      align={'center'}
-      justify={'center'}
-      bg={useColorModeValue('gray.50', 'gray.800')}
+      minH={"80vh"}
+      align={"center"}
+      justify={"center"}
+      bg={useColorModeValue("gray.50", "gray.800")}
     >
       <form onSubmit={formik.handleSubmit}>
         <Stack
-          rounded={'lg'}
-          boxShadow={'lg'}
+          rounded={"lg"}
+          boxShadow={"lg"}
           spacing={8}
-          mx={'auto'}
-          maxW={'lg'}
+          mx={"auto"}
+          maxW={"lg"}
           py={12}
           px={6}
-          style={{ minWidth: '60vw', minHeight: '30vh' }}
+          style={{ minWidth: "60vw", minHeight: "30vh" }}
         >
-          <Stack align={'center'}>
-            <Heading fontSize={'4xl'}>Add Battle User</Heading>
+          <Stack align={"center"}>
+            <Heading fontSize={"4xl"}>Add Battle User</Heading>
           </Stack>
           <Box p={8}>
             <Stack spacing={4}>
-              <FormControl id='username'>
+              <FormControl id="username">
                 <FormLabel>Username</FormLabel>
                 <Input
-                  type='text'
-                  autoComplete='off'
+                  type="text"
+                  autoComplete="off"
                   onBlur={formik.handleBlur}
                   value={formik.values.username}
-                  variant='filled'
-                  placeholder='Search...'
-                  id='username'
-                  name='username'
+                  variant="filled"
+                  placeholder="Search..."
+                  id="username"
+                  name="username"
                   autoFocus
                   onChange={async (evt) => {
                     formik.handleChange(evt)
                   }}
                 />
                 {formik.touched.username && formik.errors.username ? (
-                  <Text color='red.500'>{formik.errors.username}</Text>
+                  <Text color="red.500">{formik.errors.username}</Text>
                 ) : null}
-                <UnorderedList styleType='none'>
+                <UnorderedList styleType="none">
                   {formik.values.username.length > 0 &&
+                    Array.isArray(options) &&
                     options?.map((option) => {
                       return (
                         <ListItem key={option.id}>
                           <Button
-                            rounded='none'
-                            width='100%'
+                            rounded="none"
+                            width="100%"
                             onClick={() => {
-                              formik.setFieldValue('username', option.username)
+                              formik.setFieldValue("username", option.username)
                               chooseOption(option.id)
                             }}
                           >
@@ -140,15 +142,15 @@ function AddBattleUser() {
               <Stack spacing={10}>
                 <Button
                   isDisabled={!option}
-                  type='submit'
-                  bg={'cyan.400'}
-                  color={'white'}
+                  type="submit"
+                  bg={"cyan.400"}
+                  color={"white"}
                   mt={5}
                   _hover={{
-                    bg: 'cyan.500',
+                    bg: "cyan.500",
                   }}
-                  mx='auto'
-                  size='lg'
+                  mx="auto"
+                  size="lg"
                 >
                   Request to join battle
                 </Button>

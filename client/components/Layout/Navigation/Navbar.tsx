@@ -41,7 +41,6 @@ function Navbar({ sidebarDisclosure }: any) {
       borderBottomWidth="1px"
       color="inherit"
       h="14"
-      //position="fixed"
     >
       <IconButton
         aria-label="Menu"
