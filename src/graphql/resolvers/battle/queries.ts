@@ -1,23 +1,30 @@
-import { GraphQLError } from 'graphql'
-import Battle from '../../../entities/Battle'
-import BattleStatus from '../../../types/BattleStatusEnum'
-import addMiddleware from '../../../utils/addMiddleware'
-import isAuthMiddleware from '../../middlewares/isAuth'
+import { GraphQLError } from "graphql"
+import Battle from "../../../entities/Battle"
+import BattleStatus from "../../../types/BattleStatusEnum"
+import addMiddleware from "../../../utils/addMiddleware"
+import isAuthMiddleware from "../../middlewares/isAuth"
 
 export default {
   async getBattles(_: any, { take, skip, orderBy }) {
-    const orderByOptions = ['title', 'expires', 'createdAt', 'likeDislikeCount']
+    const orderByOptions = [
+      "title",
+      "expires",
+      "createdAt",
+      "-createdAt",
+      "likeDislikeCount",
+    ]
     try {
-      const [battles,count] = await Battle.findAndCount({
+      const [battles, count] = await Battle.findAndCount({
         relations: { battleUsers: { user: true } },
         take: take || undefined,
         skip: skip || undefined,
         order: orderByOptions.includes(orderBy)
-          ? { [orderBy]: 'DESC' }
-          : { createdAt: 'DESC' },
+          ? orderBy.at(0) === "-"
+            ? { [orderBy.substring(1)]: "ASC" }
+            : { [orderBy]: "DESC" }
+          : { createdAt: "DESC" },
       })
-      return {battles,total:count}
-      
+      return { battles, total: count }
     } catch (err) {
       throw new Error(err)
     }
@@ -36,15 +43,15 @@ export default {
           },
         })
         if (!battle) {
-          return new GraphQLError('Validation Error', {
+          return new GraphQLError("Validation Error", {
             extensions: {
               errors: [
                 {
-                  path: 'battle',
-                  message: 'Battle with that id was not found',
+                  path: "battle",
+                  message: "Battle with that id was not found",
                 },
               ],
-              code: 'BAD_USER_INPUT',
+              code: "BAD_USER_INPUT",
             },
           })
         }

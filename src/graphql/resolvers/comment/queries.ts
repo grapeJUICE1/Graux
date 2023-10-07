@@ -8,7 +8,7 @@ export default {
     isAuthMiddleware,
     async (_: any, { battleId, userId, take, skip, orderBy }, { payload }) => {
       try {
-        const orderByOptions = ["createdAt", "likeDislikeCount"]
+        const orderByOptions = ["createdAt", "-createdAt", "likeDislikeCount"]
         const [comments, total] = await Comment.findAndCount({
           relations: { user: true },
           where: {
@@ -18,7 +18,9 @@ export default {
           take: take || undefined,
           skip: skip || undefined,
           order: orderByOptions.includes(orderBy)
-            ? { [orderBy]: "DESC" }
+            ? orderBy.at(0) === "-"
+              ? { [orderBy.substring(1)]: "ASC" }
+              : { [orderBy]: "DESC" }
             : { createdAt: "DESC" },
         })
 
