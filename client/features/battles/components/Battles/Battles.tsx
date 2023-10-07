@@ -1,7 +1,8 @@
-import { Center, Heading } from "@chakra-ui/react"
+import { Box, Center, Heading } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import CreateBattleButton from "../../../../components/Buttons/CreateBattleButton"
+import SortButton from "../../../../components/Buttons/SortButton"
 import Pagination from "../../../../components/Pagination"
 import {
   Battle as BattleType,
@@ -93,6 +94,12 @@ function Battles({
           : "All Battles"}
       </Heading>
       <Center>
+        <Box my={5} width="30%">
+          <SortButton />
+        </Box>
+      </Center>
+
+      <Center mt={2}>
         {" "}
         <CreateBattleButton
           buttonProps={{ mt: 5, colorScheme: "green", size: "lg" }}
