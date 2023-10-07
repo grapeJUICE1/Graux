@@ -1,6 +1,7 @@
-import { Center, Heading, SimpleGrid } from "@chakra-ui/react"
+import { Box, Center, Heading, SimpleGrid } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import SortButton from "../../../../components/Buttons/SortButton"
 import Pagination from "../../../../components/Pagination"
 import { User as UserType } from "../../../../gql/graphql"
 import UserCard from "../UserProfile/UserCard"
@@ -33,6 +34,13 @@ function Users({ initialTotal, initialUsers, pageSize }: UsersProps) {
       <Heading textAlign="center" mt="5" pb="10">
         All Users
       </Heading>
+      <Center>
+        <Box my={5} width="30%">
+          <SortButton
+            sortOptions={{ createdAt: "Latest", "-createdAt": "Oldest" }}
+          />
+        </Box>
+      </Center>
       <Center>
         <SimpleGrid columns={{ base: 2, sm: 2, md: 3, xl: 4 }} spacing={10}>
           {initialUsers?.map((user) => (
