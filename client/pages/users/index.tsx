@@ -26,14 +26,16 @@ export default function AllUsersPage({
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { query } = context
-  const skip =
-    (query?.page
-      ? Number(query?.page)
-        ? Number(query?.page) - 1
-        : 0
-      : 0 || 0) * pageSize
-
+  if (!Number(query?.page)) {
+    query.page = "1"
+  }
+  const skip = (Number(query?.page) - 1) * pageSize
   const take = pageSize
+
+  if (!query?.sort) {
+    query.sort = "createdAt"
+  }
+  const orderBy = query.sort
 
   const search = query?.search || null
 
@@ -67,13 +69,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     variables: {
       take: take,
       skip: skip,
-      orderBy: "createdAt",
+      orderBy: orderBy,
       search: search ? "a" + search : null,
       avoidClientSideError: true,
     },
   })
 
-  console.log(data)
   return {
     props: {
       initialUsers: data?.getUsers?.users || null,
