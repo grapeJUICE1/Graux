@@ -1,7 +1,6 @@
 import { gql } from "@apollo/client"
 import client from "../../apollo-client"
 import { User as UserType } from "../../gql/graphql"
-import { useRouter } from "next/router"
 import { GetServerSidePropsContext } from "next"
 import { Users } from "../../features/users"
 
@@ -14,7 +13,6 @@ export default function AllUsersPage({
   initialUsers: UserType[]
   total: number
 }) {
-  const router = useRouter()
   return (
     <>
       <Users
@@ -38,7 +36,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const take = pageSize
 
   const search = query?.search || null
-  console.log(take, "" + "a" + search, skip)
 
   const { data } = await client.query({
     query: gql`

@@ -38,45 +38,63 @@ export default function BattlesPage({
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { query } = context
 
-  const skip =
-    (query.page ? (Number(query.page) ? Number(query.page) - 1 : 0) : 0 || 0) *
-    pageSize
-
+  if (!Number(query?.page)) {
+    query.page = "1"
+  }
+  const skip = (Number(query?.page) - 1) * pageSize
   const take = pageSize
 
+  if (!query?.sort) {
+    query.sort = "createdAt"
+  }
+  const orderBy = query.sort
   const { data } = await client.query({
     query: gql`
-      query GetBattles {
-        getBattles(take:${take} , skip:${skip} , orderBy:"createdAt") {
-         battles 
-          {id
-          uuid
-          title
-          status
-          likeDislikeCount
-          expires
-          createdAt
-          battleUsers {
-            user {
-              id
-              email
-              createdAt
-              username
+      query GetBattles(
+        $take: Int
+        $skip: Int
+        $orderBy: String #$search: String
+      ) {
+        getBattles(
+          take: $take
+          skip: $skip
+          orderBy: $orderBy # search: $search
+        ) {
+          battles {
+            id
+            uuid
+            title
+            status
+            likeDislikeCount
+            expires
+            createdAt
+            battleUsers {
+              user {
+                id
+                email
+                createdAt
+                username
+              }
+              songName
+              songArtist
+              songAlbum
+              songImage
+              songLink
+              battleCreator
+              isWinner
             }
-            songName
-            songArtist
-            songAlbum
-            songImage
-            songLink
-            battleCreator
-            isWinner
           }
-        },
           total
         }
       }
     `,
     fetchPolicy: "network-only",
+    variables: {
+      take: take,
+      skip: skip,
+      orderBy: orderBy,
+      // search: "a" + search,
+    },
   })
   console.log(data.getBattles.battles)
   return {
