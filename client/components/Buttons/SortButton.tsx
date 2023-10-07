@@ -8,7 +8,7 @@ function SortButton({ sortOptions }: { sortOptions: {} }) {
   const handleChange = (e: BaseSyntheticEvent) => {
     console.log(e?.target?.value)
     setValue(e?.target?.value)
-    router.push({ query: { ...router.query, sort: e?.target?.value } })
+    router.push({ query: { ...router.query, page: 1, sort: e?.target?.value } })
   }
   return (
     <>

@@ -49,10 +49,6 @@ function Battles({
   useEffect(() => {
     meQuery()
   }, [])
-  useEffect(() => {
-    if (!Number(router.query?.page))
-      router.push({ query: { ...router.query, page: 1 } })
-  }, [])
 
   useEffect(() => {
     if (userBattles?.userId) {
