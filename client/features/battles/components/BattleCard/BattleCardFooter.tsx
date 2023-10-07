@@ -28,20 +28,6 @@ function BattleCardFooter({ battle }: BattleCardFooterProps) {
 
   return (
     <>
-      <Flex justifyContent="space-between" alignItems="center" mt={4}>
-        {data?.me?.id &&
-        battleCreator?.user?.id &&
-        data?.me?.id === battleCreator?.user?.id ? (
-          <Box mx="auto">
-            <ManageBattleButton
-              buttonProps={{ mt: 5, colorScheme: "green" }}
-              battleId={battle?.id}
-            />
-          </Box>
-        ) : (
-          ""
-        )}
-      </Flex>
       {battle?.status === "over" && (
         <Flex justifyContent="space-between" alignItems="center" mt={4}>
           {battle.status === "over" ? (
@@ -49,7 +35,7 @@ function BattleCardFooter({ battle }: BattleCardFooterProps) {
               <Text mx="auto" display="inline">
                 Battle won by :{" "}
               </Text>
-              <Text display="inline" fontWeight="medium">
+              <Text display="inline" fontWeight="bold" fontSize="lg">
                 {battleWinner?.user?.username || "None cuz it's a tie"}
               </Text>
             </Box>
@@ -79,6 +65,20 @@ function BattleCardFooter({ battle }: BattleCardFooterProps) {
           </Box>
         </Flex>
       )}
+      <Flex justifyContent="space-between" alignItems="center" mt={4}>
+        {data?.me?.id &&
+        battleCreator?.user?.id &&
+        data?.me?.id === battleCreator?.user?.id ? (
+          <Box mx="auto">
+            <ManageBattleButton
+              buttonProps={{ mt: 5, colorScheme: "green" }}
+              battleId={battle?.id}
+            />
+          </Box>
+        ) : (
+          ""
+        )}
+      </Flex>
     </>
   )
 }
