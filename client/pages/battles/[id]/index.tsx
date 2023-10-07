@@ -1,8 +1,8 @@
-import { gql } from '@apollo/client'
-import { GetServerSidePropsContext } from 'next'
-import client from '../../../apollo-client'
-import { IndividualBattle } from '../../../features/battles'
-import { Battle as BattleType } from '../../../gql/graphql'
+import { gql } from "@apollo/client"
+import { GetServerSidePropsContext } from "next"
+import client from "../../../apollo-client"
+import { IndividualBattle } from "../../../features/battles"
+import { Battle as BattleType } from "../../../gql/graphql"
 
 export async function getServerSideProps({
   params,
@@ -54,14 +54,14 @@ query GetBattle {
 }
 `,
 
-      fetchPolicy: 'network-only',
+      fetchPolicy: "network-only",
       context: {
         headers: {
           authorization: req?.cookies?.jid ? req?.cookies?.jid : undefined,
         },
       },
     })
-
+    console.log(data?.getBattle)
     return {
       props: {
         battle: data.getBattle,

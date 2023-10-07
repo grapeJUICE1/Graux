@@ -1,7 +1,8 @@
 import { Box, Center, Text } from "@chakra-ui/react"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import SortButton from "../../../../components/Buttons/SortButton"
+import Nprogress from "nprogress"
 import Pagination from "../../../../components/Pagination"
 import {
   Comment,
@@ -26,6 +27,8 @@ function Comments({
   const [page, setPage] = useState(1)
   const [orderBy, setOrderBy] = useState("createdAt")
 
+  const commentHeaderRef = useRef(null)
+
   const [total, setTotal] = useState(0)
   const [getComments] = useGetCommentsLazyQuery()
 
@@ -35,6 +38,8 @@ function Comments({
 
   useEffect(() => {
     if (battleId || userId) {
+      Nprogress.set(0.3)
+      Nprogress.start()
       getComments({
         variables: {
           battleId,
@@ -49,11 +54,14 @@ function Comments({
           const total = data?.getComments?.total
           if (comments) setComments(comments as Comment[])
           if (total) setTotal(total)
+          Nprogress.done()
         })
-        .catch()
+        .catch((_) => {
+          Nprogress.done()
+        })
     }
   }, [battleId, page, orderBy])
-
+  useEffect(() => {}, [comments])
   const handlePageClick = (data: any) => {
     let selected = data.selected + 1
     setPage(selected)
@@ -84,7 +92,7 @@ function Comments({
 
   return (
     <Box mt="10">
-      <Text textAlign="center" fontSize="2rem">
+      <Text ref={commentHeaderRef} textAlign="center" fontSize="2rem">
         Comments
       </Text>
       <Center>
