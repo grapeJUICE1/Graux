@@ -1,4 +1,5 @@
 import { useToast } from "@chakra-ui/react"
+import Nprogress from "nprogress"
 
 function useMutation(mutationFn: any) {
   const toast = useToast()
@@ -10,10 +11,8 @@ function useMutation(mutationFn: any) {
   ) {
     try {
       toast.closeAll()
-      toast({
-        description: "Please wait for a few seconds",
-        duration: null,
-      })
+      Nprogress.set(0.3)
+      Nprogress.start()
       const { data } = await mutationFn(mutationOptions)
       toast.closeAll()
       toast({
@@ -21,9 +20,11 @@ function useMutation(mutationFn: any) {
         duration: 2000,
         status: "success",
       })
+      Nprogress.done()
       onSuccess(data)
     } catch (err) {
       toast.closeAll()
+      Nprogress.done()
       //@ts-ignore
       if (err?.graphQLErrors?.at(0)?.extensions?.errors) {
         //@ts-ignore
