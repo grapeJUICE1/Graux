@@ -1,12 +1,16 @@
 import { Select } from "@chakra-ui/react"
 
-function SortButton() {
+function SortButton({ sortOptions }: { sortOptions: {} }) {
   return (
-    <Select placeholder="latest">
-      <option value="createdAt">Latest</option>
-      <option value="-createdAt">oldest</option>
-      <option value="likeDislikeCount">Most Liked</option>
-    </Select>
+    <>
+      <Select>
+        {Object.entries(sortOptions)?.map(([key, value], i) => (
+          <option key={i} value={key}>
+            {String(value)}
+          </option>
+        ))}
+      </Select>
+    </>
   )
 }
 

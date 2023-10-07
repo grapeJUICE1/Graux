@@ -95,11 +95,17 @@ function Battles({
       </Heading>
       <Center>
         <Box my={5} width="30%">
-          <SortButton />
+          <SortButton
+            sortOptions={{
+              createdAt: "Latest",
+              "-createdAt": "Oldest",
+              likeDislikeCount: "Most Liked",
+            }}
+          />
         </Box>
       </Center>
 
-      <Center mt={2}>
+      <Center>
         {" "}
         <CreateBattleButton
           buttonProps={{ mt: 5, colorScheme: "green", size: "lg" }}
