@@ -78,6 +78,10 @@ function Battles({
     }
   }, [router.query?.page])
 
+  const onOrderByChange = (newOrderBy: string) => {
+    router.push({ query: { ...router.query, page: 1, sort: newOrderBy } })
+  }
+
   return (
     <>
       <Heading textAlign="center" mt="5">
@@ -97,6 +101,7 @@ function Battles({
               "-createdAt": "Oldest",
               likeDislikeCount: "Most Liked",
             }}
+            onOrderByChange={onOrderByChange}
           />
         </Box>
       </Center>

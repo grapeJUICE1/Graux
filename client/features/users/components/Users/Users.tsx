@@ -29,6 +29,9 @@ function Users({ initialTotal, initialUsers, pageSize }: UsersProps) {
       router.push({ query: { ...router.query, page: 1 } })
   }, [])
 
+  const onOrderByChange = (newOrderBy: string) => {
+    router.push({ query: { ...router.query, page: 1, sort: newOrderBy } })
+  }
   return (
     <>
       <Heading textAlign="center" mt="5" pb="10">
@@ -38,6 +41,7 @@ function Users({ initialTotal, initialUsers, pageSize }: UsersProps) {
         <Box my={5} width="30%">
           <SortButton
             sortOptions={{ createdAt: "Latest", "-createdAt": "Oldest" }}
+            onOrderByChange={onOrderByChange}
           />
         </Box>
       </Center>

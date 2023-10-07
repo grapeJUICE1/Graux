@@ -1,6 +1,7 @@
 import { Box, Center, Text } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import SortButton from "../../../../components/Buttons/SortButton"
 import Pagination from "../../../../components/Pagination"
 import {
   Comment,
@@ -23,10 +24,10 @@ function Comments({
   const [meQuery, { data }] = useMeLazyQuery()
   const [comments, setComments] = useState<Comment[] | null>([])
   const [page, setPage] = useState(1)
+  const [orderBy, setOrderBy] = useState("createdAt")
+
   const [total, setTotal] = useState(0)
   const [getComments] = useGetCommentsLazyQuery()
-
-  const router = useRouter()
 
   useEffect(() => {
     meQuery()
@@ -40,6 +41,7 @@ function Comments({
           userId,
           take: pageSize,
           skip: (page - 1) * pageSize,
+          orderBy,
         },
       })
         .then(({ data }) => {
@@ -50,25 +52,16 @@ function Comments({
         })
         .catch()
     }
-  }, [battleId])
+  }, [battleId, page, orderBy])
 
-  useEffect(() => {
-    const take = pageSize
-    const skip = (page - 1) * pageSize
-    getComments({
-      variables: {
-        battleId,
-        userId,
-        take,
-        skip,
-      },
-    }).then(({ data }) => {
-      const comments = data?.getComments?.comments
-      const total = data?.getComments?.total
-      if (comments) setComments(comments as Comment[])
-      if (total) setTotal(total)
-    })
-  }, [page])
+  const handlePageClick = (data: any) => {
+    let selected = data.selected + 1
+    setPage(selected)
+  }
+
+  const onOrderByChange = (newOrderBy: string) => {
+    setOrderBy(newOrderBy)
+  }
 
   function setComment(commentToReplaceWith: Comment) {
     if (comments) {
@@ -87,11 +80,6 @@ function Comments({
     return false
   }
 
-  const handlePageClick = (data: any) => {
-    let selected = data.selected + 1
-    setPage(selected)
-  }
-
   const pageCount = Math.ceil(total / pageSize)
 
   return (
@@ -99,6 +87,18 @@ function Comments({
       <Text textAlign="center" fontSize="2rem">
         Comments
       </Text>
+      <Center>
+        <Box my={5} width="30%">
+          <SortButton
+            sortOptions={{
+              createdAt: "Latest",
+              "-createdAt": "Oldest",
+              likeDislikeCount: "Most Liked",
+            }}
+            onOrderByChange={onOrderByChange}
+          />
+        </Box>
+      </Center>
       <Center>
         {battleId && data?.me && (
           <AddCommentButton
