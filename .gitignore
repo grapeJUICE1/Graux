@@ -4,4 +4,5 @@ node_modules/
 build/
 tmp/
 temp/
-src/config/config.env
+
+/src/config/config.env
