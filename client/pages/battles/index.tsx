@@ -41,24 +41,32 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!Number(query?.page)) {
     query.page = "1"
   }
+
   const skip = (Number(query?.page) - 1) * pageSize
   const take = pageSize
 
   if (!query?.sort) {
     query.sort = "createdAt"
   }
+
+  const search = query?.search || null
+
   const orderBy = query.sort
   const { data } = await client.query({
     query: gql`
       query GetBattles(
         $take: Int
         $skip: Int
-        $orderBy: String #$search: String
+        $orderBy: String
+        $search: String
+        $avoidClientSideError: Boolean
       ) {
         getBattles(
           take: $take
           skip: $skip
-          orderBy: $orderBy # search: $search
+          orderBy: $orderBy
+          search: $search
+          avoidClientSideError: $avoidClientSideError
         ) {
           battles {
             id
@@ -93,10 +101,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       take: take,
       skip: skip,
       orderBy: orderBy,
-      // search: "a" + search,
+      avoidClientSideError: true,
+      search: search ? "a" + search : undefined,
     },
   })
-  console.log(data.getBattles.battles)
   return {
     props: {
       initialBattles: data.getBattles.battles,

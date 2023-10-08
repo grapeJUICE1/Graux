@@ -238,6 +238,7 @@ export type QueryGetBattleUsersArgs = {
 export type QueryGetBattlesArgs = {
   avoidClientSideError?: InputMaybe<Scalars['Boolean']>;
   orderBy?: InputMaybe<Scalars['String']>;
+  search?: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
 };

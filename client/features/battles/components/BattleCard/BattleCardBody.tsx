@@ -1,7 +1,6 @@
 import { Box, Center, Flex, HStack, Link, Text } from "@chakra-ui/react"
 import NextLink from "next/link"
 import { useMemo } from "react"
-import LikeDislike from "../../../../components/Buttons/LikeDislikeButton"
 import { Battle } from "../../../../gql/graphql"
 
 interface BattleCardBody {
@@ -102,7 +101,7 @@ function BattleCardBody({ battle }: BattleCardBody) {
           })}
       </Flex>
       <Center>
-        <Text fontSize="medium" fontWeight="bold">
+        <Text fontSize="1.4rem" fontWeight="bold">
           {battle.likeDislikeCount} likes
         </Text>
       </Center>
