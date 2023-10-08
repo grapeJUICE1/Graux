@@ -76,7 +76,7 @@ const typeDefs = `#graphql
   type Query {
     
     # Battle Queries
-    getBattles(take:Int skip:Int orderBy:String avoidClientSideError:Boolean): getBattlesResponse
+    getBattles(take:Int skip:Int orderBy:String search:String avoidClientSideError:Boolean): getBattlesResponse
     getBattle(battleId:Int! manage:Boolean!): Battle
 
     # User Queries

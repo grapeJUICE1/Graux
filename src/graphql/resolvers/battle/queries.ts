@@ -1,11 +1,19 @@
 import { GraphQLError } from "graphql"
+import { ILike } from "typeorm"
 import Battle from "../../../entities/Battle"
 import BattleStatus from "../../../types/BattleStatusEnum"
 import addMiddleware from "../../../utils/addMiddleware"
 import isAuthMiddleware from "../../middlewares/isAuth"
 
 export default {
-  async getBattles(_: any, { take, skip, orderBy }) {
+  async getBattles(
+    _: any,
+    { take, skip, orderBy, avoidClientSideError, search }
+  ) {
+    let mutableSearch = search
+    if (search && avoidClientSideError) {
+      mutableSearch = search?.substring(1)
+    }
     const orderByOptions = [
       "title",
       "expires",
@@ -15,6 +23,7 @@ export default {
     ]
     try {
       const [battles, count] = await Battle.findAndCount({
+        where: { title: search ? ILike(`%${mutableSearch}%`) : undefined },
         relations: { battleUsers: { user: true } },
         take: take || undefined,
         skip: skip || undefined,
