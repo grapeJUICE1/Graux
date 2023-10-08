@@ -1,11 +1,9 @@
 /**
- *
  * NProgress
  *
  */
-
 import Router from "next/router"
-import * as NProgress from "nprogress"
+import NProgress from "nprogress"
 import * as PropTypes from "prop-types"
 import * as React from "react"
 
