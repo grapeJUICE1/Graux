@@ -19,7 +19,7 @@ import {
 } from "@chakra-ui/react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
-import { useUpdateBattleMutation } from "../../gql/graphql"
+import { useUpdateBattleMutation } from "../../../../gql/graphql"
 
 function EditTitleButton({
   buttonProps,
