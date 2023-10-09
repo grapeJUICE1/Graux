@@ -1,5 +1,6 @@
-import { Box, Flex, Text } from "@chakra-ui/react"
+import { Box, Center, Flex, HStack, Text } from "@chakra-ui/react"
 import { useEffect, useMemo } from "react"
+import ChooseSongButton from "../../../../components/Buttons/ChooseSongButton"
 import ManageBattleButton from "../../../../components/Buttons/ManageBattleButton"
 import { Battle, useMeLazyQuery } from "../../../../gql/graphql"
 import formatDate from "../../../../utils/formatDate"
@@ -25,6 +26,12 @@ function BattleCardFooter({ battle }: BattleCardFooterProps) {
       return battleUser?.battleCreator === true ? true : false
     })
   }, [battle])
+
+  const userIsInBattle = useMemo(() => {
+    return battle?.battleUsers?.find((battleUser) => {
+      return battleUser?.user?.id === data?.me?.id
+    })
+  }, [battle, data])
 
   return (
     <>
@@ -65,20 +72,29 @@ function BattleCardFooter({ battle }: BattleCardFooterProps) {
           </Box>
         </Flex>
       )}
-      <Flex justifyContent="space-between" alignItems="center" mt={4}>
-        {data?.me?.id &&
-        battleCreator?.user?.id &&
-        data?.me?.id === battleCreator?.user?.id ? (
-          <Box mx="auto">
-            <ManageBattleButton
-              buttonProps={{ mt: 5, colorScheme: "green" }}
+      <Center>
+        <HStack>
+          {data?.me?.id &&
+          battleCreator?.user?.id &&
+          data?.me?.id === battleCreator?.user?.id ? (
+            <Box>
+              <ManageBattleButton
+                buttonProps={{ mt: 5, colorScheme: "green" }}
+                battleId={battle?.id}
+              />
+            </Box>
+          ) : (
+            ""
+          )}
+
+          {userIsInBattle && (
+            <ChooseSongButton
               battleId={battle?.id}
+              buttonProps={{ mt: 5, colorScheme: "teal", size: "md" }}
             />
-          </Box>
-        ) : (
-          ""
-        )}
-      </Flex>
+          )}
+        </HStack>
+      </Center>
     </>
   )
 }

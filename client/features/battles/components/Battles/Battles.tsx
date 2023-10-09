@@ -1,6 +1,7 @@
 import { Box, Center, Heading, Text, VStack } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import ChooseSongButton from "../../../../components/Buttons/ChooseSongButton"
 import CreateBattleButton from "../../../../components/Buttons/CreateBattleButton"
 import SortButton from "../../../../components/Buttons/SortButton"
 import Pagination from "../../../../components/Pagination"
