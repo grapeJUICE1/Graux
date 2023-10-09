@@ -1,6 +1,5 @@
 import { Box, Center, Heading, SimpleGrid } from "@chakra-ui/react"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
 import SortButton from "../../../../components/Buttons/SortButton"
 import Pagination from "../../../../components/Pagination"
 import { User as UserType } from "../../../../gql/graphql"
@@ -13,7 +12,7 @@ type UsersProps = {
 }
 
 function Users({ initialTotal, initialUsers, pageSize }: UsersProps) {
-  const [total, setTotal] = useState(initialTotal || 0)
+  const total = initialTotal || 0
 
   const router = useRouter()
 
@@ -23,11 +22,6 @@ function Users({ initialTotal, initialUsers, pageSize }: UsersProps) {
   }
 
   const pageCount = Math.ceil(total / pageSize)
-
-  useEffect(() => {
-    if (!Number(router.query?.page))
-      router.push({ query: { ...router.query, page: 1 } })
-  }, [])
 
   const onOrderByChange = (newOrderBy: string) => {
     router.push({ query: { ...router.query, page: 1, sort: newOrderBy } })

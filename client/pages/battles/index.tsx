@@ -1,10 +1,9 @@
 import { gql } from "@apollo/client"
 import client from "../../apollo-client"
-import { Battle as BattleType, useGetBattlesLazyQuery } from "../../gql/graphql"
+import { Battle as BattleType } from "../../gql/graphql"
 import { Battles } from "../../features/battles"
 import { useRouter } from "next/router"
 import { GetServerSidePropsContext } from "next"
-import { useEffect } from "react"
 
 const pageSize = 5
 
@@ -16,13 +15,7 @@ export default function BattlesPage({
   total: number
 }) {
   const router = useRouter()
-  const [getBattles] = useGetBattlesLazyQuery()
 
-  useEffect(() => {
-    getBattles({ variables: { orderBy: "createdAt" } }).then((data) => {
-      console.log(data)
-    })
-  }, [])
   return (
     <>
       <Battles
@@ -37,21 +30,19 @@ export default function BattlesPage({
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { query } = context
-
   if (!Number(query?.page)) {
     query.page = "1"
   }
-
   const skip = (Number(query?.page) - 1) * pageSize
   const take = pageSize
-
   if (!query?.sort) {
     query.sort = "createdAt"
   }
-
+  console.log(query?.search)
   const search = query?.search || null
 
   const orderBy = query.sort
+
   const { data } = await client.query({
     query: gql`
       query GetBattles(

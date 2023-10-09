@@ -1,9 +1,21 @@
-import { Box, Center, Heading } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  Center,
+  Heading,
+  HStack,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Text,
+  VStack,
+} from "@chakra-ui/react"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { BaseSyntheticEvent, useEffect, useState } from "react"
 import CreateBattleButton from "../../../../components/Buttons/CreateBattleButton"
 import SortButton from "../../../../components/Buttons/SortButton"
 import Pagination from "../../../../components/Pagination"
+import Search from "../../../../components/Search"
 import {
   Battle as BattleType,
   useGetUserBattlesLazyQuery,
@@ -82,6 +94,14 @@ function Battles({
     router.push({ query: { ...router.query, page: 1, sort: newOrderBy } })
   }
 
+  const onSearch = (searchString: string | null) => {
+    router.push({
+      query: searchString
+        ? { page: 1, sort: "createdAt", search: searchString }
+        : { page: 1, sort: "createdAt" },
+    })
+  }
+
   return (
     <>
       <Heading textAlign="center" mt="5">
@@ -93,19 +113,31 @@ function Battles({
             : "All Battles User Is Part Of"
           : "All Battles"}
       </Heading>
+      {allBattles ? (
+        <Center>
+          <Box my={3} width="50%">
+            <Search onSearch={onSearch} placeholder="Search For Battles" />
+          </Box>
+        </Center>
+      ) : (
+        ""
+      )}
+
       <Center>
-        <Box my={5} width="30%">
-          <SortButton
-            sortOptions={{
-              createdAt: "Latest",
-              "-createdAt": "Oldest",
-              likeDislikeCount: "Most Liked",
-            }}
-            onOrderByChange={onOrderByChange}
-          />
+        <Box my={4} width="20%">
+          <VStack>
+            <Text>Sort-By</Text>
+            <SortButton
+              sortOptions={{
+                createdAt: "Latest",
+                "-createdAt": "Oldest",
+                likeDislikeCount: "Most Liked",
+              }}
+              onOrderByChange={onOrderByChange}
+            />
+          </VStack>
         </Box>
       </Center>
-
       <Center>
         {" "}
         <CreateBattleButton
