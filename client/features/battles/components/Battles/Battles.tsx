@@ -129,7 +129,6 @@ function Battles({
         </Box>
       </Center>
       <Center>
-        {" "}
         <CreateBattleButton
           buttonProps={{ mt: 5, colorScheme: "green", size: "lg" }}
           userIsAuthenticated={data?.me ? true : false}

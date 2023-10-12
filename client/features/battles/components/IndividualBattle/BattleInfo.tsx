@@ -1,5 +1,6 @@
 import { Box, Center, HStack, Text } from "@chakra-ui/react"
 import { Dispatch, SetStateAction } from "react"
+import ChooseSongButton from "../../../../components/Buttons/ChooseSongButton"
 import LikeDislike from "../../../../components/Buttons/LikeDislikeButton"
 import ManageBattleButton from "../../../../components/Buttons/ManageBattleButton"
 import { Battle } from "../../../../gql/graphql"
@@ -62,10 +63,18 @@ function BattleInfo({ battle, totalVotes, setBattle }: BattleInfoProps) {
       </HStack>
 
       <Center>
-        <ManageBattleButton
-          buttonProps={{ mt: 5, colorScheme: "green" }}
-          battleId={battle?.id}
-        />
+        <HStack mt={5}>
+          <ManageBattleButton
+            buttonProps={{ colorScheme: "green" }}
+            battleId={battle?.id}
+          />
+          <Center>
+            <ChooseSongButton
+              battleId={battle?.id}
+              buttonProps={{ colorScheme: "teal", size: "md" }}
+            />
+          </Center>
+        </HStack>
       </Center>
     </Box>
   )

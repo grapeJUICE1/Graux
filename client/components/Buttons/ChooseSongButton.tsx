@@ -1,7 +1,7 @@
 import { Button, ButtonProps } from "@chakra-ui/react"
 import Link from "next/link"
 
-function CreateBattleButton({
+function ChooseSongButton({
   battleId,
   buttonProps,
 }: {
@@ -16,4 +16,4 @@ function CreateBattleButton({
     </>
   )
 }
-export default CreateBattleButton
+export default ChooseSongButton
