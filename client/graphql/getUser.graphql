@@ -4,5 +4,6 @@ query GetUser($userId: Int!) {
     email
     username
     createdAt
+    battlesWon
   }
 }

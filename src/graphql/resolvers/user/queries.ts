@@ -24,7 +24,6 @@ export default {
       }
       const [users, total] = await User.findAndCount({
         where: { username: search ? ILike(`%${mutableSearch}%`) : undefined },
-        //take: search ? 10 : undefined,
         take: take || undefined,
         skip: skip || undefined,
         order: orderByOptions.includes(orderBy)
@@ -33,7 +32,6 @@ export default {
             : { [orderBy]: "DESC" }
           : { createdAt: "DESC" },
       })
-
       return { users, total }
     } catch (err) {
       throw new Error(err)
@@ -41,7 +39,6 @@ export default {
   },
   getUser: async (_: any, { userId }) => {
     try {
-      console.log("Am i coming here")
       const user = await User.findOne({ where: { id: userId } })
       if (!user) {
         return new GraphQLError("Validation Error", {

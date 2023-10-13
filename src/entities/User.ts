@@ -1,13 +1,13 @@
-import { hash } from 'argon2'
-import { IsAlphanumeric, IsEmail, Length } from 'class-validator'
-import { Entity, Column, OneToMany, BeforeInsert } from 'typeorm'
-import AppBaseEntity from './AppBaseEntity'
-import BattleRequest from './BattleRequest'
-import BattleUser from './BattleUser'
-import Comment from './Comment'
-import Vote from './Vote'
+import { hash } from "argon2"
+import { IsAlphanumeric, IsEmail, Length } from "class-validator"
+import { Entity, Column, OneToMany, BeforeInsert } from "typeorm"
+import AppBaseEntity from "./AppBaseEntity"
+import BattleRequest from "./BattleRequest"
+import BattleUser from "./BattleUser"
+import Comment from "./Comment"
+import Vote from "./Vote"
 
-@Entity('users')
+@Entity("users")
 export default class User extends AppBaseEntity {
   @Column()
   @IsEmail()
@@ -22,8 +22,11 @@ export default class User extends AppBaseEntity {
   @Length(8, 255)
   password: string
 
-  @Column('int', { default: 0 })
+  @Column("int", { default: 0 })
   tokenVersion: number
+
+  @Column("int", { default: 0 })
+  battlesWon: number
 
   @OneToMany(() => BattleUser, (battleUser) => battleUser.user)
   battleSongs: BattleUser[]

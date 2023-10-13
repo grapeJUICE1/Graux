@@ -5,6 +5,7 @@ const typeDefs = `#graphql
    username: String!
    battleSongs: [BattleUser]
    createdAt:String
+   battlesWon:Int
   }
   type BattleUser{
     id: ID!

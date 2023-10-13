@@ -61,6 +61,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
             email
             username
             createdAt
+            battlesWon
           }
         }
       }

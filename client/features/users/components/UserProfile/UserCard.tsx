@@ -10,6 +10,7 @@ interface UserCardProps {
 function UserCard({ user, me }: UserCardProps) {
   const [deleteUser] = useDeleteUserMutation()
   const router = useRouter()
+  console.log(user)
   return (
     <Box
       maxW={"320px"}
@@ -35,6 +36,9 @@ function UserCard({ user, me }: UserCardProps) {
       </Heading>
       <Text fontWeight={600} color={"gray.500"} mb={4}>
         {user?.email}
+      </Text>
+      <Text fontWeight={600} color={"gray.500"} mb={4}>
+        Battles Winned : {user.battlesWon || 0}
       </Text>
       {user?.id && me?.id && user?.id === me?.id && (
         <DeleteButton

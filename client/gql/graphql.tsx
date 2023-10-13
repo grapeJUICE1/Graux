@@ -290,6 +290,7 @@ export type QueryGetUsersArgs = {
 export type User = {
   __typename?: 'User';
   battleSongs?: Maybe<Array<Maybe<BattleUser>>>;
+  battlesWon?: Maybe<Scalars['Int']>;
   createdAt?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   id: Scalars['ID'];
@@ -426,7 +427,7 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', getUser?: { __typename?: 'User', id: string, email: string, username: string, createdAt?: string | null } | null };
+export type GetUserQuery = { __typename?: 'Query', getUser?: { __typename?: 'User', id: string, email: string, username: string, createdAt?: string | null, battlesWon?: number | null } | null };
 
 export type GetUserBattleRequestsQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -455,7 +456,7 @@ export type GetUsersQueryVariables = Exact<{
 }>;
 
 
-export type GetUsersQuery = { __typename?: 'Query', getUsers?: { __typename?: 'getUsersResponse', total?: number | null, users?: Array<{ __typename?: 'User', id: string, username: string, email: string, createdAt?: string | null } | null> | null } | null };
+export type GetUsersQuery = { __typename?: 'Query', getUsers?: { __typename?: 'getUsersResponse', total?: number | null, users?: Array<{ __typename?: 'User', id: string, username: string, email: string, createdAt?: string | null, battlesWon?: number | null } | null> | null } | null };
 
 export type LikeDislikeMutationVariables = Exact<{
   value: Scalars['Int'];
@@ -1071,6 +1072,7 @@ export const GetUserDocument = gql`
     email
     username
     createdAt
+    battlesWon
   }
 }
     `;
@@ -1235,6 +1237,7 @@ export const GetUsersDocument = gql`
       username
       email
       createdAt
+      battlesWon
     }
     total
   }

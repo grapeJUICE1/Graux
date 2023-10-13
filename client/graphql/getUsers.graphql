@@ -5,6 +5,7 @@ query GetUsers($take: Int, $skip: Int, $orderBy: String, $search: String) {
       username
       email
       createdAt
+      battlesWon
     }
     total
   }

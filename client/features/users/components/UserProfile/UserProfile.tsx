@@ -1,13 +1,13 @@
-import { Box, Center, Spinner } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { Box, Center, Spinner } from "@chakra-ui/react"
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
 import {
   useGetUserLazyQuery,
   useMeLazyQuery,
   User,
-} from '../../../../gql/graphql'
-import ProfileTabs from './ProfileTabs'
-import UserCard from './UserCard'
+} from "../../../../gql/graphql"
+import ProfileTabs from "./ProfileTabs"
+import UserCard from "./UserCard"
 
 function UserProfile() {
   const [getUser] = useGetUserLazyQuery()
@@ -40,7 +40,7 @@ function UserProfile() {
         })
     }
   }, [router?.query?.id])
-
+  console.log("hhahaj k ", user)
   return (
     <>
       {user?.id ? (

@@ -1,15 +1,15 @@
-import { Length } from 'class-validator'
-import { Entity, Column, OneToMany } from 'typeorm'
-import BattleUser from './BattleUser'
-import BattleStatus from '../types/BattleStatusEnum'
-import AppBaseEntity from './AppBaseEntity'
-import Comment from './Comment'
-import LikeDislike from './LikeDislike'
-import BattleRequest from './BattleRequest'
+import { Length } from "class-validator"
+import { Entity, Column, OneToMany } from "typeorm"
+import BattleUser from "./BattleUser"
+import BattleStatus from "../types/BattleStatusEnum"
+import AppBaseEntity from "./AppBaseEntity"
+import Comment from "./Comment"
+import LikeDislike from "./LikeDislike"
+import BattleRequest from "./BattleRequest"
 
 @Entity()
 export default class Battle extends AppBaseEntity {
-  @Column({ generated: 'uuid' })
+  @Column({ generated: "uuid" })
   uuid: string
 
   @Length(10, 255)
@@ -20,7 +20,7 @@ export default class Battle extends AppBaseEntity {
   expires: Date
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: BattleStatus,
     default: BattleStatus.CREATION,
   })
@@ -30,7 +30,7 @@ export default class Battle extends AppBaseEntity {
   likeDislikeCount: Number
 
   @OneToMany(() => BattleUser, (battleUser) => battleUser.battle, {
-    onDelete: 'CASCADE',
+    onDelete: "CASCADE",
   })
   battleUsers: BattleUser[]
 
@@ -52,12 +52,13 @@ export default class Battle extends AppBaseEntity {
 
   public setBattleWinner() {
     let winner: any
-    if (this.battleUsers[0]?.voteCount === this.battleUsers[1]?.voteCount) {
-      winner = 'tie'
+
+    if (this?.battleUsers[0]?.voteCount === this?.battleUsers[1]?.voteCount) {
+      winner = "tie"
       return winner
     }
-    winner = this?.battleUsers.sort((prev, curr) => {
-      return curr.voteCount - prev.voteCount
+    winner = this?.battleUsers?.sort((prev, curr) => {
+      return curr?.voteCount - prev?.voteCount
     })[0]
 
     return winner
@@ -67,7 +68,7 @@ export default class Battle extends AppBaseEntity {
     const winner = this.battleUsers.find(
       (battleUser) => battleUser.isWinner === true
     )
-    if (!winner) return 'No Winner'
+    if (!winner) return "No Winner"
     return winner
   }
 

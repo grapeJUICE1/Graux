@@ -1,7 +1,8 @@
-import { EntitySubscriberInterface, EventSubscriber, LoadEvent } from 'typeorm'
-import BattleStatus from '../types/BattleStatusEnum'
-import Battle from '../entities/Battle'
-import BattleUser from '../entities/BattleUser'
+import { EntitySubscriberInterface, EventSubscriber, LoadEvent } from "typeorm"
+import BattleStatus from "../types/BattleStatusEnum"
+import Battle from "../entities/Battle"
+import BattleUser from "../entities/BattleUser"
+import User from "../entities/User"
 
 @EventSubscriber()
 export class BattleSubscriber implements EntitySubscriberInterface<Battle> {
@@ -22,7 +23,7 @@ export class BattleSubscriber implements EntitySubscriberInterface<Battle> {
           .createQueryBuilder()
           .update(Battle)
           .set({ status: BattleStatus.OVER })
-          .where('id = :id', { id: entity.id })
+          .where("id = :id", { id: entity.id })
           .execute()
 
         const winner = entity.setBattleWinner()
@@ -32,7 +33,18 @@ export class BattleSubscriber implements EntitySubscriberInterface<Battle> {
             .createQueryBuilder()
             .update(BattleUser)
             .set({ isWinner: true })
-            .where('id = :id', { id: winner.id })
+            .where("id = :id", { id: winner.id })
+            .execute()
+
+          const battlesWon = await BattleUser.count({
+            where: { user: { id: winner?.user?.id }, isWinner: true },
+          })
+
+          await event.connection
+            .createQueryBuilder()
+            .update(User)
+            .set({ battlesWon: battlesWon + 1 })
+            .where("id = :id", { id: winner.user.id })
             .execute()
         }
       }
