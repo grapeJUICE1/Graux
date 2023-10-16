@@ -1,5 +1,4 @@
 import { Box, Center, Text } from "@chakra-ui/react"
-import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react"
 import SortButton from "../../../../components/Buttons/SortButton"
 import Nprogress from "nprogress"
@@ -76,7 +75,6 @@ function Comments({
       const commentIndex = comments?.findIndex((comment: Comment) => {
         return comment.id === commentToReplaceWith.id
       })
-      console.log(commentIndex)
 
       if (typeof commentIndex === "number" && commentIndex !== -1) {
         const commentsCopy = [...comments]
@@ -95,6 +93,11 @@ function Comments({
       <Text ref={commentHeaderRef} textAlign="center" fontSize="2rem">
         Comments
       </Text>
+      <Center mt={5}>
+        <Text fontSize="1.3rem" fontWeight="bold">
+          {total} comments
+        </Text>
+      </Center>
       <Center>
         <Box my={5} width="30%">
           <SortButton
