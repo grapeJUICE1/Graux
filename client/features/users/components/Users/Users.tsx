@@ -1,4 +1,4 @@
-import { Box, Center, Heading, SimpleGrid } from "@chakra-ui/react"
+import { Box, Center, Heading, SimpleGrid, Text } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import SortButton from "../../../../components/Buttons/SortButton"
 import Pagination from "../../../../components/Pagination"
@@ -36,9 +36,14 @@ function Users({ initialTotal, initialUsers, pageSize }: UsersProps) {
   }
   return (
     <>
-      <Heading textAlign="center" mt="5" pb="10">
+      <Heading textAlign="center" mt="5" pb="5">
         All Users
       </Heading>
+      <Center>
+        <Text fontSize="1.5rem" fontWeight="bold">
+          {total} users
+        </Text>
+      </Center>
       <Center>
         <Box my={5} width="30%">
           <SortButton
