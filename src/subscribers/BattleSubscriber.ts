@@ -43,7 +43,7 @@ export class BattleSubscriber implements EntitySubscriberInterface<Battle> {
           await event.connection
             .createQueryBuilder()
             .update(User)
-            .set({ battlesWon: battlesWon + 1 })
+            .set({ battlesWon: battlesWon })
             .where("id = :id", { id: winner.user.id })
             .execute()
         }
