@@ -36,7 +36,6 @@ function Battles({
   >(allBattles)
   const [total, setTotal] = useState(initialTotal || 0)
   const [getUserBattles] = useGetUserBattlesLazyQuery()
-
   const router = useRouter()
 
   const handlePageClick = (data: any) => {
@@ -51,6 +50,12 @@ function Battles({
   useEffect(() => {
     meQuery()
   }, [])
+
+  useEffect(() => {
+    if (total !== initialTotal) {
+      setTotal(initialTotal)
+    }
+  }, [initialTotal])
 
   useEffect(() => {
     if (userBattles?.userId) {
@@ -103,6 +108,12 @@ function Battles({
             : "All Battles User Is Part Of"
           : "All Battles"}
       </Heading>
+      <Center mt={5}>
+        <Text fontSize="1.5rem" fontWeight="bold">
+          {total} battles
+        </Text>
+      </Center>
+
       {allBattles ? (
         <Center>
           <Box my={3} width="50%">
