@@ -19,6 +19,7 @@ export type Battle = {
   __typename?: 'Battle';
   battleRequests?: Maybe<Array<Maybe<BattleRequest>>>;
   battleUsers?: Maybe<Array<Maybe<BattleUser>>>;
+  commentCount?: Maybe<Scalars['Int']>;
   createdAt?: Maybe<Scalars['String']>;
   expires?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -386,7 +387,7 @@ export type GetBattleQueryVariables = Exact<{
 }>;
 
 
-export type GetBattleQuery = { __typename?: 'Query', getBattle?: { __typename?: 'Battle', id: string, uuid: string, title: string, status: string, likeDislikeCount?: number | null, expires?: string | null, createdAt?: string | null, battleUsers?: Array<{ __typename?: 'BattleUser', battleCreator?: boolean | null, createdAt?: string | null, id: string, songArtist?: string | null, songAlbum?: string | null, isWinner?: boolean | null, songImage?: string | null, songLink?: string | null, songName?: string | null, voteCount?: number | null, user?: { __typename?: 'User', id: string, email: string, username: string } | null } | null> | null, battleRequests?: Array<{ __typename?: 'BattleRequest', id: string, validated?: boolean | null, user?: { __typename?: 'User', id: string, email: string, username: string, createdAt?: string | null } | null } | null> | null } | null };
+export type GetBattleQuery = { __typename?: 'Query', getBattle?: { __typename?: 'Battle', id: string, uuid: string, title: string, status: string, likeDislikeCount?: number | null, commentCount?: number | null, expires?: string | null, createdAt?: string | null, battleUsers?: Array<{ __typename?: 'BattleUser', battleCreator?: boolean | null, createdAt?: string | null, id: string, songArtist?: string | null, songAlbum?: string | null, isWinner?: boolean | null, songImage?: string | null, songLink?: string | null, songName?: string | null, voteCount?: number | null, user?: { __typename?: 'User', id: string, email: string, username: string } | null } | null> | null, battleRequests?: Array<{ __typename?: 'BattleRequest', id: string, validated?: boolean | null, user?: { __typename?: 'User', id: string, email: string, username: string, createdAt?: string | null } | null } | null> | null } | null };
 
 export type GetBattleRequestQueryVariables = Exact<{
   battleRequestId: Scalars['Int'];
@@ -409,7 +410,7 @@ export type GetBattlesQueryVariables = Exact<{
 }>;
 
 
-export type GetBattlesQuery = { __typename?: 'Query', getBattles?: { __typename?: 'getBattlesResponse', total?: number | null, battles?: Array<{ __typename?: 'Battle', id: string, uuid: string, title: string, status: string, likeDislikeCount?: number | null, expires?: string | null, createdAt?: string | null, battleUsers?: Array<{ __typename?: 'BattleUser', songName?: string | null, songArtist?: string | null, songAlbum?: string | null, songImage?: string | null, songLink?: string | null, battleCreator?: boolean | null, isWinner?: boolean | null, user?: { __typename?: 'User', id: string, email: string, createdAt?: string | null, username: string } | null } | null> | null } | null> | null } | null };
+export type GetBattlesQuery = { __typename?: 'Query', getBattles?: { __typename?: 'getBattlesResponse', total?: number | null, battles?: Array<{ __typename?: 'Battle', id: string, uuid: string, title: string, status: string, likeDislikeCount?: number | null, commentCount?: number | null, expires?: string | null, createdAt?: string | null, battleUsers?: Array<{ __typename?: 'BattleUser', songName?: string | null, songArtist?: string | null, songAlbum?: string | null, songImage?: string | null, songLink?: string | null, battleCreator?: boolean | null, isWinner?: boolean | null, user?: { __typename?: 'User', id: string, email: string, createdAt?: string | null, username: string } | null } | null> | null } | null> | null } | null };
 
 export type GetCommentsQueryVariables = Exact<{
   battleId?: InputMaybe<Scalars['Int']>;
@@ -793,6 +794,7 @@ export const GetBattleDocument = gql`
     title
     status
     likeDislikeCount
+    commentCount
     expires
     createdAt
     battleUsers {
@@ -957,6 +959,7 @@ export const GetBattlesDocument = gql`
       title
       status
       likeDislikeCount
+      commentCount
       expires
       createdAt
       battleUsers {

@@ -1,29 +1,30 @@
-query GetBattles($take:Int,$skip:Int,$orderBy:String) {
-  getBattles(take:$take , skip:$skip , orderBy:$orderBy){
-    battles
-    {id
-    uuid
-    title
-    status
-    likeDislikeCount
-    expires
-    createdAt
-    battleUsers {
-      user {
-        id
-        email
-        createdAt
-        username
+query GetBattles($take: Int, $skip: Int, $orderBy: String) {
+  getBattles(take: $take, skip: $skip, orderBy: $orderBy) {
+    battles {
+      id
+      uuid
+      title
+      status
+      likeDislikeCount
+      commentCount
+      expires
+      createdAt
+      battleUsers {
+        user {
+          id
+          email
+          createdAt
+          username
         }
-      songName
-      songArtist
-      songAlbum
-      songImage
-      songLink
-      battleCreator
-      isWinner
+        songName
+        songArtist
+        songAlbum
+        songImage
+        songLink
+        battleCreator
+        isWinner
       }
     }
-      total
+    total
   }
-  }
+}

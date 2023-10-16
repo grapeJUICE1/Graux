@@ -105,6 +105,11 @@ function BattleCardBody({ battle }: BattleCardBody) {
           {battle.likeDislikeCount} likes
         </Text>
       </Center>
+      <Center>
+        <Text fontSize="1.4rem" fontWeight="bold">
+          {battle.commentCount} comments
+        </Text>
+      </Center>
     </Box>
   )
 }

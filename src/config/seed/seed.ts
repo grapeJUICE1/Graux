@@ -197,6 +197,11 @@ const createComments = async (createdUsers: User[], createdBattle: Battle) => {
     newComment.user = createdUsers[i]
     newComment.body = generateParagraph(getRandomInt(3, 20))
     await Comment.save(newComment)
+    const commentCount = await Comment.count({
+      where: { battleId: createdBattle?.id },
+    })
+    createdBattle.commentCount = commentCount
+    await Battle.save(createdBattle)
   }
 }
 const createBattles = async () => {

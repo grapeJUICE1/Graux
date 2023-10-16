@@ -5,6 +5,7 @@ query GetBattle($battleId: Int!, $manage: Boolean!) {
     title
     status
     likeDislikeCount
+    commentCount
     expires
     createdAt
     battleUsers {

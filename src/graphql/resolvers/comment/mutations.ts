@@ -1,11 +1,11 @@
-import { validate } from 'class-validator'
-import { GraphQLError } from 'graphql'
-import Battle from '../../../entities/Battle'
-import Comment from '../../../entities/Comment'
-import User from '../../../entities/User'
-import addMiddleware from '../../../utils/addMiddleware'
-import mapErrors from '../../../utils/mapErrors'
-import isAuthMiddleware from '../../middlewares/isAuth'
+import { validate } from "class-validator"
+import { GraphQLError } from "graphql"
+import Battle from "../../../entities/Battle"
+import Comment from "../../../entities/Comment"
+import User from "../../../entities/User"
+import addMiddleware from "../../../utils/addMiddleware"
+import mapErrors from "../../../utils/mapErrors"
+import isAuthMiddleware from "../../middlewares/isAuth"
 
 export default {
   addComment: addMiddleware(
@@ -17,11 +17,11 @@ export default {
         const battle = await Battle.findOne({ where: { id: battleId } })
         if (!battle) {
           errors.push({
-            path: 'battle',
-            message: 'Battle with that id does not exist',
+            path: "battle",
+            message: "Battle with that id does not exist",
           })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
 
@@ -30,11 +30,11 @@ export default {
         })
         if (!user) {
           errors.push({
-            path: 'jwt',
-            message: 'User logged in does not exist anymore',
+            path: "jwt",
+            message: "User logged in does not exist anymore",
           })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
 
@@ -45,12 +45,18 @@ export default {
 
         errors = await validate(newComment)
         if (errors.length > 0) {
-          return new GraphQLError('Validation Error', {
-            extensions: { errors: mapErrors(errors), code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors: mapErrors(errors), code: "BAD_USER_INPUT" },
           })
         }
-
         const comment = await Comment.save(newComment)
+
+        const commentCount = await Comment.count({
+          where: { battleId: battle?.id },
+        })
+        battle.commentCount = commentCount
+        await Battle.save(battle)
+
         return comment
       } catch (err) {
         throw new Error(err)
@@ -67,28 +73,28 @@ export default {
         })
         if (!comment) {
           errors.push({
-            path: 'comment',
-            message: 'Comment with that id does not exist',
+            path: "comment",
+            message: "Comment with that id does not exist",
           })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
         if (comment.userId !== Number(payload.userId)) {
           errors.push({
-            path: 'comment',
-            message: 'Comment was not created by you',
+            path: "comment",
+            message: "Comment was not created by you",
           })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
         comment.body = body
 
         errors = await validate(comment)
         if (errors.length > 0) {
-          return new GraphQLError('Validation Error', {
-            extensions: { errors: mapErrors(errors), code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors: mapErrors(errors), code: "BAD_USER_INPUT" },
           })
         }
         return await Comment.save(comment)
@@ -107,20 +113,20 @@ export default {
         })
         if (!comment) {
           errors.push({
-            path: 'comment',
-            message: 'Comment with that id does not exist',
+            path: "comment",
+            message: "Comment with that id does not exist",
           })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
         if (comment.userId !== Number(payload.userId)) {
           errors.push({
-            path: 'comment',
-            message: 'Comment was not created by you',
+            path: "comment",
+            message: "Comment was not created by you",
           })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
 

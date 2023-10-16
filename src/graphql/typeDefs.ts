@@ -32,6 +32,7 @@ const typeDefs = `#graphql
    battleUsers: [BattleUser]
    createdAt:String
    likeDislikeCount: Int
+   commentCount:Int
    battleRequests:[BattleRequest]
    userLikeDislike:Int
   }
@@ -158,8 +159,7 @@ export default typeDefs
 // DONE: set and get winner
 // DONE: comments
 // DONE: liking comments and battle
-// TODO: sort , filter/search , pagination
-// TODO: fix ui shit and complete website
+// DONE: sort , filter/search , pagination
 // TODO: deploy website
 
 // version 2

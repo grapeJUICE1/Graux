@@ -65,6 +65,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
             title
             status
             likeDislikeCount
+            commentCount
             expires
             createdAt
             battleUsers {
@@ -98,8 +99,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   })
   return {
     props: {
-      initialBattles: data.getBattles.battles,
-      total: data.getBattles.total,
+      initialBattles: data?.getBattles?.battles,
+      total: data?.getBattles?.total,
     },
   }
 }
