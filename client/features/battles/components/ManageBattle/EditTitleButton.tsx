@@ -15,7 +15,6 @@ import {
   Stack,
   Text,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react"
 import { useFormik } from "formik"
 import * as Yup from "yup"
@@ -34,7 +33,6 @@ function EditTitleButton({
   const updateBattleMutation = useMutation(updateBattle)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const toast = useToast()
 
   const formik = useFormik({
     initialValues: { title: "" },

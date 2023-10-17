@@ -19,6 +19,7 @@ import {
   RemoveBattleUserMutation,
   RemoveCommentMutation,
 } from "../../gql/graphql"
+import useMutation from "../../hooks/useMutation"
 
 interface DeleteButtonProps {
   modalHeader: string
@@ -70,7 +71,6 @@ function DeleteButton({
 }: DeleteButtonProps) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
-
   async function deleteButtonOnClick() {
     try {
       toast.closeAll()
