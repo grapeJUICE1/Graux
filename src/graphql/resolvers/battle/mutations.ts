@@ -79,6 +79,15 @@ export default {
         if (battle instanceof GraphQLError) {
           return battle
         }
+        if (battle.status !== BattleStatus.CREATION) {
+          errors.push({
+            path: "battle",
+            message: "You can only edit the battle if it is in creation phase",
+          })
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
+          })
+        }
         const battleExists = await Battle.findOne({ where: { title } })
 
         if (battleExists) {
