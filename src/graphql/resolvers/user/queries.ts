@@ -17,7 +17,7 @@ export default {
     { search, take, skip, orderBy, avoidClientSideError }
   ) => {
     try {
-      const orderByOptions = ["createdAt", "-createdAt"]
+      const orderByOptions = ["createdAt", "-createdAt", "battlesWon"]
       let mutableSearch = search
       if (search && avoidClientSideError) {
         mutableSearch = search?.substring(1)

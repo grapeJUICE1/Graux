@@ -47,7 +47,11 @@ function Users({ initialTotal, initialUsers, pageSize }: UsersProps) {
       <Center>
         <Box my={5} width="30%">
           <SortButton
-            sortOptions={{ createdAt: "Latest", "-createdAt": "Oldest" }}
+            sortOptions={{
+              createdAt: "Latest",
+              "-createdAt": "Oldest",
+              battlesWon: "Best",
+            }}
             onOrderByChange={onOrderByChange}
           />
         </Box>

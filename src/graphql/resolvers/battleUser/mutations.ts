@@ -1,30 +1,17 @@
-import { GraphQLError } from 'graphql'
-import BattleRequest from '../../../entities/BattleRequest'
-import Battle from '../../../entities/Battle'
-import BattleUser from '../../../entities/BattleUser'
-import User from '../../../entities/User'
-import BattleStatus from '../../../types/BattleStatusEnum'
-import addMiddleware from '../../../utils/addMiddleware'
-import isAuthMiddleware from '../../middlewares/isAuth'
+import { GraphQLError } from "graphql"
+import BattleRequest from "../../../entities/BattleRequest"
+import Battle from "../../../entities/Battle"
+import BattleUser from "../../../entities/BattleUser"
+import User from "../../../entities/User"
+import BattleStatus from "../../../types/BattleStatusEnum"
+import addMiddleware from "../../../utils/addMiddleware"
+import isAuthMiddleware from "../../middlewares/isAuth"
 
 export default {
   addBattleUser: addMiddleware(
     isAuthMiddleware,
     async (_, { battleId, userId }, { payload }) => {
       let errors = []
-      const battleRequest = await BattleRequest.findOne({
-        where: { battleId: battleId, userId: userId },
-        relations: { battle: { battleUsers: true }, user: true },
-      })
-      if (battleRequest) {
-        errors.push({
-          path: 'username',
-          message: 'You have already sent battle request once to this user',
-        })
-        return new GraphQLError('Validation Error', {
-          extensions: { errors, code: 'BAD_USER_INPUT' },
-        })
-      }
       const battle = await Battle.findOne({
         where: { id: battleId },
         relations: { battleUsers: true },
@@ -32,69 +19,83 @@ export default {
 
       if (!battle) {
         errors.push({
-          path: 'username',
-          message: 'Battle with that id does not exist',
+          path: "username",
+          message: "Battle with that id does not exist",
         })
-        return new GraphQLError('Validation Error', {
-          extensions: { errors, code: 'BAD_USER_INPUT' },
+        return new GraphQLError("Validation Error", {
+          extensions: { errors, code: "BAD_USER_INPUT" },
         })
       }
 
       if (battle.status !== BattleStatus.CREATION) {
         errors.push({
-          path: 'username',
+          path: "username",
           message:
-            'You can only add users to battle if battle is being created',
+            "You can only add users to battle if battle is being created",
         })
-        return new GraphQLError('Validation Error', {
-          extensions: { errors, code: 'BAD_USER_INPUT' },
+        return new GraphQLError("Validation Error", {
+          extensions: { errors, code: "BAD_USER_INPUT" },
         })
       }
       if (battle.battleUsers.length >= 2) {
         errors.push({
-          path: 'username',
-          message: 'Battle already has 2 users',
+          path: "username",
+          message: "Battle already has 2 users",
         })
-        return new GraphQLError('Validation Error', {
-          extensions: { errors, code: 'BAD_USER_INPUT' },
+        return new GraphQLError("Validation Error", {
+          extensions: { errors, code: "BAD_USER_INPUT" },
+        })
+      }
+      const battleRequest = await BattleRequest.findOne({
+        where: { battleId: battleId },
+        relations: { battle: { battleUsers: true }, user: true },
+      })
+      if (battleRequest) {
+        errors.push({
+          path: "username",
+          message:
+            "You Can't send more than one battle request , to send another battle request , delete the battle request u have already sent",
+        })
+        return new GraphQLError("Validation Error", {
+          extensions: { errors, code: "BAD_USER_INPUT" },
         })
       }
       const user = await User.findOne({ where: { id: userId } })
       if (!user) {
         errors.push({
-          path: 'username',
-          message: 'User with that id does not exist',
+          path: "username",
+          message: "User with that id does not exist",
         })
-        return new GraphQLError('Validation Error', {
-          extensions: { errors, code: 'BAD_USER_INPUT' },
+        return new GraphQLError("Validation Error", {
+          extensions: { errors, code: "BAD_USER_INPUT" },
         })
       }
 
       const battleCreatorId = battle.getBattleCreator
       if (!battleCreatorId) {
-        errors.push({ path: 'battle', message: 'Battle does not exist' })
-        return new GraphQLError('Validation Error', {
-          extensions: { errors, code: 'BAD_USER_INPUT' },
+        errors.push({ path: "battle", message: "Battle does not exist" })
+        return new GraphQLError("Validation Error", {
+          extensions: { errors, code: "BAD_USER_INPUT" },
         })
       }
 
       if (user.id === battleCreatorId) {
         errors.push({
-          path: 'username',
-          message: 'You cannnot request yourself to join the battle',
+          path: "username",
+          message: "You cannnot request yourself to join the battle",
         })
-        return new GraphQLError('Validation Error', {
-          extensions: { errors, code: 'BAD_USER_INPUT' },
+        return new GraphQLError("Validation Error", {
+          extensions: { errors, code: "BAD_USER_INPUT" },
         })
       }
 
       if (Number(payload.userId) !== battleCreatorId) {
         errors.push({
-          path: 'username',
-          message: 'Battle was not created by you',
+          path: "username",
+          message: "Battle was not created by you",
         })
-        return new GraphQLError('Validation Error', {
-          extensions: { errors, code: 'BAD_USER_INPUT' },
+        return new GraphQLError("Validation Error", {
+          extensions: { errors, code: "BAD_USER_INPUT" },
         })
       }
 
@@ -118,50 +119,50 @@ export default {
 
         if (!battleUser) {
           errors.push({
-            path: 'id',
-            message: 'BattleUser with that id was not found',
+            path: "id",
+            message: "BattleUser with that id was not found",
           })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
 
         if (battleUser.battle.status !== BattleStatus.CREATION) {
           errors.push({
-            path: 'battle',
+            path: "battle",
             message:
-              'You can only add users to battle if battle is being created',
+              "You can only add users to battle if battle is being created",
           })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
         if (battleUser.battleCreator === true) {
           errors.push({
-            path: 'battleUser',
+            path: "battleUser",
             message: "You can't remove yourself from the battle you created",
           })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
 
         const battleCreatorId = battleUser.battle.getBattleCreator
         if (!battleCreatorId) {
-          errors.push({ path: 'battle', message: 'Battle does not exist' })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          errors.push({ path: "battle", message: "Battle does not exist" })
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
 
         if (battleCreatorId !== Number(payload.userId)) {
           if (battleUser.userId !== Number(payload.userId)) {
             errors.push({
-              path: 'battleUser',
+              path: "battleUser",
               message: "You can't remove no one but yourself from the battle",
             })
-            return new GraphQLError('Validation Error', {
-              extensions: { errors, code: 'BAD_USER_INPUT' },
+            return new GraphQLError("Validation Error", {
+              extensions: { errors, code: "BAD_USER_INPUT" },
             })
           }
         }
@@ -194,22 +195,22 @@ export default {
 
         if (!battleUser) {
           errors.push({
-            path: 'battleUser',
-            message: 'You are not a participant of this battle',
+            path: "battleUser",
+            message: "You are not a participant of this battle",
           })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
 
         if (battleUser.battle.status !== BattleStatus.CREATION) {
           errors.push({
-            path: 'battleUser',
+            path: "battleUser",
             message:
-              'You can only add users to battle if battle is being created',
+              "You can only add users to battle if battle is being created",
           })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
         battleUser.songName = songName
