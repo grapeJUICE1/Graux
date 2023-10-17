@@ -1,13 +1,13 @@
-import { validate } from 'class-validator'
-import { GraphQLError } from 'graphql'
-import Battle from '../../../entities/Battle'
-import BattleUser from '../../../entities/BattleUser'
-import User from '../../../entities/User'
-import BattleStatus from '../../../types/BattleStatusEnum'
-import addMiddleware from '../../../utils/addMiddleware'
-import mapErrors from '../../../utils/mapErrors'
-import isAuthMiddleware from '../../middlewares/isAuth'
-import { checkIfBattleExistsAndBattleCreatedByUser } from './utils'
+import { validate } from "class-validator"
+import { GraphQLError } from "graphql"
+import Battle from "../../../entities/Battle"
+import BattleUser from "../../../entities/BattleUser"
+import User from "../../../entities/User"
+import BattleStatus from "../../../types/BattleStatusEnum"
+import addMiddleware from "../../../utils/addMiddleware"
+import mapErrors from "../../../utils/mapErrors"
+import isAuthMiddleware from "../../middlewares/isAuth"
+import { checkIfBattleExistsAndBattleCreatedByUser } from "./utils"
 
 export default {
   createBattle: addMiddleware(
@@ -20,9 +20,9 @@ export default {
         const titleTaken = await Battle.findOne({ where: { title } })
 
         if (titleTaken) {
-          errors.push({ path: 'title', message: 'Title is already taken' })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          errors.push({ path: "title", message: "Title is already taken" })
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
 
@@ -30,13 +30,13 @@ export default {
         const battleCreatedBy = req.user
         if (!battleCreatedBy) {
           errors.push({
-            path: 'jwt',
-            message: 'User logged in does not exist anymore',
+            path: "jwt",
+            message: "User logged in does not exist anymore",
           })
-          return new GraphQLError('Authentication Error', {
+          return new GraphQLError("Authentication Error", {
             extensions: {
               errors,
-              code: 'BAD_USER_INPUT',
+              code: "BAD_USER_INPUT",
             },
           })
         }
@@ -48,8 +48,8 @@ export default {
         errors = await validate(newBattle)
 
         if (errors.length > 0)
-          return new GraphQLError('Validation Error', {
-            extensions: { errors: mapErrors(errors), code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors: mapErrors(errors), code: "BAD_USER_INPUT" },
           })
 
         await Battle.save(newBattle)
@@ -82,9 +82,9 @@ export default {
         const battleExists = await Battle.findOne({ where: { title } })
 
         if (battleExists) {
-          errors.push({ path: 'title', message: 'Title is already taken' })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          errors.push({ path: "title", message: "Title is already taken" })
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
 
@@ -93,8 +93,8 @@ export default {
 
         errors = await validate(battle)
         if (errors.length > 0)
-          return new GraphQLError('Validation Error', {
-            extensions: { errors: mapErrors(errors), code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors: mapErrors(errors), code: "BAD_USER_INPUT" },
           })
 
         await Battle.save(battle)
@@ -109,12 +109,23 @@ export default {
     isAuthMiddleware,
     async (_, { battleId }, { req }) => {
       try {
+        let errors = []
         const battle = await checkIfBattleExistsAndBattleCreatedByUser(
           battleId,
           req.user as User
         )
         if (battle instanceof GraphQLError) {
           return battle
+        }
+        if (battle.status !== BattleStatus.CREATION) {
+          errors.push({
+            path: "battle",
+            message:
+              "You can only delete a battle if the battle is in creation phase",
+          })
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
+          })
         }
         await Battle.remove(battle)
 
@@ -141,33 +152,33 @@ export default {
       // check if battle is in creation phase
       if (battle.status !== BattleStatus.CREATION) {
         errors.push({
-          path: 'battle',
-          message: 'Battle has already started or over',
+          path: "battle",
+          message: "Battle has already started or over",
         })
-        return new GraphQLError('Validation Error', {
-          extensions: { errors, code: 'BAD_USER_INPUT' },
+        return new GraphQLError("Validation Error", {
+          extensions: { errors, code: "BAD_USER_INPUT" },
         })
       }
 
       // check if battle has atleast 2 users
       if (battle.battleUsers.length < 2) {
         errors.push({
-          path: 'battle',
-          message: 'Battle must have 2 participants',
+          path: "battle",
+          message: "Battle must have 2 participants",
         })
-        return new GraphQLError('Validation Error', {
-          extensions: { errors, code: 'BAD_USER_INPUT' },
+        return new GraphQLError("Validation Error", {
+          extensions: { errors, code: "BAD_USER_INPUT" },
         })
       }
 
       // check if users have chosen songs
       if (!battle.battleUsersChosenSong) {
         errors.push({
-          path: 'battle',
-          message: 'Battle participants havent chose songs yet',
+          path: "battle",
+          message: "Battle participants havent chose songs yet",
         })
-        return new GraphQLError('Validation Error', {
-          extensions: { errors, code: 'BAD_USER_INPUT' },
+        return new GraphQLError("Validation Error", {
+          extensions: { errors, code: "BAD_USER_INPUT" },
         })
       }
 

@@ -131,7 +131,7 @@ export default {
           errors.push({
             path: "battle",
             message:
-              "You can only add users to battle if battle is being created",
+              "You can only delete a battle user if the battle is in creation phase",
           })
           return new GraphQLError("Validation Error", {
             extensions: { errors, code: "BAD_USER_INPUT" },
