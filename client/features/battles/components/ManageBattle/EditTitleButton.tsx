@@ -20,6 +20,7 @@ import {
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { useUpdateBattleMutation } from "../../../../gql/graphql"
+import useMutation from "../../../../hooks/useMutation"
 
 function EditTitleButton({
   buttonProps,
@@ -29,6 +30,9 @@ function EditTitleButton({
   battleId: number
 }) {
   const [updateBattle] = useUpdateBattleMutation()
+
+  const updateBattleMutation = useMutation(updateBattle)
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
 
@@ -42,41 +46,16 @@ function EditTitleButton({
     }),
 
     onSubmit: async (values, { setFieldError }) => {
-      if (true) {
-        try {
-          toast.closeAll()
-          toast({
-            description: "Please wait for a few seconds",
-            duration: null,
-            isClosable: true,
-          })
-          await updateBattle({ variables: { battleId, title: values.title } })
+      await updateBattleMutation(
+        {
+          variables: { battleId, title: values.title },
+        },
+
+        () => {
           onClose()
-          toast.closeAll()
-          toast({
-            description: "Edited Title Successfully",
-            duration: 3000,
-            status: "success",
-          })
-        } catch (err) {
-          toast.closeAll()
-          //@ts-ignore
-          let error = err?.graphQLErrors?.at(0).extensions?.errors[0] as {
-            path: string
-            message: string
-          }
-          if (error) {
-            setFieldError("title", error.message)
-          } else {
-            onClose()
-            toast({
-              description: "Something went wrong",
-              duration: 3000,
-              status: "error",
-            })
-          }
-        }
-      }
+        },
+        setFieldError
+      )
     },
   })
   return (

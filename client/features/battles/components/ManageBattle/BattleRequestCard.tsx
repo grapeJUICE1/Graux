@@ -11,6 +11,7 @@ interface BattleRequestCardProps {
 function BattleRequestCard({ battleRequest }: BattleRequestCardProps) {
   const [removeBattleRequest] = useRemoveBattleRequestMutation()
   const toast = useToast()
+
   function copyLinkButtonOnClick(requestId: number) {
     navigator.clipboard.writeText(
       window.location.origin + `/users/approveBattleRequest/${requestId}`
@@ -21,6 +22,7 @@ function BattleRequestCard({ battleRequest }: BattleRequestCardProps) {
       duration: 2000,
     })
   }
+
   return (
     <Box
       key={battleRequest.id}
