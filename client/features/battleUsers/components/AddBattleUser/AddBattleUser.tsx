@@ -13,7 +13,6 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react"
-import { isArray } from "class-validator"
 import { useFormik } from "formik"
 import { useRouter } from "next/router"
 import { addBattleUserSchema } from "../../../../data/validationSchemas"

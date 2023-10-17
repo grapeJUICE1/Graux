@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react"
 import { useFormik } from "formik"
 import { useRouter } from "next/router"
-import { Fragment } from "react"
+import { Fragment, useState } from "react"
 import { useChooseSongMutation } from "../../../../gql/graphql"
 import useMutation from "../../../../hooks/useMutation"
 import useAutocomplete from "../../hooks/useAutocomplete"
@@ -23,8 +23,11 @@ import useAutocomplete from "../../hooks/useAutocomplete"
 function ChooseSong() {
   const router = useRouter()
   const toast = useToast()
+
   const [chooseSong] = useChooseSongMutation()
   const chooseSongMutation = useMutation(chooseSong)
+  const [t, setT] = useState(null)
+
   const formik = useFormik({
     initialValues: {
       songName: "",
@@ -54,19 +57,29 @@ function ChooseSong() {
 
   const { options, option, chooseOption } = useAutocomplete<any, any>(
     (setOptions) => {
-      let songNameInUrl = formik.values.songName.replace(/ /g, "%20")
-      fetch(
-        `https://ws.audioscrobbler.com/2.0/?limit=15&method=track.search&track=${songNameInUrl}&api_key=095ee494d48c0071adda4e2816787daa&format=json`
+      if (t) clearTimeout(t)
+      setT(
+        //@ts-ignore
+        setTimeout(
+          () => {
+            let songNameInUrl = formik.values.songName.replace(/ /g, "%20")
+            fetch(
+              `https://ws.audioscrobbler.com/2.0/?limit=15&method=track.search&track=${songNameInUrl}&api_key=095ee494d48c0071adda4e2816787daa&format=json`
+            )
+              .then(async (response) => {
+                const data = await response.json()
+                let songs = data?.results?.trackmatches?.track
+                if (songs) setOptions(songs)
+              })
+              .catch((_err) => {
+                console.log(_err)
+                toast({ status: "error", title: "Something went wrong" })
+              })
+          },
+
+          1000
+        )
       )
-        .then(async (response) => {
-          const data = await response.json()
-          let songs = data?.results?.trackmatches?.track
-          if (songs) setOptions(songs)
-        })
-        .catch((_err) => {
-          console.log(_err)
-          toast({ status: "error", title: "Something went wrong" })
-        })
     },
     formik.values.songName
   )
@@ -172,7 +185,7 @@ function ChooseSong() {
                   id="songName"
                   name="songName"
                   autoFocus
-                  onChange={async (evt) => {
+                  onChange={(evt) => {
                     formik.handleChange(evt)
                   }}
                 />
