@@ -83,6 +83,7 @@ function BattleUserInfo({
         {battle?.status === "creation" && (
           <ChooseSongButton
             battleId={battle?.id}
+            battleStatus={battle?.status}
             buttonProps={{ size: "lg", colorScheme: "teal" }}
           />
         )}

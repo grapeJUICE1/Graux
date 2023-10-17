@@ -90,6 +90,7 @@ function BattleCardFooter({ battle }: BattleCardFooterProps) {
           {userIsInBattle && (
             <ChooseSongButton
               battleId={battle?.id}
+              battleStatus={battle?.status}
               buttonProps={{ mt: 5, colorScheme: "teal", size: "md" }}
             />
           )}

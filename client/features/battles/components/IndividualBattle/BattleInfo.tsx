@@ -71,6 +71,7 @@ function BattleInfo({ battle, totalVotes, setBattle }: BattleInfoProps) {
           <Center>
             <ChooseSongButton
               battleId={battle?.id}
+              battleStatus={battle?.status}
               buttonProps={{ colorScheme: "teal", size: "md" }}
             />
           </Center>

@@ -3,16 +3,22 @@ import Link from "next/link"
 
 function ChooseSongButton({
   battleId,
+  battleStatus,
   buttonProps,
 }: {
   battleId: string
   buttonProps?: ButtonProps
+  battleStatus: string
 }) {
   return (
     <>
-      <Link href={`/battles/${battleId}/choose`}>
-        <Button {...buttonProps}>Choose Song</Button>
-      </Link>
+      {battleStatus === "creation" && (
+        <>
+          <Link href={`/battles/${battleId}/choose`}>
+            <Button {...buttonProps}>Choose Song</Button>
+          </Link>
+        </>
+      )}
     </>
   )
 }
