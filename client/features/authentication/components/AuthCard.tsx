@@ -11,21 +11,21 @@ import {
   Text,
   useColorModeValue,
   Center,
-} from '@chakra-ui/react'
-import { useFormik } from 'formik'
-import NextLink from 'next/link'
-import { useRouter } from 'next/router'
-import { loginSchema, registerSchema } from '../../../data/validationSchemas'
+} from "@chakra-ui/react"
+import { useFormik } from "formik"
+import NextLink from "next/link"
+import { useRouter } from "next/router"
+import { loginSchema, registerSchema } from "../../../data/validationSchemas"
 import {
   MeDocument,
   MeQuery,
   useLoginMutation,
   useRegisterMutation,
-} from '../../../gql/graphql'
-import useMutation from '../../../hooks/useMutation'
+} from "../../../gql/graphql"
+import useMutation from "../../../hooks/useMutation"
 
 interface AuthCardProps {
-  authType: 'register' | 'login'
+  authType: "register" | "login"
 }
 function AuthCard({ authType }: AuthCardProps) {
   let [login] = useLoginMutation()
@@ -37,17 +37,17 @@ function AuthCard({ authType }: AuthCardProps) {
 
   const formik = useFormik({
     initialValues:
-      authType === 'login'
+      authType === "login"
         ? {
-            username: '',
-            password: '',
+            username: "",
+            password: "",
           }
-        : { email: '', username: '', password: '' },
+        : { email: "", username: "", password: "" },
 
-    validationSchema: authType === 'login' ? loginSchema : registerSchema,
+    validationSchema: authType === "login" ? loginSchema : registerSchema,
 
     onSubmit: async (values, { setFieldError }) => {
-      if (authType === 'login') {
+      if (authType === "login") {
         await loginMutation(
           {
             variables: {
@@ -63,15 +63,17 @@ function AuthCard({ authType }: AuthCardProps) {
             },
           },
           () => {
-            router.replace('/')
+            setTimeout(() => {
+              window.location.href = "/"
+            }, 1000)
           },
           setFieldError
         )
-      } else if (authType === 'register') {
+      } else if (authType === "register") {
         await registerMutation(
           { variables: { ...values } },
           () => {
-            router.replace('/auth/login')
+            router.replace("/auth/login")
           },
           setFieldError
         )
@@ -81,26 +83,26 @@ function AuthCard({ authType }: AuthCardProps) {
 
   return (
     <Flex
-      minH={'100vh'}
-      align={'center'}
-      justify={'center'}
-      bg={useColorModeValue('gray.50', 'gray.800')}
+      minH={"100vh"}
+      align={"center"}
+      justify={"center"}
+      bg={useColorModeValue("gray.50", "gray.800")}
     >
       <form onSubmit={formik.handleSubmit}>
-        <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
-          <Stack align={'center'}>
-            <Heading fontSize={'4xl'}>
-              {authType === 'login' ? 'Log in to your' : 'Register for a new'}{' '}
+        <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+          <Stack align={"center"}>
+            <Heading fontSize={"4xl"}>
+              {authType === "login" ? "Log in to your" : "Register for a new"}{" "}
               account
             </Heading>
-            <Text fontSize={'lg'} color={'gray.600'}>
-              to enjoy all of our cool features{' '}
+            <Text fontSize={"lg"} color={"gray.600"}>
+              to enjoy all of our cool features{" "}
             </Text>
           </Stack>
           <Box
-            rounded={'lg'}
-            bg={useColorModeValue('white', 'gray.700')}
-            boxShadow={'lg'}
+            rounded={"lg"}
+            bg={useColorModeValue("white", "gray.700")}
+            boxShadow={"lg"}
             p={8}
           >
             <Stack spacing={4}>
@@ -109,7 +111,7 @@ function AuthCard({ authType }: AuthCardProps) {
                   <FormControl key={field} id={field}>
                     <FormLabel>Your {field}</FormLabel>
                     <Input
-                      type={field === 'password' ? 'password' : 'text'}
+                      type={field === "password" ? "password" : "text"}
                       {...formik.getFieldProps(field)}
                     />
 
@@ -117,7 +119,7 @@ function AuthCard({ authType }: AuthCardProps) {
                       //@ts-ignore
                       formik.touched[field] && formik.errors[field] ? (
                         //@ts-ignore
-                        <Text color='red.500'>{formik.errors[field]}</Text>
+                        <Text color="red.500">{formik.errors[field]}</Text>
                       ) : null
                     }
                   </FormControl>
@@ -126,32 +128,32 @@ function AuthCard({ authType }: AuthCardProps) {
               <Stack spacing={10}>
                 <Button
                   isDisabled={!formik.isValid}
-                  type='submit'
-                  bg={'cyan.400'}
-                  color={'white'}
+                  type="submit"
+                  bg={"cyan.400"}
+                  color={"white"}
                   mt={5}
                   _hover={{
-                    bg: 'cyan.500',
+                    bg: "cyan.500",
                   }}
                 >
-                  {authType === 'login' ? 'Log In' : 'Register'}
+                  {authType === "login" ? "Log In" : "Register"}
                 </Button>
               </Stack>
               <Stack pt={6}>
-                <Text align={'center'}>
-                  {authType === 'login'
+                <Text align={"center"}>
+                  {authType === "login"
                     ? "Don't have an account?"
-                    : 'Already have an account?'}
+                    : "Already have an account?"}
                 </Text>
                 <Center>
                   <Link
                     as={NextLink}
                     href={`/auth/${
-                      authType === 'login' ? 'register' : 'login'
+                      authType === "login" ? "register" : "login"
                     }`}
-                    color={'blue.400'}
+                    color={"blue.400"}
                   >
-                    {authType === 'login' ? 'Register' : 'Log In'}
+                    {authType === "login" ? "Register" : "Log In"}
                   </Link>
                 </Center>
               </Stack>
