@@ -101,28 +101,33 @@ function ManageBattle() {
                     <BattleUserCard
                       battleUser={battleUser}
                       battleCreator={battleCreator}
+                      battleStatus={battle?.status}
                     />
                   )
                 })}
             </Box>
-            <Box width={{ base: "100%", sm: "100%", md: "50%" }}>
-              <Text fontSize="2xl" mt="10">
-                Battle Requests
-              </Text>
-              <Button
-                colorScheme="cyan"
-                onClick={() =>
-                  router.push(`/battles/${router?.query?.id}/users`)
-                }
-              >
-                Request People To Join the battle
-              </Button>
-              {battle?.battleRequests &&
-                //@ts-ignore
-                battle?.battleRequests?.map((battleRequest: BattleRequest) => {
-                  return <BattleRequestCard battleRequest={battleRequest} />
-                })}
-            </Box>
+            {battle?.status === "creation" && (
+              <Box width={{ base: "100%", sm: "100%", md: "50%" }}>
+                <Text fontSize="2xl" mt="10">
+                  Battle Requests
+                </Text>
+                <Button
+                  colorScheme="cyan"
+                  onClick={() =>
+                    router.push(`/battles/${router?.query?.id}/users`)
+                  }
+                >
+                  Request People To Join the battle
+                </Button>
+                {battle?.battleRequests &&
+                  battle?.battleRequests?.map(
+                    //@ts-ignore
+                    (battleRequest: BattleRequest) => {
+                      return <BattleRequestCard battleRequest={battleRequest} />
+                    }
+                  )}
+              </Box>
+            )}
           </Stack>
         </Box>
       ) : (

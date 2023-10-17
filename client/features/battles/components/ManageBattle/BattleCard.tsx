@@ -61,7 +61,7 @@ function BattleCard({ battle }: BattleCardProps) {
       })}
       <Center>
         <Box>
-          {battle?.id && (
+          {battle?.id && battle.status === "creation" && (
             <EditTitleButton
               buttonProps={{ colorScheme: "cyan", mt: "5", mx: "3" }}
               battleId={+battle?.id}
@@ -70,7 +70,7 @@ function BattleCard({ battle }: BattleCardProps) {
           {battle && isBattleStartable && (
             <StartBattleButton battleId={+battle?.id} />
           )}
-          {battle && (
+          {battle && battle.status === "creation" && (
             <DeleteButton
               modalHeader="Delete Battle"
               modalBody="Are you sure you want to remove this battle??"

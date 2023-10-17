@@ -9,10 +9,14 @@ import {
 interface BattleUserCardProps {
   battleUser: BattleUser
   battleCreator: BattleUser
+  battleStatus: string
 }
-function BattleUserCard({ battleUser, battleCreator }: BattleUserCardProps) {
+function BattleUserCard({
+  battleUser,
+  battleCreator,
+  battleStatus,
+}: BattleUserCardProps) {
   const [removeBattleUser] = useRemoveBattleUserMutation()
-
   let battleUserPropertiesToDisplay = {
     username: "Username",
     email: "Email",
@@ -82,17 +86,18 @@ function BattleUserCard({ battleUser, battleCreator }: BattleUserCardProps) {
         <Text>Song not chosen yet</Text>
       )}
       <br />
-      {battleCreator?.user?.username !== battleUser?.user?.username && (
-        <DeleteButton
-          modalHeader="Remove Battle User"
-          modalBody="Are you sure you want to remove this battle user?"
-          mutationFunc={() =>
-            removeBattleUser({
-              variables: { battleUserId: +battleUser?.id },
-            })
-          }
-        />
-      )}
+      {battleStatus === "creation" &&
+        battleCreator?.user?.username !== battleUser?.user?.username && (
+          <DeleteButton
+            modalHeader="Remove Battle User"
+            modalBody="Are you sure you want to remove this battle user?"
+            mutationFunc={() =>
+              removeBattleUser({
+                variables: { battleUserId: +battleUser?.id },
+              })
+            }
+          />
+        )}
     </Box>
   )
 }

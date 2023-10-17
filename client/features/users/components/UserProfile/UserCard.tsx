@@ -10,7 +10,6 @@ interface UserCardProps {
 function UserCard({ user, me }: UserCardProps) {
   const [deleteUser] = useDeleteUserMutation()
   const router = useRouter()
-  console.log(user)
   return (
     <Box
       maxW={"320px"}

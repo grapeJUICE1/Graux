@@ -38,7 +38,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!query?.sort) {
     query.sort = "createdAt"
   }
-  console.log(query?.search)
   const search = query?.search || null
 
   const orderBy = query.sort

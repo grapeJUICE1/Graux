@@ -40,7 +40,6 @@ function UserProfile() {
         })
     }
   }, [router?.query?.id])
-  console.log("hhahaj k ", user)
   return (
     <>
       {user?.id ? (

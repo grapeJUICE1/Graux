@@ -9,7 +9,6 @@ export async function getServerSideProps({
   req,
 }: GetServerSidePropsContext) {
   if (params?.id) {
-    console.log(req.cookies?.jid)
     const { data } = await client.query({
       query: gql`
 query GetBattle {
@@ -61,7 +60,6 @@ query GetBattle {
         },
       },
     })
-    console.log(data?.getBattle)
     return {
       props: {
         battle: data.getBattle,
