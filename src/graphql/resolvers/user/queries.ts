@@ -27,7 +27,7 @@ export default {
         take: take || undefined,
         skip: skip || undefined,
         order: orderByOptions.includes(orderBy)
-          ? orderBy.at(0) === "-"
+          ? Array?.from(orderBy)[0] === "-"
             ? { [orderBy.substring(1)]: "ASC" }
             : { [orderBy]: "DESC" }
           : { createdAt: "DESC" },

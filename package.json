@@ -27,7 +27,7 @@
     "typeorm": "0.3.10"
   },
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "export NODE_ENV=production && ts-node src/index.ts",
     "dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"ts-node src/index.ts\"",
     "seed": "ts-node src/config/seed/seed.ts",
     "typeorm": "typeorm-ts-node-commonjs"
