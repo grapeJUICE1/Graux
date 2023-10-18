@@ -76,12 +76,10 @@ export default {
       })
 
       if (!battleUsers) return new Error("Given user has no battles")
-      // console.log({battles,lel:battles[0].battle,total})
       const battles = []
       battleUsers.forEach((battleUser) => {
         battles.push(battleUser.battle)
       })
-      console.log(battles)
       return {
         battles,
         total,

@@ -18,7 +18,6 @@ export default function App({ Component, pageProps }: AppProps) {
     })
       .then(async (response) => {
         const data = await response.json()
-        console.log("got the access token bish lelelelel", data)
         setAccessToken(data.accessToken)
         setLoading(false)
       })

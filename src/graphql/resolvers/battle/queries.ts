@@ -10,12 +10,9 @@ export default {
     _: any,
     { take, skip, orderBy, avoidClientSideError, search }
   ) {
-    console.log(search, "hello", avoidClientSideError)
-
     let mutableSearch = search
     if (search && avoidClientSideError) {
       mutableSearch = search?.substring(1)
-      console.log(mutableSearch)
     }
     const orderByOptions = [
       "title",
