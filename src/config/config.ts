@@ -2,7 +2,7 @@ import path from "path"
 import dotenv from "dotenv"
 // Parsing the env file.
 if (process.env.NODE_ENV === "production") {
-  dotenv.config({ path: path.resolve(__dirname, "/etc/secrets/config.env") })
+  dotenv.config({ path: "/etc/secrets/config.env" })
 } else {
   dotenv.config({ path: path.resolve(__dirname, "./config.env") })
 }
