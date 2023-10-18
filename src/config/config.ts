@@ -1,8 +1,11 @@
 import path from "path"
 import dotenv from "dotenv"
 // Parsing the env file.
-dotenv.config({ path: path.resolve(__dirname, "./config.env") })
-
+if (process.env.NODE_ENV === "production") {
+  dotenv.config({ path: path.resolve(__dirname, "/etc/secrets/config.env") })
+} else {
+  dotenv.config({ path: path.resolve(__dirname, "./config.env") })
+}
 // Interface to load env variables
 // Note these variables can possibly be undefined
 // as someone could skip these varibales or not setup a .env file at all
