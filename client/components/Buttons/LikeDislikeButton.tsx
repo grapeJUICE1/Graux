@@ -1,6 +1,13 @@
 import { ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons"
 import { Button, HStack, Text } from "@chakra-ui/react"
-import { Battle, Comment, useLikeDislikeMutation } from "../../gql/graphql"
+import { useRouter } from "next/router"
+import { useEffect } from "react"
+import {
+  Battle,
+  Comment,
+  useLikeDislikeMutation,
+  useMeLazyQuery,
+} from "../../gql/graphql"
 import useMutation from "../../hooks/useMutation"
 
 interface likeDislikeComponentProps {
@@ -16,6 +23,12 @@ function LikeDislike({
   const [likeDislike] = useLikeDislikeMutation()
 
   const likeDislikeMutation = useMutation(likeDislike)
+  const router = useRouter()
+
+  const [meQuery, { data }] = useMeLazyQuery()
+  useEffect(() => {
+    meQuery()
+  }, [])
 
   async function likeDislikeButtonOnClick(value: number, id: number) {
     await likeDislikeMutation(
@@ -46,10 +59,12 @@ function LikeDislike({
       <Button
         colorScheme={entity.userLikeDislike === 1 ? `orange` : "gray"}
         onClick={() =>
-          likeDislikeButtonOnClick(
-            entity.userLikeDislike === 1 ? 0 : 1,
-            +entity.id
-          )
+          data?.me
+            ? likeDislikeButtonOnClick(
+                entity.userLikeDislike === 1 ? 0 : 1,
+                +entity.id
+              )
+            : router.replace("/auth/login")
         }
       >
         <ArrowUpIcon />
@@ -58,10 +73,12 @@ function LikeDislike({
       <Button
         colorScheme={entity.userLikeDislike === -1 ? `red` : "gray"}
         onClick={() =>
-          likeDislikeButtonOnClick(
-            entity.userLikeDislike === -1 ? 0 : -1,
-            +entity.id
-          )
+          data?.me
+            ? likeDislikeButtonOnClick(
+                entity.userLikeDislike === -1 ? 0 : -1,
+                +entity.id
+              )
+            : router.replace("/auth/login")
         }
       >
         <ArrowDownIcon />

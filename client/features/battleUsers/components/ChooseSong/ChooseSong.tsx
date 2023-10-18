@@ -64,7 +64,7 @@ function ChooseSong() {
           () => {
             let songNameInUrl = formik.values.songName.replace(/ /g, "%20")
             fetch(
-              `https://ws.audioscrobbler.com/2.0/?limit=15&method=track.search&track=${songNameInUrl}&api_key=095ee494d48c0071adda4e2816787daa&format=json`
+              `https://ws.audioscrobbler.com/2.0/?limit=15&method=track.search&track=${songNameInUrl}&api_key=${process.env.NEXT_PUBLIC_LAST_FM_API_KEY}&format=json`
             )
               .then(async (response) => {
                 const data = await response.json()
@@ -93,7 +93,7 @@ function ChooseSong() {
         isClosable: true,
       })
       const trackResponse = await fetch(
-        `https://ws.audioscrobbler.com/2.0/?limit=15&method=track.getInfo&track=${song.name}&artist=${song.artist}&api_key=095ee494d48c0071adda4e2816787daa&format=json`
+        `https://ws.audioscrobbler.com/2.0/?limit=15&method=track.getInfo&track=${song.name}&artist=${song.artist}&api_key=${process.env.NEXT_PUBLIC_LAST_FM_API_KEY}&format=json`
       )
       const data = await trackResponse.json()
       const track = data?.track
