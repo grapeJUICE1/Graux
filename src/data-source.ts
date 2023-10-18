@@ -24,7 +24,7 @@ const AppDataSource = new DataSource({
       ? config.DATABASE_NAME
       : config.LOCAL_DATABASE_NAME,
 
-  synchronize: true,
+  synchronize: process.env.NODE_ENV === "production" ? false : true,
   logging: false,
   entities: ["src/entities/**/*.ts"],
   migrations: ["src/migration/**/*.ts"],

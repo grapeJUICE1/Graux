@@ -29,7 +29,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"ts-node src/index.ts\"",
-    "typeorm": "typeorm-ts-node-commonjs",
-    "seed": "ts-node src/config/seed/seed.ts"
+    "seed": "ts-node src/config/seed/seed.ts",
+    "typeorm": "typeorm-ts-node-commonjs"
   }
 }
