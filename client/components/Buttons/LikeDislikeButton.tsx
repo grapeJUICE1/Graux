@@ -35,7 +35,6 @@ function LikeDislike({
       }
     )
   }
-
   return (
     <HStack
       width="100%"

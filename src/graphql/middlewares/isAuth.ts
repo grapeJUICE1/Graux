@@ -1,7 +1,7 @@
-import { verify } from 'jsonwebtoken'
-import config from '../../config/config'
-import User from '../../entities/User'
-import { GraphQLMiddlewareFunc } from '../../types/graphql-utils'
+import { verify } from "jsonwebtoken"
+import config from "../../config/config"
+import User from "../../entities/User"
+import { GraphQLMiddlewareFunc } from "../../types/graphql-utils"
 
 const isAuthMiddleware: GraphQLMiddlewareFunc = async (
   resolver,
@@ -13,34 +13,33 @@ const isAuthMiddleware: GraphQLMiddlewareFunc = async (
 ) => {
   let authorized = false
 
-  const authorization = context.req.headers['authorization'] // bearer token
+  const authorization = context.req.headers["authorization"] // bearer token
   if (!authorization) {
     if (justCheckIfAuthorized) {
       const result = await resolver(parent, args, context, info)
       return result
     }
-    throw new Error('not authenticated')
+    throw new Error("not authenticated")
   }
   try {
-    const token = authorization.split(' ')[1]
+    const token = authorization.split(" ")[1]
     const payload: any = verify(token, config.ACCESS_TOKEN_SECRET)
 
     const user = await User.findOne({ where: { id: payload.userId } })
 
     if (!user) {
-      throw new Error('User associated with this token does not exist anymore')
+      throw new Error("User associated with this token does not exist anymore")
     }
 
     context.payload = payload
     context.req.user = user
     authorized = true
   } catch (err) {
-    console.log('samasita mama')
     console.log(err)
 
-    context?.res?.cookie('jid', '', {
+    context?.res?.cookie("jid", "", {
       httpOnly: true,
-      sameSite: 'none',
+      sameSite: "none",
       secure: true,
     })
     if (!justCheckIfAuthorized) throw new Error(err)

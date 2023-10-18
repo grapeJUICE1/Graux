@@ -1,13 +1,13 @@
-import { Alert, AlertIcon, AlertTitle, Box, Spinner } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { Alert, AlertIcon, AlertTitle, Box, Spinner } from "@chakra-ui/react"
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
 import {
   BattleRequest as BattleRequestType,
   useGetUserBattleRequestsLazyQuery,
   useMeLazyQuery,
   User,
-} from '../../../gql/graphql'
-import BattleRequest from './BattleRequest'
+} from "../../../gql/graphql"
+import BattleRequest from "./BattleRequest"
 
 function BattleRequests() {
   const [meQuery] = useMeLazyQuery()
@@ -22,7 +22,7 @@ function BattleRequests() {
 
   useEffect(() => {
     meQuery().then(({ data }) => {
-      if (!data?.me) router.replace('/')
+      if (!data?.me) router.replace("/")
       setMe(data?.me || null)
     })
   }, [])
@@ -48,7 +48,7 @@ function BattleRequests() {
               return <BattleRequest battleRequest={battleRequest} />
             })
           ) : (
-            <Alert status='warning'>
+            <Alert status="warning">
               <AlertIcon />
               <AlertTitle>You currently have no battle requests</AlertTitle>
             </Alert>

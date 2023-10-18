@@ -1,7 +1,12 @@
 import { Box, Button, Text } from "@chakra-ui/react"
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction, useEffect, useMemo } from "react"
 import ChooseSongButton from "../../../../components/Buttons/ChooseSongButton"
-import { Battle, BattleUser, useVoteMutation } from "../../../../gql/graphql"
+import {
+  Battle,
+  BattleUser,
+  useMeLazyQuery,
+  useVoteMutation,
+} from "../../../../gql/graphql"
 import useMutation from "../../../../hooks/useMutation"
 
 interface BattleUserInfo {
@@ -20,6 +25,16 @@ function BattleUserInfo({
   const [vote] = useVoteMutation()
   const voteMutation = useMutation(vote)
 
+  const [meQuery, { data }] = useMeLazyQuery()
+
+  useEffect(() => {
+    meQuery()
+  }, [])
+  const userIsInBattle = useMemo(() => {
+    return battle?.battleUsers?.find((battleUser) => {
+      return battleUser?.user?.id === data?.me?.id
+    })
+  }, [battle, data])
   async function voteButtonOnClick(battleUserId: number) {
     if (battle?.battleUsers?.length === 2 && battle.status === "active") {
       await voteMutation({ variables: { battleUserId } }, (data) => {
@@ -80,7 +95,7 @@ function BattleUserInfo({
       bgColor={battleUser?.isWinner ? "green.700" : ""}
     >
       <Box h="90%">
-        {battle?.status === "creation" && (
+        {battle?.status === "creation" && userIsInBattle && (
           <ChooseSongButton
             battleId={battle?.id}
             battleStatus={battle?.status}

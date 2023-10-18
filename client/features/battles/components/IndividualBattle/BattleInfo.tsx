@@ -1,9 +1,9 @@
 import { Box, Center, HStack, Text } from "@chakra-ui/react"
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction, useEffect, useMemo } from "react"
 import ChooseSongButton from "../../../../components/Buttons/ChooseSongButton"
 import LikeDislike from "../../../../components/Buttons/LikeDislikeButton"
 import ManageBattleButton from "../../../../components/Buttons/ManageBattleButton"
-import { Battle } from "../../../../gql/graphql"
+import { Battle, useMeLazyQuery } from "../../../../gql/graphql"
 import formatDate from "../../../../utils/formatDate"
 
 interface BattleInfoProps {
@@ -12,6 +12,24 @@ interface BattleInfoProps {
   setBattle: Dispatch<SetStateAction<Battle>>
 }
 function BattleInfo({ battle, totalVotes, setBattle }: BattleInfoProps) {
+  const [meQuery, { data }] = useMeLazyQuery()
+
+  useEffect(() => {
+    meQuery()
+  }, [])
+
+  const battleCreator = useMemo(() => {
+    return battle?.battleUsers?.find((battleUser) => {
+      return battleUser?.battleCreator === true ? true : false
+    })
+  }, [battle])
+
+  const userIsInBattle = useMemo(() => {
+    return battle?.battleUsers?.find((battleUser) => {
+      return battleUser?.user?.id === data?.me?.id
+    })
+  }, [battle, data])
+
   return (
     <Box border="1px" borderColor="cyan.500" width="100%" p="10">
       <Box style={{ wordWrap: "break-word" }} py={2} textAlign="center">
@@ -64,16 +82,22 @@ function BattleInfo({ battle, totalVotes, setBattle }: BattleInfoProps) {
 
       <Center>
         <HStack mt={5}>
-          <ManageBattleButton
-            buttonProps={{ colorScheme: "green" }}
-            battleId={battle?.id}
-          />
+          {data?.me?.id &&
+            battleCreator?.user?.id &&
+            data?.me?.id === battleCreator?.user?.id && (
+              <ManageBattleButton
+                buttonProps={{ colorScheme: "green" }}
+                battleId={battle?.id}
+              />
+            )}
           <Center>
-            <ChooseSongButton
-              battleId={battle?.id}
-              battleStatus={battle?.status}
-              buttonProps={{ colorScheme: "teal", size: "md" }}
-            />
+            {userIsInBattle && (
+              <ChooseSongButton
+                battleId={battle?.id}
+                battleStatus={battle?.status}
+                buttonProps={{ colorScheme: "teal", size: "md" }}
+              />
+            )}
           </Center>
         </HStack>
       </Center>

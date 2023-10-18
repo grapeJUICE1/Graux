@@ -143,6 +143,7 @@ const typeDefs = `#graphql
 
     approveBattleRequest(battleRequestId:Int!):Boolean
     removeBattleRequest(battleRequestId:Int!):Boolean
+    logout:Boolean
   }
 
 `

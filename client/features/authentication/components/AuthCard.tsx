@@ -65,7 +65,7 @@ function AuthCard({ authType }: AuthCardProps) {
           () => {
             setTimeout(() => {
               window.location.href = "/"
-            }, 1000)
+            }, 500)
           },
           setFieldError
         )
