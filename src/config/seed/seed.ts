@@ -6,11 +6,8 @@ import LikeDislike from "../../entities/LikeDislike"
 import User from "../../entities/User"
 import Vote from "../../entities/Vote"
 import BattleStatus from "../../types/BattleStatusEnum"
-import battlesJson from "./battles.json"
-import usersJson from "./users.json"
-
-const battles = battlesJson.battles
-const users = usersJson.users
+import battles from "./battles"
+import users from "./users"
 
 const getRandomInt = (min: number, max: number) => {
   min = Math.ceil(min)

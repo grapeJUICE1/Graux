@@ -18,6 +18,7 @@ interface ENV {
   DATABASE_NAME: string | undefined
   ACCESS_TOKEN_SECRET: string | undefined
   REFRESH_TOKEN_SECRET: string | undefined
+  LAST_FM_API_KEY: string | undefined
 }
 
 interface Config {
@@ -31,6 +32,7 @@ interface Config {
   DATABASE_NAME: string
   ACCESS_TOKEN_SECRET: string
   REFRESH_TOKEN_SECRET: string
+  LAST_FM_API_KEY: string
 }
 
 // Loading process.env as ENV interface
@@ -49,6 +51,7 @@ const getConfig = (): ENV => {
     DATABASE_NAME: process.env.DATABASE_NAME,
     ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
     REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,
+    LAST_FM_API_KEY: process.env.LAST_FM_API_KEY,
   }
 }
 
