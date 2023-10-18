@@ -12,7 +12,7 @@ import theme from "../theme"
 export default function App({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true)
   useEffect(() => {
-    fetch("http://localhost:3000/refresh_token", {
+    fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/refresh_token`, {
       credentials: "include",
       method: "POST",
     })

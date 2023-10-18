@@ -1,45 +1,45 @@
 {
-    "name": "client",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-        "dev": "next dev -p 5000",
-        "build": "next build",
-        "start": "next start",
-        "lint": "next lint",
-        "codegen": "graphql-codegen --config codegen.ts"
-    },
-    "dependencies": {
-        "@apollo/client": "^3.7.1",
-        "@chakra-ui/icons": "^2.0.12",
-        "@chakra-ui/react": "^2.4.0",
-        "@choc-ui/chakra-autocomplete": "^5.1.4",
-        "@emotion/react": "^11.10.5",
-        "@emotion/styled": "^11.10.5",
-        "@types/node": "18.11.9",
-        "@types/react": "18.0.25",
-        "@types/react-dom": "18.0.8",
-        "@types/react-paginate": "^7.1.2",
-        "apollo-link-token-refresh": "^0.4.0",
-        "eslint": "8.27.0",
-        "eslint-config-next": "13.0.3",
-        "formik": "^2.2.9",
-        "framer-motion": "^7.6.6",
-        "graphql": "^16.6.0",
-        "next": "13.0.3",
-        "nprogress": "^0.2.0",
-        "react": "18.2.0",
-        "react-dom": "18.2.0",
-        "react-paginate": "^8.2.0",
-        "typescript": "4.8.4",
-        "yup": "^0.32.11"
-    },
-    "devDependencies": {
-        "@graphql-codegen/cli": "2.13.12",
-        "@graphql-codegen/typescript": "^2.8.2",
-        "@graphql-codegen/typescript-operations": "^2.5.7",
-        "@graphql-codegen/typescript-react-apollo": "^3.3.6",
-        "@types/nprogress": "^0.2.1",
-        "jwt-decode": "^3.1.2"
-    }
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 5000",
+    "build": "next build",
+    "start": "next start -p 5000",
+    "lint": "next lint",
+    "codegen": "graphql-codegen --config codegen.ts"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.7.1",
+    "@chakra-ui/icons": "^2.0.12",
+    "@chakra-ui/react": "^2.4.0",
+    "@choc-ui/chakra-autocomplete": "^5.1.4",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@types/node": "18.11.9",
+    "@types/react": "18.0.25",
+    "@types/react-dom": "18.0.8",
+    "@types/react-paginate": "^7.1.2",
+    "apollo-link-token-refresh": "^0.4.0",
+    "eslint": "8.27.0",
+    "eslint-config-next": "13.0.3",
+    "formik": "^2.2.9",
+    "framer-motion": "^7.6.6",
+    "graphql": "^16.6.0",
+    "next": "13.0.3",
+    "nprogress": "^0.2.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-paginate": "^8.2.0",
+    "typescript": "4.8.4",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "2.13.12",
+    "@graphql-codegen/typescript": "^2.8.2",
+    "@graphql-codegen/typescript-operations": "^2.5.7",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.6",
+    "@types/nprogress": "^0.2.1",
+    "jwt-decode": "^3.1.2"
+  }
 }
