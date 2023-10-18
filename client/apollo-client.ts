@@ -11,7 +11,7 @@ import { getAccessToken, setAccessToken } from "./accessToken"
 import { TokenRefreshLink } from "apollo-link-token-refresh"
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:3000/graphql",
+  uri: "https://graux.onrender.com/graphql",
   credentials: "include",
 })
 

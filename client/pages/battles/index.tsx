@@ -91,7 +91,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     variables: {
       take: take,
       skip: skip,
-      orderBy: orderBy,
+      orderBy: "createdAt",
       avoidClientSideError: true,
       search: search ? "a" + search : undefined,
     },
