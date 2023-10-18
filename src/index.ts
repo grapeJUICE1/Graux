@@ -35,7 +35,10 @@ async function main() {
   app.use(cookieParser())
   app.use(
     cors({
-      origin: "http://localhost:5000",
+      origin:
+        process.env.NODE_ENV === "production"
+          ? "https://graux-sage.vercel.app"
+          : "http://localhost:5000",
       credentials: true,
     })
   )
