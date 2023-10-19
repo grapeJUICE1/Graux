@@ -27,6 +27,7 @@ export default {
         }
 
         // make logged in user battleCreator
+        //@ts-ignore
         const battleCreatedBy = req.user
         if (!battleCreatedBy) {
           errors.push({
@@ -74,6 +75,7 @@ export default {
         let errors = []
         const battle = await checkIfBattleExistsAndBattleCreatedByUser(
           battleId,
+          //@ts-ignore
           req.user as User
         )
         if (battle instanceof GraphQLError) {
@@ -121,6 +123,7 @@ export default {
         let errors = []
         const battle = await checkIfBattleExistsAndBattleCreatedByUser(
           battleId,
+          //@ts-ignore
           req.user as User
         )
         if (battle instanceof GraphQLError) {
@@ -152,6 +155,7 @@ export default {
 
       const battle = await checkIfBattleExistsAndBattleCreatedByUser(
         battleId,
+        //@ts-ignore
         req.user as User
       )
       if (battle instanceof GraphQLError) {

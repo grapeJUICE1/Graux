@@ -1,9 +1,9 @@
-import { GraphQLError } from 'graphql'
-import BattleUser from '../../../entities/BattleUser'
-import Vote from '../../../entities/Vote'
-import BattleStatus from '../../../types/BattleStatusEnum'
-import addMiddleware from '../../../utils/addMiddleware'
-import isAuthMiddleware from '../../middlewares/isAuth'
+import { GraphQLError } from "graphql"
+import BattleUser from "../../../entities/BattleUser"
+import Vote from "../../../entities/Vote"
+import BattleStatus from "../../../types/BattleStatusEnum"
+import addMiddleware from "../../../utils/addMiddleware"
+import isAuthMiddleware from "../../middlewares/isAuth"
 
 export default {
   vote: addMiddleware(
@@ -18,21 +18,21 @@ export default {
 
         if (!battleUser) {
           errors.push({
-            path: 'battleUser',
-            message: 'BattleUser with that id does not exist',
+            path: "battleUser",
+            message: "BattleUser with that id does not exist",
           })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
 
         if (battleUser.battle.status !== BattleStatus.ACTIVE) {
           errors.push({
-            path: 'battle',
-            message: 'You can only vote if a battle is active',
+            path: "battle",
+            message: "You can only vote if a battle is active",
           })
-          return new GraphQLError('Validation Error', {
-            extensions: { errors, code: 'BAD_USER_INPUT' },
+          return new GraphQLError("Validation Error", {
+            extensions: { errors, code: "BAD_USER_INPUT" },
           })
         }
 
@@ -52,6 +52,7 @@ export default {
         // add the new vote
 
         await Vote.insert({
+          //@ts-ignore
           user: req.user,
           battleUser: battleUser,
         })

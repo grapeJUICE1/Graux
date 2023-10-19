@@ -41,6 +41,7 @@ export default {
         })
 
       const user = await newUser.save()
+      //@ts-ignore
       req.user = user
       return user
     } catch (err) {
@@ -87,6 +88,7 @@ export default {
       //login successful
       sendRefreshToken(res, user)
 
+      //@ts-ignore
       req.user = user
       return {
         accessToken: createAccessToken(user),

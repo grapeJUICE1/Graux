@@ -19,6 +19,7 @@ export default {
         })
       }
 
+      //@ts-ignore
       const user: User = req.user as User
       let likeDislike: LikeDislike
       let battle: Battle

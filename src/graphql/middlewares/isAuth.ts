@@ -31,9 +31,9 @@ const isAuthMiddleware: GraphQLMiddlewareFunc = async (
     }
 
     //@ts-ignore
-    context?.payload = payload
+    context.payload = payload
     //@ts-ignore
-    context?.req?.user = user
+    context.req.user = user
     authorized = true
   } catch (err) {
     console.log(err)
