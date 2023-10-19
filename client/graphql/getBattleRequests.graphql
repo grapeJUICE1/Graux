@@ -1,5 +1,5 @@
-query GetBattleRequests($battleId: Int!) {
-  getBattleRequests(battleId: $battleId) {
+query GetBattleRequests($battleId: Int!, $showValidated: Boolean) {
+  getBattleRequests(battleId: $battleId, showValidated: $showValidated) {
     id
     user {
       id

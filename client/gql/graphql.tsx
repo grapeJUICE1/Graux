@@ -229,6 +229,7 @@ export type QueryGetBattleRequestArgs = {
 
 export type QueryGetBattleRequestsArgs = {
   battleId: Scalars['Int'];
+  showValidated?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -266,6 +267,7 @@ export type QueryGetUserArgs = {
 
 
 export type QueryGetUserBattleRequestsArgs = {
+  showValidated?: InputMaybe<Scalars['Boolean']>;
   userId: Scalars['Int'];
 };
 
@@ -399,6 +401,7 @@ export type GetBattleRequestQuery = { __typename?: 'Query', getBattleRequest?: {
 
 export type GetBattleRequestsQueryVariables = Exact<{
   battleId: Scalars['Int'];
+  showValidated?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
@@ -433,6 +436,7 @@ export type GetUserQuery = { __typename?: 'Query', getUser?: { __typename?: 'Use
 
 export type GetUserBattleRequestsQueryVariables = Exact<{
   userId: Scalars['Int'];
+  showValidated?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
@@ -915,8 +919,8 @@ export type GetBattleRequestQueryHookResult = ReturnType<typeof useGetBattleRequ
 export type GetBattleRequestLazyQueryHookResult = ReturnType<typeof useGetBattleRequestLazyQuery>;
 export type GetBattleRequestQueryResult = Apollo.QueryResult<GetBattleRequestQuery, GetBattleRequestQueryVariables>;
 export const GetBattleRequestsDocument = gql`
-    query GetBattleRequests($battleId: Int!) {
-  getBattleRequests(battleId: $battleId) {
+    query GetBattleRequests($battleId: Int!, $showValidated: Boolean) {
+  getBattleRequests(battleId: $battleId, showValidated: $showValidated) {
     id
     user {
       id
@@ -942,6 +946,7 @@ export const GetBattleRequestsDocument = gql`
  * const { data, loading, error } = useGetBattleRequestsQuery({
  *   variables: {
  *      battleId: // value for 'battleId'
+ *      showValidated: // value for 'showValidated'
  *   },
  * });
  */
@@ -1114,8 +1119,8 @@ export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
 export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
 export const GetUserBattleRequestsDocument = gql`
-    query GetUserBattleRequests($userId: Int!) {
-  getUserBattleRequests(userId: $userId) {
+    query GetUserBattleRequests($userId: Int!, $showValidated: Boolean) {
+  getUserBattleRequests(userId: $userId, showValidated: $showValidated) {
     id
     validated
     battle {
@@ -1150,6 +1155,7 @@ export const GetUserBattleRequestsDocument = gql`
  * const { data, loading, error } = useGetUserBattleRequestsQuery({
  *   variables: {
  *      userId: // value for 'userId'
+ *      showValidated: // value for 'showValidated'
  *   },
  * });
  */

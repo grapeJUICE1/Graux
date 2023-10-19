@@ -29,13 +29,13 @@ function BattleRequests() {
 
   useEffect(() => {
     if (me) {
-      getUserBattleRequests({ variables: { userId: +me.id } }).then(
-        ({ data }) => {
-          setBattleRequests(
-            (data?.getUserBattleRequests as BattleRequestType[]) || null
-          )
-        }
-      )
+      getUserBattleRequests({
+        variables: { userId: +me.id, showValidated: false },
+      }).then(({ data }) => {
+        setBattleRequests(
+          (data?.getUserBattleRequests as BattleRequestType[]) || null
+        )
+      })
     }
   }, [me])
 
