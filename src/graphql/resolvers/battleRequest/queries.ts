@@ -1,5 +1,5 @@
-import { GraphQLError } from 'graphql'
-import BattleRequest from '../../../entities/BattleRequest'
+import { GraphQLError } from "graphql"
+import BattleRequest from "../../../entities/BattleRequest"
 
 export default {
   getAllBattleRequests: async () => {
@@ -9,19 +9,19 @@ export default {
     return battleRequests
   },
 
-  getBattleRequests: async (_: any, { battleId }) => {
+  getBattleRequests: async (_: any, { battleId, showValidated }) => {
     const battleRequests = await BattleRequest.find({
       relations: { user: true },
-      where: { battleId: battleId },
+      where: { battleId: battleId, validated: showValidated },
     })
 
     return battleRequests
   },
 
-  getUserBattleRequests: async (_: any, { userId }) => {
+  getUserBattleRequests: async (_: any, { userId, showValidated }) => {
     const battleRequests = await BattleRequest.find({
       relations: { battle: { battleUsers: { user: true } } },
-      where: { userId: userId },
+      where: { userId: userId, validated: showValidated },
     })
 
     return battleRequests
@@ -33,15 +33,15 @@ export default {
       relations: { battle: { battleUsers: { user: true } } },
     })
     if (!battleRequest) {
-      return new GraphQLError('Validation Error', {
+      return new GraphQLError("Validation Error", {
         extensions: {
           errors: [
             {
-              path: 'battleRequest',
-              message: 'Battle Request with that id was not found',
+              path: "battleRequest",
+              message: "Battle Request with that id was not found",
             },
           ],
-          code: 'BAD_USER_INPUT',
+          code: "BAD_USER_INPUT",
         },
       })
     }

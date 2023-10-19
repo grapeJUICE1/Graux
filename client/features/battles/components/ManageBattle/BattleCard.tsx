@@ -1,14 +1,30 @@
-import { Box, Center, Divider, Text } from "@chakra-ui/react"
+import { Box, Button, Center, Divider, Text } from "@chakra-ui/react"
 import { useMemo } from "react"
 import DeleteButton from "../../../../components/Buttons/DeleteButton"
 import EditTitleButton from "./EditTitleButton"
 import { Battle, useDeleteBattleMutation } from "../../../../gql/graphql"
 import formatDate from "../../../../utils/formatDate"
 import StartBattleButton from "../../../../components/Buttons/StartBattleButton"
+import { useRouter } from "next/router"
 
 interface BattleCardProps {
   battle: Battle
 }
+
+function GoToBattleButton({ battleId }: { battleId: string }) {
+  const router = useRouter()
+  const buttonOnClick = () => {
+    router.push(`/battles/${battleId}`)
+  }
+  return (
+    <>
+      <Button onClick={buttonOnClick} mt={5} colorScheme="teal" size="md">
+        Go To Battle
+      </Button>
+    </>
+  )
+}
+
 function BattleCard({ battle }: BattleCardProps) {
   const [deleteBattle] = useDeleteBattleMutation()
 
@@ -70,6 +86,9 @@ function BattleCard({ battle }: BattleCardProps) {
           {battle && isBattleStartable && (
             <StartBattleButton battleId={+battle?.id} />
           )}
+          {/* <Center> */}
+          {battle?.id && <GoToBattleButton battleId={battle?.id} />}
+          {/* </Center> */}
           {battle && battle.status === "creation" && (
             <DeleteButton
               modalHeader="Delete Battle"

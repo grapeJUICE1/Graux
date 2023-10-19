@@ -92,8 +92,8 @@ const typeDefs = `#graphql
     battlesCreated:Boolean,take:Int,skip:Int,orderBy:String ,avoidClientSideError:Boolean ): getUserBattlesResponse
 
     getAllBattleRequests: [BattleRequest]
-    getBattleRequests(battleId:Int!): [BattleRequest]
-    getUserBattleRequests(userId:Int!): [BattleRequest]
+    getBattleRequests(battleId:Int! showValidated:Boolean ): [BattleRequest]
+    getUserBattleRequests(userId:Int! showValidated:Boolean): [BattleRequest]
     getBattleRequest(battleRequestId:Int!): BattleRequest
 
     # Comment Queries
