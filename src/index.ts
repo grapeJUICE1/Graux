@@ -10,9 +10,9 @@ import dataSource from "./data-source"
 import resolvers from "./graphql/resolvers"
 import typeDefs from "./graphql/typeDefs"
 import { verify } from "jsonwebtoken"
-import config from "./config/config"
 import User from "./entities/User"
 import { createAccessToken, sendRefreshToken } from "./utils/auth"
+import config from "./config/config"
 
 async function main() {
   await dataSource.initialize()
@@ -57,7 +57,7 @@ async function main() {
     }
     let payload: any = null
     try {
-      payload = verify(token, config.REFRESH_TOKEN_SECRET)
+      payload = verify(token, process.env.REFRESH_TOKEN_SECRET)
 
       const user = await User.findOne({
         where: {
@@ -87,9 +87,9 @@ async function main() {
     }
   })
   await new Promise<void>((resolve) =>
-    httpServer.listen({ port: config.PORT }, resolve)
+    httpServer.listen({ port: process.env.PORT }, resolve)
   )
 
-  console.log(`🚀 Server ready at http://localhost:${config.PORT}/`)
+  console.log(`🚀 Server ready at http://localhost:${process.env.PORT}/`)
 }
 main().catch((err) => console.log(err))
