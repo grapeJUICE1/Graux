@@ -88,7 +88,7 @@ async function main() {
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: process.env.PORT }, resolve)
   )
-
+  console.log(process.env)
   console.log(`🚀 Server ready at http://localhost:${process.env.PORT}/`)
 }
 main().catch((err) => console.log(err))
