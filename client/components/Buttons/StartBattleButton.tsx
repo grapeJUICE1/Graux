@@ -41,7 +41,9 @@ function StartBattleButton({ battleId }: { battleId: number }) {
         },
         () => {
           router.push(`/battles/${router.query.id}`)
-          router.reload()
+          setTimeout(() => {
+            router.reload()
+          }, 400)
         },
         setFieldError
       )
