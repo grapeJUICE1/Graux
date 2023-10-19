@@ -58,12 +58,7 @@ function Navbar({ sidebarDisclosure }: any) {
           base: "none",
           md: "flex",
         }}
-      >
-        <InputLeftElement color="gray.500">
-          {/* <FiSearch /> */}
-        </InputLeftElement>
-        <Input placeholder="Search for articles..." />
-      </InputGroup>
+      ></InputGroup>
       <Stack
         flex={{ base: 1, md: 0 }}
         justify={"flex-end"}
