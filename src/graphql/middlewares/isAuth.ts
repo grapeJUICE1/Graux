@@ -30,8 +30,10 @@ const isAuthMiddleware: GraphQLMiddlewareFunc = async (
       throw new Error("User associated with this token does not exist anymore")
     }
 
-    context.payload = payload
-    context.req.user = user
+    //@ts-ignore
+    context?.payload = payload
+    //@ts-ignore
+    context?.req?.user = user
     authorized = true
   } catch (err) {
     console.log(err)
