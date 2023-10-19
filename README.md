@@ -114,34 +114,40 @@ npm run seed
 
 ###### Battles page
 
-![Battles Page](https://github.com/grapeJUICE1/Graux/blob/master/Screenshots/battles.png?raw=true "Battles Page")
+![Battles Page](https://raw.githubusercontent.com/grapeJUICE1/Graux/master/Screenshots/battles.png "Battles Page")
 
 ###### Individual Battle page
 
-![Individual Battle](https://github.com/grapeJUICE1/Graux/blob/master/Screenshots/individual_battle.png?raw=true "Individual Battle Page")
+![Individual Battle](https://raw.githubusercontent.com/grapeJUICE1/Graux/master/Screenshots/individual_battle.png "Individual Battle Page")
 
 ###### Comments
 
-![Comments](https://github.com/grapeJUICE1/Graux/blob/master/Screenshots/comments.png?raw=true "Comments")
+![Comments](https://raw.githubusercontent.com/grapeJUICE1/Graux/master/Screenshots/comments.png "Comments")
 
 ###### Choose song
 
-![Choose song](https://github.com/grapeJUICE1/Graux/blob/master/Screenshots/choose_song.png?raw=true "Choose song")
+![Choose song](https://raw.githubusercontent.com/grapeJUICE1/Graux/master/Screenshots/choose_song.png "Choose song")
 
 ###### Manage Battle Page
 
-![Manage Battle Page](https://github.com/grapeJUICE1/Graux/blob/master/Screenshots/manage_battle.png?raw=true "Manage Battle Page")
+![Manage Battle Page](https://raw.githubusercontent.com/grapeJUICE1/Graux/master/Screenshots/manage_battle.png "Manage Battle Page")
 
 ###### User Profile Page
 
-![User Profile Page](https://github.com/grapeJUICE1/Graux/blob/master/Screenshots/user_profile.png?raw=true "User Profile Page")
+![User Profile Page](https://raw.githubusercontent.com/grapeJUICE1/Graux/master/Screenshots/user_profile.png "User Profile Page")
 
 ###### Users Page
 
-![Users Page](https://github.com/grapeJUICE1/Graux/blob/master/Screenshots/users.png?raw=true "Users Page")
+![Users Page](https://raw.githubusercontent.com/grapeJUICE1/Graux/master/Screenshots/users.png "Users Page")
 
 ###### Login Page
 
-![Login Page](https://github.com/grapeJUICE1/Graux/blob/master/Screenshots/login.png?raw=true "Login Page")
+![Login Page](https://raw.githubusercontent.com/grapeJUICE1/Graux/master/Screenshots/login.png "Login Page")
 
 ### Todos
+
+- [ ] User Image Upload
+- [ ] Password Change
+- [ ] Edit User
+- [ ] Daily/Weekly/Monthly leaderboards
+- [ ] removing @ts-ignores and using es-lint
