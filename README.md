@@ -2,6 +2,8 @@
 
 > Aux Battles For The Web
 
+Application Live At https://graux-sage.vercel.app
+
 ### Introduction
 
 An Aux battle is a music competition between 2 or more people. Typically a 1v1 or 1v1 bracket.
