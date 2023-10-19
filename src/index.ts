@@ -6,13 +6,12 @@ import cookieParser from "cookie-parser"
 import MyContext from "./MyContext"
 import http from "http"
 import cors from "cors"
-import dataSource from "./data-source"
 import resolvers from "./graphql/resolvers"
 import typeDefs from "./graphql/typeDefs"
+import dataSource from "./data-source"
 import { verify } from "jsonwebtoken"
 import User from "./entities/User"
 import { createAccessToken, sendRefreshToken } from "./utils/auth"
-import config from "./config/config"
 
 async function main() {
   await dataSource.initialize()

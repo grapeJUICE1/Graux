@@ -1,6 +1,5 @@
 import { verify } from "jsonwebtoken"
 import { GraphQLError } from "graphql"
-import config from "../../../config/config"
 import BattleUser from "../../../entities/BattleUser"
 import User from "../../../entities/User"
 import MyContext from "../../../MyContext"
@@ -95,7 +94,7 @@ export default {
     }
     try {
       const token = authorization.split(" ")[1]
-      const payload: any = verify(token, config.ACCESS_TOKEN_SECRET)
+      const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET)
       if (!payload) {
         return null
       }

@@ -1,28 +1,27 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
-import config from "./config/config"
 
 const AppDataSource = new DataSource({
   //@ts-ignore
-  type: config.DATABASE_TYPE,
-  port: config.DATABASE_PORT,
+  type: process.env.DATABASE_TYPE,
+  port: +process.env.DATABASE_PORT,
 
   host:
     process.env.NODE_ENV === "production"
-      ? config.DATABASE_HOST
-      : config.LOCAL_DATABASE_HOST,
+      ? process.env.DATABASE_HOST
+      : process.env.LOCAL_DATABASE_HOST,
   username:
     process.env.NODE_ENV === "production"
-      ? config.DATABASE_USERNAME
-      : config.LOCAL_DATABASE_USERNAME,
+      ? process.env.DATABASE_USERNAME
+      : process.env.LOCAL_DATABASE_USERNAME,
   password:
     process.env.NODE_ENV === "production"
-      ? config.DATABASE_PASSWORD
-      : config.LOCAL_DATABASE_PASSWORD,
+      ? process.env.DATABASE_PASSWORD
+      : process.env.LOCAL_DATABASE_PASSWORD,
   database:
     process.env.NODE_ENV === "production"
-      ? config.DATABASE_NAME
-      : config.LOCAL_DATABASE_NAME,
+      ? process.env.DATABASE_NAME
+      : process.env.LOCAL_DATABASE_NAME,
 
   synchronize: process.env.NODE_ENV === "production" ? false : true,
   logging: false,

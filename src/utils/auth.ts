@@ -1,11 +1,10 @@
 import { Response } from "express"
 import { sign } from "jsonwebtoken"
-import config from "../config/config"
 import dataSource from "../data-source"
 import User from "../entities/User"
 
 export const createAccessToken = (user: User) => {
-  return sign({ userId: user.id }, config.ACCESS_TOKEN_SECRET, {
+  return sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "15m",
   })
 }
@@ -13,7 +12,7 @@ export const createAccessToken = (user: User) => {
 export const createRefreshToken = (user: User) => {
   return sign(
     { userId: user.id, tokenVersion: user.tokenVersion },
-    config.REFRESH_TOKEN_SECRET,
+    process.env.REFRESH_TOKEN_SECRET,
     {
       expiresIn: "7d",
     }

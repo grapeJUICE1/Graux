@@ -1,5 +1,4 @@
 import { verify } from "jsonwebtoken"
-import config from "../../config/config"
 import User from "../../entities/User"
 import { GraphQLMiddlewareFunc } from "../../types/graphql-utils"
 
@@ -23,7 +22,7 @@ const isAuthMiddleware: GraphQLMiddlewareFunc = async (
   }
   try {
     const token = authorization.split(" ")[1]
-    const payload: any = verify(token, config.ACCESS_TOKEN_SECRET)
+    const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET)
 
     const user = await User.findOne({ where: { id: payload.userId } })
 
