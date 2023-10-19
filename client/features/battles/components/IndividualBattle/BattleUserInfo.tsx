@@ -1,4 +1,5 @@
 import { Box, Button, Text } from "@chakra-ui/react"
+import Link from "next/link"
 import { Dispatch, SetStateAction, useEffect, useMemo } from "react"
 import ChooseSongButton from "../../../../components/Buttons/ChooseSongButton"
 import {
@@ -103,10 +104,15 @@ function BattleUserInfo({
           />
         )}
         <Text fontSize="2rem">{battleUser?.isWinner ? "Winner" : ""}</Text>
-        <Text>{battleUser?.songName}</Text>
-        <Text>{battleUser?.songArtist}</Text>
-        <Text>{battleUser?.songAlbum}</Text>
-        <Text>{battleUser?.songLink}</Text>
+        <Link href={`/users/${battleUser?.user?.id}`}>
+          <Text as="u" fontSize="1.5rem" color="green.400">
+            Song choice of {battleUser?.user?.username}
+          </Text>
+        </Link>
+        <Text>song name : {battleUser?.songName}</Text>
+        <Text>song artist : {battleUser?.songArtist}</Text>
+        <Text>song album : {battleUser?.songAlbum}</Text>
+        <Text mb={5}>song link : {battleUser?.songLink}</Text>
         {battleUser?.songImage && (
           <img src={battleUser.songImage} style={{ width: "8rem" }} />
         )}
@@ -118,7 +124,8 @@ function BattleUserInfo({
             colorScheme={battleUser?.userVote === 1 ? "orange" : "blue"}
             isDisabled={battle?.status !== "active"}
           >
-            Vote ({battleUser?.voteCount} votes)
+            Vote For {battleUser?.user?.username} ({battleUser?.voteCount}{" "}
+            votes)
           </Button>
         )}
       </Box>
