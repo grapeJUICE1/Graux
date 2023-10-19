@@ -18,12 +18,12 @@ import {
   Stack,
   Text,
   useDisclosure,
-} from '@chakra-ui/react'
-import { useFormik } from 'formik'
-import { useRouter } from 'next/router'
-import { startBattleSchema } from '../../../../data/validationSchemas'
-import { useStartBattleMutation } from '../../../../gql/graphql'
-import useMutation from '../../../../hooks/useMutation'
+} from "@chakra-ui/react"
+import { useFormik } from "formik"
+import { useRouter } from "next/router"
+import { startBattleSchema } from "../../data/validationSchemas"
+import { useStartBattleMutation } from "../../gql/graphql"
+import useMutation from "../../hooks/useMutation"
 
 function StartBattleButton({ battleId }: { battleId: number }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -41,6 +41,7 @@ function StartBattleButton({ battleId }: { battleId: number }) {
         },
         () => {
           router.push(`/battles/${router.query.id}`)
+          router.reload()
         },
         setFieldError
       )
@@ -50,10 +51,10 @@ function StartBattleButton({ battleId }: { battleId: number }) {
   return (
     <>
       <Button
-        colorScheme='green'
-        mt='5'
-        textAlign='center'
-        mx='3'
+        colorScheme="green"
+        mt="5"
+        textAlign="center"
+        mx="3"
         onClick={onOpen}
       >
         Start Battle
@@ -63,20 +64,20 @@ function StartBattleButton({ battleId }: { battleId: number }) {
         <ModalOverlay />
         <ModalContent>
           <form onSubmit={formik.handleSubmit}>
-            <ModalHeader mt='5'>
+            <ModalHeader mt="5">
               How many hours do you want the battle to be active
             </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <Box p={8}>
                 <Stack spacing={4}>
-                  <FormControl id='songLink'>
+                  <FormControl id="songLink">
                     <FormLabel>Hours</FormLabel>
                     <NumberInput
-                      id='hours'
-                      name='hours'
+                      id="hours"
+                      name="hours"
                       onChange={(val) => {
-                        formik.setFieldValue('hours', +val)
+                        formik.setFieldValue("hours", +val)
                       }}
                       onBlur={formik.handleBlur}
                       value={formik.values.hours}
@@ -91,7 +92,7 @@ function StartBattleButton({ battleId }: { battleId: number }) {
                       </NumberInputStepper>
                     </NumberInput>
                     {formik.touched.hours && formik.errors.hours ? (
-                      <Text color='red.500'>{formik.errors.hours}</Text>
+                      <Text color="red.500">{formik.errors.hours}</Text>
                     ) : null}
                   </FormControl>
                 </Stack>
@@ -99,7 +100,7 @@ function StartBattleButton({ battleId }: { battleId: number }) {
             </ModalBody>
 
             <ModalFooter>
-              <Button colorScheme='green' mr={3} type='submit'>
+              <Button colorScheme="green" mr={3} type="submit">
                 Start Battle
               </Button>
             </ModalFooter>

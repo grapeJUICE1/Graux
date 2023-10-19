@@ -4,7 +4,7 @@ import DeleteButton from "../../../../components/Buttons/DeleteButton"
 import EditTitleButton from "./EditTitleButton"
 import { Battle, useDeleteBattleMutation } from "../../../../gql/graphql"
 import formatDate from "../../../../utils/formatDate"
-import StartBattleButton from "./StartBattleButton"
+import StartBattleButton from "../../../../components/Buttons/StartBattleButton"
 
 interface BattleCardProps {
   battle: Battle

@@ -15,8 +15,8 @@ import {
 } from "@chakra-ui/react"
 import { useFormik } from "formik"
 import { useRouter } from "next/router"
-import { Fragment, useState } from "react"
-import { useChooseSongMutation } from "../../../../gql/graphql"
+import { Fragment, useEffect, useState } from "react"
+import { useChooseSongMutation, useMeLazyQuery } from "../../../../gql/graphql"
 import useMutation from "../../../../hooks/useMutation"
 import useAutocomplete from "../../hooks/useAutocomplete"
 
@@ -25,8 +25,17 @@ function ChooseSong() {
   const toast = useToast()
 
   const [chooseSong] = useChooseSongMutation()
+  const [meQuery, { data }] = useMeLazyQuery()
   const chooseSongMutation = useMutation(chooseSong)
   const [t, setT] = useState(null)
+
+  useEffect(() => {
+    meQuery()
+  }, [])
+
+  if (data && !data?.me) {
+    router.replace("/")
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -48,7 +57,7 @@ function ChooseSong() {
             },
           },
           () => {
-            router.replace(`/battles/${router.query.id}/manage`)
+            router.replace(`/battles/${router.query.id}`)
           }
         )
       }

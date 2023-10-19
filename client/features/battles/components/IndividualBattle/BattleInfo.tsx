@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useMemo } from "react"
 import ChooseSongButton from "../../../../components/Buttons/ChooseSongButton"
 import LikeDislike from "../../../../components/Buttons/LikeDislikeButton"
 import ManageBattleButton from "../../../../components/Buttons/ManageBattleButton"
+import StartBattleButton from "../../../../components/Buttons/StartBattleButton"
 import { Battle, useMeLazyQuery } from "../../../../gql/graphql"
 import formatDate from "../../../../utils/formatDate"
 
@@ -29,6 +30,18 @@ function BattleInfo({ battle, totalVotes, setBattle }: BattleInfoProps) {
       return battleUser?.user?.id === data?.me?.id
     })
   }, [battle, data])
+
+  const isBattleStartable = useMemo(() => {
+    if (battle?.status !== "creation") return false
+    let battleHasEnoughUsers = battle?.battleUsers?.length === 2
+    let battleUsersHaveNotChosenSong = battle?.battleUsers?.find(
+      (battleUser) => {
+        return !battleUser?.songName
+      }
+    )
+
+    return battleHasEnoughUsers && !battleUsersHaveNotChosenSong
+  }, [battle])
 
   return (
     <Box border="1px" borderColor="cyan.500" width="100%" p="10">
@@ -99,6 +112,9 @@ function BattleInfo({ battle, totalVotes, setBattle }: BattleInfoProps) {
               />
             )}
           </Center>
+          {battle && isBattleStartable && (
+            <StartBattleButton battleId={+battle?.id} />
+          )}
         </HStack>
       </Center>
     </Box>
