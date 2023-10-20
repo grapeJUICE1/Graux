@@ -44,7 +44,7 @@ Now to run the backend , on the root directory run
 npm install
 ```
 
-Next , create a src/config/config.env file <br>
+Next , create .env file in the root directory <br>
 The file should look like this .
 
 ```env
@@ -141,6 +141,10 @@ npm run seed
 ###### Users Page
 
 ![Users Page](https://raw.githubusercontent.com/grapeJUICE1/Graux/master/Screenshots/users.png "Users Page")
+
+###### Approve Battle Request Page
+
+![Approve Battle Request Page](https://raw.githubusercontent.com/grapeJUICE1/Graux/master/Screenshots/approve_battle_request.png "Approve Battle Request Page")
 
 ###### Login Page
 
